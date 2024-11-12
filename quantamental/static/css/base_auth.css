@@ -1,0 +1,85 @@
+h1 {
+    color: #083959;
+    padding-bottom: 1rem;
+}
+
+.form-group {
+    margin: 0.5rem;
+}
+
+.log-label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: hsla(204, 84%, 19%, 0.75);
+}
+
+.form-control {
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #0839593d;
+    height: 2.5rem;
+    font-size: 1rem;
+    padding-left: 0;
+}
+
+
+.form-control:focus {
+    box-shadow: none;
+    border-bottom: 1px solid #083959;
+}
+
+
+
+.form-control:hover {
+    background-color: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+
+.sign-button {
+    background-color: white;
+    color: #083959;
+    height: 3rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-bottom: 1px solid #083959;
+    text-align: start;
+    margin-top: 1rem;
+}
+
+.sign-button:hover {
+    box-shadow: 0 0.5em 0.375em -0.4em #083959;
+    transform: translateY(-0.05em);
+}
+
+.sign {
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    position: fixed;
+    right: 1rem;
+}
+
+#form-div {
+    background-color: white;
+    width: 35rem;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    display: inline-block;
+    box-shadow: 1px 1px 2px 2px #c0bfbf44;
+    transform: translate(60%, 0);
+}
+
+@media (max-width: 1300px) {
+    #form-div {
+        transform: translate(25%, 0);
+    }
+}

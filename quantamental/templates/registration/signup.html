@@ -1,0 +1,48 @@
+{% extends "base_auth.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+{% endblock head %}
+{% block form-div-content%}
+
+<h1>Register New User</h1>
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+        {{form.username}}
+        <label class="log-label" for="inputuser" data-bs-toggle="tooltip" data-bs-placement="right"
+            title="150 characters or fewer. Letters, digits and @/./+/-/_ only.">Username</label>
+    </div>
+
+
+    <div class="form-group">
+        {{form.password1}}
+        <label class="log-label" for="inputuser" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right"
+            title="Your password can’t be too similar to your other personal information.<br>
+            Your password must contain at least 8 characters.<br>
+        Your password can’t be a commonly used password.<br>
+        Your password can’t be entirely numeric.<br>">Password</label>
+    </div>
+
+    <div class="form-group">
+        {{form.password2}}
+        <label class="log-label" for="inputuser" data-bs-toggle="tooltip" data-bs-placement="right"
+            title="Enter the same password as before, for verification.">Confirm Password</label>
+    </div>
+
+    <div class="form-group">
+        {{form.email}}
+        <label class="log-label" for="inputuser" data-bs-toggle="tooltip" data-bs-placement="right"
+            title="Enter valid e-mail.">E-Mail</label>
+    </div>
+    <input class="sign-button" type="submit" value="CREATE ACCOUNT">
+</form>
+
+
+
+
+
+<!-- registration form -->
+{% endblock form-div-content %}

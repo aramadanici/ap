@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head %}
+<!-- CSS Files -->
+<link rel="stylesheet" href="{% static 'scores/css/singleStock.css' %}">
+
+
+{% endblock head %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+    <!-- Control panel for content -->
+
+    <div class="row justify-content-center">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h6>Stock:</h6>
+                        <select class="form-select" aria-label="Default select example">
+                            <option value="AMD">AMD</option>
+                            <option value="AAPL">Apple</option>
+                            <option value="AVGO">Broadcomm</option>
+                            <option value="IBM">IBM</option>
+                            <option value="INTC">Intel</option>
+                            <option value="NVDA">NVIDIA</option>
+                            <option value="QCOM">Qualcomm</option>
+                            <option value="TXN">Texas Instruments</option>
+                        </select>
+                    </div>
+
+                    <div class="col">
+                        <h6>Reference:</h6>
+                        <select class="form-select" aria-label="Default select example">
+                            <option value="1">MSCI World</option>
+                            <option value="2">NASDAQ 100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- <div class="row pb-5">
+        <div class="col">
+            <h2>Control Panel</h2>
+            <h3>Stock</h3>
+
+            <select class="form-select" aria-label="Default select example">
+                <option value="AMD">AMD</option>
+                <option value="AAPL">Apple</option>
+                <option value="AVGO">Broadcomm</option>
+                <option value="IBM">IBM</option>
+                <option value="INTC">Intel</option>
+                <option value="NVDA">NVIDIA</option>
+                <option value="QCOM">Qualcomm</option>
+                <option value="TXN">Texas Instruments</option>
+            </select>
+            <h3>Client Portfolio</h3>
+            <select class="form-select" aria-label="Default select example">
+                <option value="1">MSCI World</option>
+                <option value="2">NASDAQ 100</option>
+            </select>
+
+        </div>
+    </div> -->
+
+    <div class="h-divider">
+        <h3>Overview</h3>
+        <div class="divider-shadow"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-4">
+            <table class="table" style="width:100%" data-url="{% url 'scores:single_stock_view_data_2' %}" id="miau2">
+                <thead>
+                    <tr class="table-headers"></tr>
+                </thead>
+                <tbody class="table-body"></tbody>
+            </table>
+
+            <table class="table" style="width:100%" data-url="{% url 'scores:single_stock_view_data_1' %}" id="miau1">
+                <thead>
+                    <tr class="table-headers"></tr>
+                </thead>
+                <tbody class="table-body"></tbody>
+            </table>
+        </div>
+
+        <div class="col-7">
+            <div id="sankey-chart-area" class="col text-center"></div>
+        </div>
+    </div>
+
+
+    <div class="h-divider">
+        <h3>Performance</h3>
+        <div class="divider-shadow"></div>
+    </div>
+
+    <!-- Performance -->
+    <div class="row">
+        <div class="col">
+            <div id="performance-line-area"></div>
+
+            <div class="pb-1" id="slider-div">
+                <div class="slider-container">
+                    <label>Date: <span id="dateLabel1">31/12/2009</span> - <span
+                            id="dateLabel2">07/03/2024</span></label>
+
+                </div>
+                <div class="slider-container">
+                    <div id="date-slider1"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div id="performance-bar-area"></div>
+        </div>
+    </div>
+
+    <div class="h-divider">
+        <h3>Fundamentals</h3>
+        <div class="divider-shadow"></div>
+    </div>
+
+    <!-- Multiples -->
+    <div class="row">
+        <div class="col">
+            <div id="multiple-bar-area"></div>
+        </div>
+        <div class="col">
+            <div id="spider-area"></div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}
+
+
+
+
+
+{% block jsextra %}
+
+<script>
+    const output1 = "{% url 'scores:single_stock_view_data_1' %}";
+    const output2 = "{% url 'scores:single_stock_view_data_2' %}";
+    const sankeyData = "{% static 'data/sankeyApple.json' %}";
+    const sankeyTest = "{% static 'data/sankey.json' %}";
+    const sankeyStocks = "{% static 'data/sankeyStocks.json' %}";
+    const techstockTS = "{% static 'data/techstockTS2.csv' %}";
+    const groupedbar = "{% static 'data/groupedbarstock.json' %}";
+    const groupedbar2 = "{% static 'data/multiples.json' %}";
+</script>
+
+<!-- <script>
+    var csvUrl = "{% static 'data/revenues.csv' %}";
+    var jsonUrl2 = "{% static 'data/coins.json' %}";
+    var indices = "{% static 'data/indices.csv' %}";
+</script> -->
+<!-- <script type="text/javascript" src="{% static 'js/line_brushed.js' %}"></script> -->
+<script type="text/javascript" src="{% static 'js/BarChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/LineChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/HorizontalTable.js' %}"></script>
+<!-- <script type="text/javascript" src="{% static 'js/Sankey.js' %}"></script> -->
+<script type="text/javascript" src="{% static 'js/SankeyChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/GroupedBarChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/SpiderChart.js' %}"></script>
+
+<!-- <script type="text/javascript" src="{% static 'scores/js/main_vis.js' %}"></script> -->
+<script type="text/javascript" src="{% static 'scores/js/main_single_stock.js' %}"></script>
+{% endblock jsextra %}

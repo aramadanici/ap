@@ -1,0 +1,811 @@
+{
+    "AAPL": {
+        "nodes": [
+            {
+                "name": "Wearables, Home and Accessories",
+                "category": "Product"
+            },
+            {
+                "name": "iPad ®",
+                "category": "Product"
+            },
+            {
+                "name": "Mac ®",
+                "category": "Product"
+            },
+            {
+                "name": "Services",
+                "category": "Product"
+            },
+            {
+                "name": "iPhone ®",
+                "category": "Product"
+            },
+            {
+                "name": "Other",
+                "category": "Product"
+            },
+            {
+                "name": "Revenue",
+                "category": "Benefit"
+            },
+            {
+                "name": "Gross Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Operating Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Net Income",
+                "category": "Benefit"
+            },
+            {
+                "name": "Cost of Revenue",
+                "category": "Cost"
+            },
+            {
+                "name": "Operating Expenses",
+                "category": "Cost"
+            },
+            {
+                "name": "Tax and Analyst Adjustments",
+                "category": "Cost"
+            }
+        ],
+        "links": [
+            {
+                "source": "Wearables, Home and Accessories",
+                "target": "Revenue",
+                "value": 39845
+            },
+            {
+                "source": "iPad ®",
+                "target": "Revenue",
+                "value": 28300
+            },
+            {
+                "source": "Mac ®",
+                "target": "Revenue",
+                "value": 29357
+            },
+            {
+                "source": "Services",
+                "target": "Revenue",
+                "value": 85200
+            },
+            {
+                "source": "iPhone ®",
+                "target": "Revenue",
+                "value": 200583
+            },
+            {
+                "source": "Other",
+                "target": "Revenue",
+                "value": 2421
+            },
+            {
+                "source": "Revenue",
+                "target": "Cost of Revenue",
+                "value": 212035
+            },
+            {
+                "source": "Revenue",
+                "target": "Gross Profit",
+                "value": 173671
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Profit",
+                "value": 118658
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Expenses",
+                "value": 55013
+            },
+            {
+                "source": "Operating Profit",
+                "target": "Net Income",
+                "value": 100913
+            },
+            {
+                "source": "Operating Profit",
+                "target": "Tax and Analyst Adjustments",
+                "value": 17745
+            }
+        ]
+    },
+    "AMD": {
+        "nodes": [
+            {
+                "name": "Embedded",
+                "category": "Product"
+            },
+            {
+                "name": "Data Center",
+                "category": "Product"
+            },
+            {
+                "name": "Client",
+                "category": "Product"
+            },
+            {
+                "name": "Gaming",
+                "category": "Product"
+            },
+            {
+                "name": "Revenue",
+                "category": "Benefit"
+            },
+            {
+                "name": "Gross Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Operating Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Net Income",
+                "category": "Benefit"
+            },
+            {
+                "name": "Cost of Revenue",
+                "category": "Cost"
+            },
+            {
+                "name": "Operating Expenses",
+                "category": "Cost"
+            },
+            {
+                "name": "Tax and Analyst Adjustments",
+                "category": "Benefit"
+            }
+        ],
+        "links": [
+            {
+                "source": "Embedded",
+                "target": "Revenue",
+                "value": 5321
+            },
+            {
+                "source": "Data Center",
+                "target": "Revenue",
+                "value": 6496
+            },
+            {
+                "source": "Client",
+                "target": "Revenue",
+                "value": 4651
+            },
+            {
+                "source": "Gaming",
+                "target": "Revenue",
+                "value": 6212
+            },
+            {
+                "source": "Revenue",
+                "target": "Cost of Revenue",
+                "value": 12220
+            },
+            {
+                "source": "Revenue",
+                "target": "Gross Profit",
+                "value": 10460
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Profit",
+                "value": 401
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Expenses",
+                "value": 10059
+            },
+            {
+                "source": "Operating Profit",
+                "target": "Net Income",
+                "value": 31
+            },
+            {
+                "source": "Tax and Analyst Adjustments",
+                "target": "Net Income",
+                "value": 3901
+            }
+        ]
+    },
+    "AVGO": {
+        "nodes": [
+            {
+                "name": "Infrastructure Software",
+                "category": "Product"
+            },
+            {
+                "name": "Semiconductor Solutions",
+                "category": "Product"
+            },
+            {
+                "name": "Revenue",
+                "category": "Benefit"
+            },
+            {
+                "name": "Gross Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Operating Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Net Income",
+                "category": "Benefit"
+            },
+            {
+                "name": "Cost of Revenue",
+                "category": "Cost"
+            },
+            {
+                "name": "Operating Expenses",
+                "category": "Cost"
+            },
+            {
+                "name": "Tax and Analyst Adjustments",
+                "category": "Benefit"
+            }
+        ],
+        "links": [
+            {
+                "source": "Infrastructure Software",
+                "target": "Revenue",
+                "value": 7637
+            },
+            {
+                "source": "Semiconductor Solutions",
+                "target": "Revenue",
+                "value": 28182
+            },
+            {
+                "source": "Revenue",
+                "target": "Cost of Revenue",
+                "value": 11129
+            },
+            {
+                "source": "Revenue",
+                "target": "Gross Profit",
+                "value": 24690
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Profit",
+                "value": 16451
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Expenses",
+                "value": 8239
+            },
+            {
+                "source": "Operating Profit",
+                "target": "Net Income",
+                "value": 16451
+            },
+            {
+                "source": "Tax and Analyst Adjustments",
+                "target": "Net Income",
+                "value": 1927
+            }
+        ]
+    },
+    "IBM": {
+        "nodes": [
+            {
+                "name": "Other Revenue",
+                "category": "Product"
+            },
+            {
+                "name": "Financing",
+                "category": "Product"
+            },
+            {
+                "name": "Infrastructure",
+                "category": "Product"
+            },
+            {
+                "name": "Consulting",
+                "category": "Product"
+            },
+            {
+                "name": "Software",
+                "category": "Product"
+            },
+            {
+                "name": "Revenue",
+                "category": "Benefit"
+            },
+            {
+                "name": "Gross Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Operating Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Net Income",
+                "category": "Benefit"
+            },
+            {
+                "name": "Cost of Revenue",
+                "category": "Cost"
+            },
+            {
+                "name": "Operating Expenses",
+                "category": "Cost"
+            },
+            {
+                "name": "Tax and Analyst Adjustments",
+                "category": "Benefit"
+            }
+        ],
+        "links": [
+            {
+                "source": "Other Revenue",
+                "target": "Revenue",
+                "value": 233
+            },
+            {
+                "source": "Financing",
+                "target": "Revenue",
+                "value": 741
+            },
+            {
+                "source": "Infrastructure",
+                "target": "Revenue",
+                "value": 14593
+            },
+            {
+                "source": "Consulting",
+                "target": "Revenue",
+                "value": 19985
+            },
+            {
+                "source": "Software",
+                "target": "Revenue",
+                "value": 26308
+            },
+            {
+                "source": "Revenue",
+                "target": "Cost of Revenue",
+                "value": 27560
+            },
+            {
+                "source": "Revenue",
+                "target": "Gross Profit",
+                "value": 34300
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Profit",
+                "value": 9374
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Expenses",
+                "value": 24926
+            },
+            {
+                "source": "Operating Profit",
+                "target": "Net Income",
+                "value": 8873
+            },
+            {
+                "source": "Tax and Analyst Adjustments",
+                "target": "Net Income",
+                "value": 501
+            }
+        ]
+    },
+    "INTC": {
+        "nodes": [
+            {
+                "name": "Intel Foundry Services",
+                "category": "Product"
+            },
+            {
+                "name": "All other",
+                "category": "Product"
+            },
+            {
+                "name": "Mobileye",
+                "category": "Product"
+            },
+            {
+                "name": "Network and Edge",
+                "category": "Product"
+            },
+            {
+                "name": "Data Center and Artificial Intelligence (AI)",
+                "category": "Product"
+            },
+            {
+                "name": "Client Computing",
+                "category": "Product"
+            },
+            {
+                "name": "Revenue",
+                "category": "Benefit"
+            },
+            {
+                "name": "Gross Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Operating Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Net Income",
+                "category": "Benefit"
+            },
+            {
+                "name": "Cost of Revenue",
+                "category": "Cost"
+            },
+            {
+                "name": "Operating Expenses",
+                "category": "Cost"
+            },
+            {
+                "name": "Tax and Analyst Adjustments",
+                "category": "Benefit"
+            }
+        ],
+        "links": [
+            {
+                "source": "Intel Foundry Services",
+                "target": "Revenue",
+                "value": 952
+            },
+            {
+                "source": "All other",
+                "target": "Revenue",
+                "value": 644
+            },
+            {
+                "source": "Mobileye",
+                "target": "Revenue",
+                "value": 2079
+            },
+            {
+                "source": "Network and Edge",
+                "target": "Revenue",
+                "value": 5774
+            },
+            {
+                "source": "Data Center and Artificial Intelligence (AI)",
+                "target": "Revenue",
+                "value": 15521
+            },
+            {
+                "source": "Client Computing",
+                "target": "Revenue",
+                "value": 29258
+            },
+            {
+                "source": "Revenue",
+                "target": "Cost of Revenue",
+                "value": 32517
+            },
+            {
+                "source": "Revenue",
+                "target": "Gross Profit",
+                "value": 21711
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Profit",
+                "value": 31
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Expenses",
+                "value": 21680
+            },
+            {
+                "source": "Operating Profit",
+                "target": "Net Income",
+                "value": 31
+            },
+            {
+                "source": "Tax and Analyst Adjustments",
+                "target": "Net Income",
+                "value": 4389
+            }
+        ]
+    },
+    "NVDA": {
+        "nodes": [
+            {
+                "name": "Compute and Networking",
+                "category": "Product"
+            },
+            {
+                "name": "Graphics",
+                "category": "Product"
+            },
+            {
+                "name": "Revenue",
+                "category": "Benefit"
+            },
+            {
+                "name": "Gross Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Operating Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Net Income",
+                "category": "Benefit"
+            },
+            {
+                "name": "Cost of Revenue",
+                "category": "Cost"
+            },
+            {
+                "name": "Operating Expenses",
+                "category": "Cost"
+            },
+            {
+                "name": "Tax and Analyst Adjustments",
+                "category": "Benefit"
+            }
+        ],
+        "links": [
+            {
+                "source": "Compute and Networking",
+                "target": "Revenue",
+                "value": 15068
+            },
+            {
+                "source": "Graphics",
+                "target": "Revenue",
+                "value": 11906
+            },
+            {
+                "source": "Revenue",
+                "target": "Cost of Revenue",
+                "value": 11618
+            },
+            {
+                "source": "Revenue",
+                "target": "Gross Profit",
+                "value": 15356
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Profit",
+                "value": 5577
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Expenses",
+                "value": 9779
+            },
+            {
+                "source": "Operating Profit",
+                "target": "Net Income",
+                "value": 5577
+            },
+            {
+                "source": "Tax and Analyst Adjustments",
+                "target": "Net Income",
+                "value": 2778
+            }
+        ]
+    },
+    "QCOM": {
+        "nodes": [
+            {
+                "name": "Qualcomm Strategic Initiatives (QSI)",
+                "category": "Product"
+            },
+            {
+                "name": "Reconciling Items",
+                "category": "Product"
+            },
+            {
+                "name": "Qualcomm Technology Licensing (QTL)",
+                "category": "Product"
+            },
+            {
+                "name": "Qualcomm Code Division Multiple Access (CDMA) Technologies (QCT)",
+                "category": "Product"
+            },
+            {
+                "name": "Other",
+                "category": "Product"
+            },
+            {
+                "name": "Revenue",
+                "category": "Benefit"
+            },
+            {
+                "name": "Gross Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Operating Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Net Income",
+                "category": "Benefit"
+            },
+            {
+                "name": "Cost of Revenue",
+                "category": "Cost"
+            },
+            {
+                "name": "Operating Expenses",
+                "category": "Cost"
+            },
+            {
+                "name": "Tax and Analyst Adjustments",
+                "category": "Benefit"
+            }
+        ],
+        "links": [
+            {
+                "source": "Qualcomm Strategic Initiatives (QSI)",
+                "target": "Revenue",
+                "value": 28
+            },
+            {
+                "source": "Reconciling Items",
+                "target": "Revenue",
+                "value": 104
+            },
+            {
+                "source": "Qualcomm Technology Licensing (QTL)",
+                "target": "Revenue",
+                "value": 5306
+            },
+            {
+                "source": "Qualcomm Code Division Multiple Access (CDMA) Technologies (QCT)",
+                "target": "Revenue",
+                "value": 30382
+            },
+            {
+                "source": "Other",
+                "target": "Revenue",
+                "value": 472
+            },
+            {
+                "source": "Revenue",
+                "target": "Cost of Revenue",
+                "value": 16137
+            },
+            {
+                "source": "Revenue",
+                "target": "Gross Profit",
+                "value": 20155
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Profit",
+                "value": 7962
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Expenses",
+                "value": 12193
+            },
+            {
+                "source": "Operating Profit",
+                "target": "Net Income",
+                "value": 7962
+            },
+            {
+                "source": "Tax and Analyst Adjustments",
+                "target": "Net Income",
+                "value": 2055
+            }
+        ]
+    },
+    "TXN": {
+        "nodes": [
+            {
+                "name": "Other",
+                "category": "Product"
+            },
+            {
+                "name": "Embedded Processing",
+                "category": "Product"
+            },
+            {
+                "name": "Analog",
+                "category": "Product"
+            },
+            {
+                "name": "Revenue",
+                "category": "Benefit"
+            },
+            {
+                "name": "Gross Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Operating Profit",
+                "category": "Benefit"
+            },
+            {
+                "name": "Net Income",
+                "category": "Benefit"
+            },
+            {
+                "name": "Cost of Revenue",
+                "category": "Cost"
+            },
+            {
+                "name": "Operating Expenses",
+                "category": "Cost"
+            },
+            {
+                "name": "Tax and Analyst Adjustments",
+                "category": "Benefit"
+            }
+        ],
+        "links": [
+            {
+                "source": "Other",
+                "target": "Revenue",
+                "value": 1111
+            },
+            {
+                "source": "Embedded Processing",
+                "target": "Revenue",
+                "value": 3368
+            },
+            {
+                "source": "Analog",
+                "target": "Revenue",
+                "value": 13040
+            },
+            {
+                "source": "Revenue",
+                "target": "Cost of Revenue",
+                "value": 6500
+            },
+            {
+                "source": "Revenue",
+                "target": "Gross Profit",
+                "value": 11019
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Profit",
+                "value": 7331
+            },
+            {
+                "source": "Gross Profit",
+                "target": "Operating Expenses",
+                "value": 3688
+            },
+            {
+                "source": "Operating Profit",
+                "target": "Net Income",
+                "value": 6452
+            },
+            {
+                "source": "Tax and Analyst Adjustments",
+                "target": "Net Income",
+                "value": 879
+            }
+        ]
+    }
+}

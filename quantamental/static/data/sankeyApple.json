@@ -1,0 +1,118 @@
+{
+    "nodes": [
+        {
+            "name": "Wearables, Home and Accessories",
+            "category": "Product"
+        },
+        {
+            "name": "iPad ®",
+            "category": "Product"
+        },
+        {
+            "name": "Mac ®",
+            "category": "Product"
+        },
+        {
+            "name": "Services",
+            "category": "Product"
+        },
+        {
+            "name": "iPhone ®",
+            "category": "Product"
+        },
+        {
+            "name": "Other",
+            "category": "Product"
+        },
+        {
+            "name": "Revenue",
+            "category": "Benefit"
+        },
+        {
+            "name": "Gross Profit",
+            "category": "Benefit"
+        },
+        {
+            "name": "Operating Profit",
+            "category": "Benefit"
+        },
+        {
+            "name": "Net Income",
+            "category": "Benefit"
+        },
+        {
+            "name": "Cost of Revenue",
+            "category": "Cost"
+        },
+        {
+            "name": "Operating Expenses",
+            "category": "Cost"
+        },
+        {
+            "name": "Tax and Other",
+            "category": "Cost"
+        }
+    ],
+    "links": [
+        {
+            "source": "Wearables, Home and Accessories",
+            "target": "Revenue",
+            "value": 39845
+        },
+        {
+            "source": "iPad ®",
+            "target": "Revenue",
+            "value": 28300
+        },
+        {
+            "source": "Mac ®",
+            "target": "Revenue",
+            "value": 29357
+        },
+        {
+            "source": "Services",
+            "target": "Revenue",
+            "value": 85200
+        },
+        {
+            "source": "iPhone ®",
+            "target": "Revenue",
+            "value": 200583
+        },
+        {
+            "source": "Other",
+            "target": "Revenue",
+            "value": 2421
+        },
+        {
+            "source": "Revenue",
+            "target": "Cost of Revenue",
+            "value": 212035
+        },
+        {
+            "source": "Revenue",
+            "target": "Gross Profit",
+            "value": 173671
+        },
+        {
+            "source": "Gross Profit",
+            "target": "Operating Profit",
+            "value": 118658
+        },
+        {
+            "source": "Gross Profit",
+            "target": "Operating Expenses",
+            "value": 55013
+        },
+        {
+            "source": "Operating Profit",
+            "target": "Net Income",
+            "value": 100913
+        },
+        {
+            "source": "Operating Profit",
+            "target": "Tax and Other",
+            "value": 17745
+        }
+    ]
+}

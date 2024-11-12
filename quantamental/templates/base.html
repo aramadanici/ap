@@ -1,0 +1,254 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!-------- Lineicons CSS -------->
+    <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+    <!-------- DataTables CSS -------->
+    <!-- DataTables -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <!-- Bootstrap 5 -->
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css"> -->
+    <!-- Searchpanes -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.2.0/css/searchPanes.dataTables.min.css">
+    <!-- Select -->
+    <link rel="stylesheet" href=" https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css">
+    <!-- Buttons -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <!-- Responsive -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+    <!-- ColReorder -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.7.0/css/colReorder.dataTables.min.css">
+    <!-- KeyTable -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/keytable/2.11.0/css/keyTable.dataTables.min.css">
+    <!-- StateRestore -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/staterestore/1.3.0/css/stateRestore.dataTables.min.css">
+
+
+
+
+
+
+    <!-------- jQuery UI CSS -------->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+
+    <!-------- Bootstrap CSS -------->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+
+    <!-------- Custom CSS -------->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    {% block head %}
+    {% endblock head %}
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <button class="toggle-btn" type="button">
+                    <i class="lni lni-grid-alt"></i>
+                </button>
+                <div class="sidebar-logo">
+                    <a href="#">CROSSINVEST</a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <!-- Simple Link -->
+                <li class="sidebar-item">
+                    <a href="{% url 'scores:scores_view' %}" class="sidebar-link">
+                        <i class="bi bi-person"></i>
+                        <span>Individual</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'scores:table_view' %}" class="sidebar-link">
+                        <!-- <i class="bi bi-filter-square"></i> -->
+                        <i class="bi bi-sliders"></i>
+                        <span>Universe</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'scores:single_stock_view' %}" class="sidebar-link">
+                        <i class="bi bi-bar-chart-line"></i>
+                        <span>Single Stock</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'scores:pf_view' %}" class="sidebar-link">
+                        <i class="bi bi-pie-chart"></i>
+                        <span>Portfolio</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-list-check"></i>
+                        <span>Task</span>
+                    </a>
+                </li>
+                <!-- <li class="sidebar-item">
+                    <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                        data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
+                        <i class="lni lni-protection"></i>
+                        <span>Auth</span>
+                    </a>
+                    <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Login</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Register</a>
+                        </li>
+                    </ul>
+                </li> -->
+                <!-- <li class="sidebar-item">
+                    <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                        data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
+                        <i class="lni lni-layout"></i>
+                        <span>Multi Level</span>
+                    </a>
+                    <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#multi-two" aria-expanded="false" aria-controls="multi-two">
+                                Two Links
+                            </a>
+                            <ul id="multi-two" class="sidebar-dropdown list-unstyled collapse">
+                                <li class="sidebar-item">
+                                    <a href="#" class="sidebar-link">Link 1</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="#" class="sidebar-link">Link 2</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li> -->
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-bell"></i>
+                        <span>Notification</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-gear"></i>
+                        <span>Setting</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <form action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <a id="logout-link" class="sidebar-link" href="#">
+                        <button class="btn-logout" type="submit"><i class="bi bi-box-arrow-left"></i>
+                            <span>Logout</span>
+                        </button>
+                    </a>
+                </form>
+            </div>
+        </aside>
+        <div class="main p-3">
+
+            {% block content %}
+
+            {% endblock content %}
+
+        </div>
+
+        <!-------- jQuery JS -------->
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+        <!-- jQuery UI -->
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+
+        <!-------- DataTables JS -------->
+        <script type="text/javascript" src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+        <!-- Bootstrap -->
+        <!-- <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script> -->
+        <!-- Searchpanes -->
+        <script type="text/javascript"
+            src="https://cdn.datatables.net/searchpanes/2.2.0/js/dataTables.searchPanes.min.js"></script>
+        <!-- Select -->
+        <script type="text/javascript" src="//cdn.datatables.net/select/1.7.0/js/dataTables.select.js"></script>
+        <!-- Buttons -->
+        <script type="text/javascript"
+            src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+        <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+        <!-- Responsive -->
+        <script type="text/javascript"
+            src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+        <!-- ColReorder -->
+        <script type="text/javascript"
+            src="https://cdn.datatables.net/colreorder/1.7.0/js/dataTables.colReorder.min.js"></script>
+        <!-- KeyTable -->
+        <script type="text/javascript"
+            src="https://cdn.datatables.net/keytable/2.11.0/js/dataTables.keyTable.min.js"></script>
+        <!-- StateRestore -->
+        <script type="text/javascript"
+            src="https://cdn.datatables.net/staterestore/1.3.0/js/dataTables.stateRestore.min.js"></script>
+
+
+
+
+        <!-------- Bootstrap JS -------->
+        <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+            crossorigin="anonymous"></script>
+
+        <!-------- AXIOS JS -------->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+        <!-------- Custom JS -------->
+        <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/test2.js' %}"></script>
+
+        <!-------- D3 -------->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+        <script src=" https://cdnjs.cloudflare.com/ajax/libs/d3-sankey/0.12.3/d3-sankey.min.js"></script>
+
+
+
+
+
+
+
+        <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script> -->
+
+
+
+
+
+        {% block jsextra %}
+        {% endblock jsextra %}
+
+
+</body>
+
+</html>

@@ -1,0 +1,122 @@
+.container-fluid {
+    border: 2px solid red;
+    padding: 10px;
+}
+
+.col,
+.col-1,
+.col-2,
+.col-3,
+.col-4,
+.col-5,
+.col-6,
+.col-7,
+.col-8,
+.col-9,
+.col-10,
+.col-11,
+.col-12 {
+    display: inline-block;
+}
+
+
+
+
+div.dataTables_wrapper div.dataTables_length select {
+    width: 3.5rem;
+}
+
+.ui-slider-handle.ui-corner-all.ui-state-default {
+    background-color: white;
+    border-radius: 50%;
+    border: 1px solid #0e2238;
+}
+
+.ui-widget-header {
+    border: 1px solid #dddddd;
+    background: #0e2238;
+    color: #333333;
+    font-weight: bold;
+}
+
+#slider-range {
+    width: 10%;
+    border-radius: 10px;
+}
+
+tfoot input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+/* overwrites root in jquery.dataTables.min.css */
+:root {
+    --dt-row-selected: 14, 34, 56;
+}
+
+
+
+
+
+
+/* DT Buttons */
+
+div.dt-buttons>.dt-button,
+div.dt-buttons>div.dt-button-split .dt-button {
+    background: none;
+    background-color: white;
+    color: #083959;
+    height: 2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-bottom: 1px solid #083959;
+    text-align: start;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+
+div.dt-buttons>.dt-button:hover:not(.disabled),
+div.dt-buttons>div.dt-button-split .dt-button:hover:not(.disabled) {
+    background: none;
+    background-color: white;
+    box-shadow: 0 0.5em 0.375em -0.4em #083959;
+    transform: translateY(-0.05em);
+    border: none;
+    border-bottom: 1px solid #083959;
+}
+
+div.dt-buttons>.dt-button:focus:not(.disabled),
+div.dt-buttons>div.dt-button-split .dt-button:focus:not(.disabled) {
+    outline: none;
+}
+
+.dt-button.buttons-collection.buttons-colvis {
+    margin-right: 50px;
+}
+
+
+/* Pagination */
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    color: white !important;
+    border: 1px solid #111;
+    background-color: #111;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111));
+    background: -webkit-linear-gradient(top, #585858 0%, #111 100%);
+    background: -moz-linear-gradient(top, #585858 0%, #111 100%);
+    background: -ms-linear-gradient(top, #585858 0%, #111 100%);
+    background: -o-linear-gradient(top, #585858 0%, #111 100%);
+    background: linear-gradient(to bottom, #083959 0%, #03131f 100%);
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    color: white !important;
+    font-weight: bold;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    /* background: linear-gradient(to bottom, rgba(230, 230, 230, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%); */
+    background: linear-gradient(to bottom, #083959 0%, #03131f 100%);
+}

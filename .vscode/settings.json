@@ -1,0 +1,16 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#082ca1",
+        "titleBar.activeBackground": "#082ca1",
+        "titleBar.activeForeground": "#FCFBF5"
+    },
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "Chinook",
+            "database": "C:\\sqlite\\db\\chinook.db"
+        }
+    ]
+}

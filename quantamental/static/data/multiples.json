@@ -1,0 +1,482 @@
+[
+    {
+        "Year": "2022",
+        "Stock": "AMD",
+        "Multiple": "P/B",
+        "Value": 1.91
+    },
+    {
+        "Year": "2022",
+        "Stock": "AMD",
+        "Multiple": "EV/EBITDA",
+        "Value": 17.71
+    },
+    {
+        "Year": "2022",
+        "Stock": "AMD",
+        "Multiple": "P/E",
+        "Value": 39.74
+    },
+    {
+        "Year": "2022",
+        "Stock": "AMD",
+        "Multiple": "P/S",
+        "Value": 4.18
+    },
+    {
+        "Year": "2022",
+        "Stock": "AMD",
+        "Multiple": "D/E",
+        "Value": 0.05
+    },
+    {
+        "Year": "2023",
+        "Stock": "AMD",
+        "Multiple": "P/B",
+        "Value": 4.33
+    },
+    {
+        "Year": "2023",
+        "Stock": "AMD",
+        "Multiple": "EV/EBITDA",
+        "Value": 58.85
+    },
+    {
+        "Year": "2023",
+        "Stock": "AMD",
+        "Multiple": "P/E",
+        "Value": 1340.09
+    },
+    {
+        "Year": "2023",
+        "Stock": "AMD",
+        "Multiple": "P/S",
+        "Value": 10.82
+    },
+    {
+        "Year": "2023",
+        "Stock": "AMD",
+        "Multiple": "D/E",
+        "Value": 0.04
+    },
+    {
+        "Year": "2022",
+        "Stock": "AAPL",
+        "Multiple": "P/B",
+        "Value": 40.88
+    },
+    {
+        "Year": "2022",
+        "Stock": "AAPL",
+        "Multiple": "EV/EBITDA",
+        "Value": 16.41
+    },
+    {
+        "Year": "2022",
+        "Stock": "AAPL",
+        "Multiple": "P/E",
+        "Value": 21.27
+    },
+    {
+        "Year": "2022",
+        "Stock": "AAPL",
+        "Multiple": "P/S",
+        "Value": 5.38
+    },
+    {
+        "Year": "2022",
+        "Stock": "AAPL",
+        "Multiple": "D/E",
+        "Value": 1.95
+    },
+    {
+        "Year": "2023",
+        "Stock": "AAPL",
+        "Multiple": "P/B",
+        "Value": 48.17
+    },
+    {
+        "Year": "2023",
+        "Stock": "AAPL",
+        "Multiple": "EV/EBITDA",
+        "Value": 24.27
+    },
+    {
+        "Year": "2023",
+        "Stock": "AAPL",
+        "Multiple": "P/E",
+        "Value": 31.41
+    },
+    {
+        "Year": "2023",
+        "Stock": "AAPL",
+        "Multiple": "P/S",
+        "Value": 7.94
+    },
+    {
+        "Year": "2023",
+        "Stock": "AAPL",
+        "Multiple": "D/E",
+        "Value": 1.53
+    },
+    {
+        "Year": "2022",
+        "Stock": "AVGO",
+        "Multiple": "P/B",
+        "Value": 10.29
+    },
+    {
+        "Year": "2022",
+        "Stock": "AVGO",
+        "Multiple": "EV/EBITDA",
+        "Value": 13.68
+    },
+    {
+        "Year": "2022",
+        "Stock": "AVGO",
+        "Multiple": "P/E",
+        "Value": 21.13
+    },
+    {
+        "Year": "2022",
+        "Stock": "AVGO",
+        "Multiple": "P/S",
+        "Value": 7.14
+    },
+    {
+        "Year": "2022",
+        "Stock": "AVGO",
+        "Multiple": "D/E",
+        "Value": 1.72
+    },
+    {
+        "Year": "2023",
+        "Stock": "AVGO",
+        "Multiple": "P/B",
+        "Value": 19.26
+    },
+    {
+        "Year": "2023",
+        "Stock": "AVGO",
+        "Multiple": "EV/EBITDA",
+        "Value": 27.35
+    },
+    {
+        "Year": "2023",
+        "Stock": "AVGO",
+        "Multiple": "P/E",
+        "Value": 33.85
+    },
+    {
+        "Year": "2023",
+        "Stock": "AVGO",
+        "Multiple": "P/S",
+        "Value": 13.31
+    },
+    {
+        "Year": "2023",
+        "Stock": "AVGO",
+        "Multiple": "D/E",
+        "Value": 1.57
+    },
+    {
+        "Year": "2022",
+        "Stock": "IBM",
+        "Multiple": "P/B",
+        "Value": 6.35
+    },
+    {
+        "Year": "2022",
+        "Stock": "IBM",
+        "Multiple": "EV/EBITDA",
+        "Value": 34.03
+    },
+    {
+        "Year": "2022",
+        "Stock": "IBM",
+        "Multiple": "P/E",
+        "Value": 93.3
+    },
+    {
+        "Year": "2022",
+        "Stock": "IBM",
+        "Multiple": "P/S",
+        "Value": 2.7
+    },
+    {
+        "Year": "2022",
+        "Stock": "IBM",
+        "Multiple": "D/E",
+        "Value": 2.34
+    },
+    {
+        "Year": "2023",
+        "Stock": "IBM",
+        "Multiple": "P/B",
+        "Value": 6.47
+    },
+    {
+        "Year": "2023",
+        "Stock": "IBM",
+        "Multiple": "EV/EBITDA",
+        "Value": 14.54
+    },
+    {
+        "Year": "2023",
+        "Stock": "IBM",
+        "Multiple": "P/E",
+        "Value": 21.19
+    },
+    {
+        "Year": "2023",
+        "Stock": "IBM",
+        "Multiple": "P/S",
+        "Value": 2.48
+    },
+    {
+        "Year": "2023",
+        "Stock": "IBM",
+        "Multiple": "D/E",
+        "Value": 2.22
+    },
+    {
+        "Year": "2022",
+        "Stock": "INTC",
+        "Multiple": "P/B",
+        "Value": 1.09
+    },
+    {
+        "Year": "2022",
+        "Stock": "INTC",
+        "Multiple": "EV/EBITDA",
+        "Value": 4.72
+    },
+    {
+        "Year": "2022",
+        "Stock": "INTC",
+        "Multiple": "P/E",
+        "Value": 8.18
+    },
+    {
+        "Year": "2022",
+        "Stock": "INTC",
+        "Multiple": "P/S",
+        "Value": 1.56
+    },
+    {
+        "Year": "2022",
+        "Stock": "INTC",
+        "Multiple": "D/E",
+        "Value": 0.37
+    },
+    {
+        "Year": "2023",
+        "Stock": "INTC",
+        "Multiple": "P/B",
+        "Value": 2.08
+    },
+    {
+        "Year": "2023",
+        "Stock": "INTC",
+        "Multiple": "EV/EBITDA",
+        "Value": 33.93
+    },
+    {
+        "Year": "2023",
+        "Stock": "INTC",
+        "Multiple": "P/E",
+        "Value": 0
+    },
+    {
+        "Year": "2023",
+        "Stock": "INTC",
+        "Multiple": "P/S",
+        "Value": 3.96
+    },
+    {
+        "Year": "2023",
+        "Stock": "INTC",
+        "Multiple": "D/E",
+        "Value": 0.44
+    },
+    {
+        "Year": "2022",
+        "Stock": "NVDA",
+        "Multiple": "P/B",
+        "Value": 16.89
+    },
+    {
+        "Year": "2022",
+        "Stock": "NVDA",
+        "Multiple": "EV/EBITDA",
+        "Value": 49.17
+    },
+    {
+        "Year": "2022",
+        "Stock": "NVDA",
+        "Multiple": "P/E",
+        "Value": 62.19
+    },
+    {
+        "Year": "2022",
+        "Stock": "NVDA",
+        "Multiple": "P/S",
+        "Value": 12.91
+    },
+    {
+        "Year": "2022",
+        "Stock": "NVDA",
+        "Multiple": "D/E",
+        "Value": 0.49
+    },
+    {
+        "Year": "2023",
+        "Stock": "NVDA",
+        "Multiple": "P/B",
+        "Value": 36.71
+    },
+    {
+        "Year": "2023",
+        "Stock": "NVDA",
+        "Multiple": "EV/EBITDA",
+        "Value": 54.98
+    },
+    {
+        "Year": "2023",
+        "Stock": "NVDA",
+        "Multiple": "P/E",
+        "Value": 65.33
+    },
+    {
+        "Year": "2023",
+        "Stock": "NVDA",
+        "Multiple": "P/S",
+        "Value": 27.48
+    },
+    {
+        "Year": "2023",
+        "Stock": "NVDA",
+        "Multiple": "D/E",
+        "Value": 0.29
+    },
+    {
+        "Year": "2022",
+        "Stock": "QCOM",
+        "Multiple": "P/B",
+        "Value": 6.84
+    },
+    {
+        "Year": "2022",
+        "Stock": "QCOM",
+        "Multiple": "EV/EBITDA",
+        "Value": 7.71
+    },
+    {
+        "Year": "2022",
+        "Stock": "QCOM",
+        "Multiple": "P/E",
+        "Value": 9.64
+    },
+    {
+        "Year": "2022",
+        "Stock": "QCOM",
+        "Multiple": "P/S",
+        "Value": 2.83
+    },
+    {
+        "Year": "2022",
+        "Stock": "QCOM",
+        "Multiple": "D/E",
+        "Value": 0.75
+    },
+    {
+        "Year": "2023",
+        "Stock": "QCOM",
+        "Multiple": "P/B",
+        "Value": 7.47
+    },
+    {
+        "Year": "2023",
+        "Stock": "QCOM",
+        "Multiple": "EV/EBITDA",
+        "Value": 17.13
+    },
+    {
+        "Year": "2023",
+        "Stock": "QCOM",
+        "Multiple": "P/E",
+        "Value": 22.18
+    },
+    {
+        "Year": "2023",
+        "Stock": "QCOM",
+        "Multiple": "P/S",
+        "Value": 4.55
+    },
+    {
+        "Year": "2023",
+        "Stock": "QCOM",
+        "Multiple": "D/E",
+        "Value": 0.67
+    },
+    {
+        "Year": "2022",
+        "Stock": "TXN",
+        "Multiple": "P/B",
+        "Value": 10.36
+    },
+    {
+        "Year": "2022",
+        "Stock": "TXN",
+        "Multiple": "EV/EBITDA",
+        "Value": 12.98
+    },
+    {
+        "Year": "2022",
+        "Stock": "TXN",
+        "Multiple": "P/E",
+        "Value": 17.32
+    },
+    {
+        "Year": "2022",
+        "Stock": "TXN",
+        "Multiple": "P/S",
+        "Value": 7.62
+    },
+    {
+        "Year": "2022",
+        "Stock": "TXN",
+        "Multiple": "D/E",
+        "Value": 0.51
+    },
+    {
+        "Year": "2023",
+        "Stock": "TXN",
+        "Multiple": "P/B",
+        "Value": 9.31
+    },
+    {
+        "Year": "2023",
+        "Stock": "TXN",
+        "Multiple": "EV/EBITDA",
+        "Value": 16.51
+    },
+    {
+        "Year": "2023",
+        "Stock": "TXN",
+        "Multiple": "P/E",
+        "Value": 22.08
+    },
+    {
+        "Year": "2023",
+        "Stock": "TXN",
+        "Multiple": "P/S",
+        "Value": 8.62
+    },
+    {
+        "Year": "2023",
+        "Stock": "TXN",
+        "Multiple": "D/E",
+        "Value": 0.66
+    }
+]

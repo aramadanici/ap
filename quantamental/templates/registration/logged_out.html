@@ -1,0 +1,20 @@
+{% extends "base_auth.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/logged_out.css' %}">
+{% endblock head %}
+{% block form-div-content%}
+<h1>You have been logged out!</h1>
+<!-- <h2>Click <form class="d-inline" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <button type="submit">here</button>
+        </form> -->
+
+
+<h2>Click <a id="here-link" href="{% url 'login' %}">here</a>
+    to login.
+</h2>
+
+<!-- registration form -->
+{% endblock form-div-content %}
