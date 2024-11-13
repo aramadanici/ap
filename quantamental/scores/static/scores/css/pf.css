@@ -1,0 +1,109 @@
+/* ! TO DO LIST */
+/* ! COLOR THE Total in light grey */
+
+
+
+.container-fluid {
+    /* border: 2px solid red; */
+}
+
+.col,
+.col-1,
+.col-2,
+.col-3,
+.col-4,
+.col-5,
+.col-6,
+.col-7,
+.col-8,
+.col-9,
+.col-10,
+.col-11,
+.col-12 {
+    /* border: 2px solid green; */
+}
+
+.row {
+    /* border: 2px solid blue; */
+}
+
+.ui-slider-handle.ui-corner-all.ui-state-default {
+    background-color: white;
+    border-radius: 50%;
+    border: 1px solid #0e2238;
+}
+
+.ui-widget-header {
+    border: 1px solid #dddddd;
+    background: #0e2238;
+    color: #333333;
+    font-weight: bold;
+}
+
+#date-slider1 {
+    width: 50%;
+    border-radius: 10px;
+}
+
+
+.slider-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#performance-line-area,
+#performance-bar-area,
+#multiple-bar-area,
+#spider-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.h-divider {
+    margin: auto;
+    margin-top: 3rem;
+    width: 80%;
+    position: relative;
+    text-align: center;
+    color: #083959
+}
+
+.h-divider .divider-shadow {
+    overflow: hidden;
+    height: 20px;
+}
+
+.h-divider .divider-shadow:after {
+    content: '';
+    display: block;
+    margin: -25px auto 0;
+    width: 100%;
+    height: 25px;
+    border-radius: 125px/12px;
+    box-shadow: 0 0 8px #083959;
+}
+
+
+
+.card {
+    border: none;
+    border-bottom: 3px solid #083959;
+    border-radius: 3px;
+    margin: 30px 10px 50px 10px;
+    padding: 30px 100px 0px 100px;
+    width: 1000px;
+}
+
+h5 {
+    color: #083959;
+}
+
+h6 {
+    display: inline-block;
+    color: #083959;
+}

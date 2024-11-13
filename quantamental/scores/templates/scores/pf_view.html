@@ -1,8 +1,159 @@
 {% extends "base.html" %}
+{% load static %}
+{% block head %}
+<!-- CSS Files -->
+<link rel="stylesheet" href="{% static 'scores/css/pf.css' %}">
+
+{% endblock head %}
+
+
 
 {% block content%}
+
+
+
+
 <div class="container-fluid">
-    <h1>PF_VIEW.HTML</h1>
+    <!-- Control panel for content -->
+
+
+    <div class="row justify-content-center mt-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <label for="weightAsset1">Asset 1:</label>
+                        <input type="number" id="weightAsset1" name="weightAsset1" class="form-control" step="0.01"
+                            min="0" max="1">
+                    </div>
+                    <div class="col">
+                        <label for="weightAsset2">Asset 2:</label>
+                        <input type="number" id="weightAsset2" name="weightAsset2" class="form-control" step="0.01"
+                            min="0" max="1">
+                    </div>
+                    <div class="col">
+                        <label for="weightAsset3">Asset 3:</label>
+                        <input type="number" id="weightAsset3" name="weightAsset3" class="form-control" step="0.01"
+                            min="0" max="1">
+                    </div>
+                    <div class="col">
+                        <label for="weightAsset4">Asset 4:</label>
+                        <input type="number" id="weightAsset4" name="weightAsset4" class="form-control" step="0.01"
+                            min="0" max="1">
+                    </div>
+                    <div class="col">
+                        <label for="weightAsset5">Asset 5:</label>
+                        <input type="number" id="weightAsset5" name="weightAsset5" class="form-control" step="0.01"
+                            min="0" max="1">
+                    </div>
+                    <div class="col">
+                        <label for="weightAsset6">Asset 6:</label>
+                        <input type="number" id="weightAsset6" name="weightAsset6" class="form-control" step="0.01"
+                            min="0" max="1">
+                    </div>
+                    <div class="row">
+                        <div class="col">Total: <span id="update-weight">0</span> </div>
+                    </div>
+
+                </div>
+
+
+
+
+                <div class="row">
+                    <div class="col">
+                        <label for="fromDate">From:</label>
+                        <input type="date" id="fromDate" name="fromDate" class="form-control">
+                    </div>
+                    <div class="col">
+                        <label for="toDate">To:</label>
+                        <input type="date" id="toDate" name="toDate" class="form-control">
+                    </div>
+                    <div class="col"> <button type="button" class="btn btn-primary mt-4">Compute</button></div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="h-divider">
+        <h3>Performance</h3>
+        <div class="divider-shadow"></div>
+    </div>
+
+    <!-- Performance -->
+    <div class="row">
+        <div class="col">
+            <div id="performance-line-area"></div>
+
+            <div class="pb-1" id="slider-div">
+                <div class="slider-container">
+                    <label>Date: <span id="dateLabel1">31/12/2009</span> - <span
+                            id="dateLabel2">07/03/2024</span></label>
+
+                </div>
+                <div class="slider-container">
+                    <div id="date-slider1"></div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col">
+            <div id="performance-bar-area"></div>
+        </div>
+
+
+    </div>
+
+
+    <div class="h-divider">
+        <h3>Risk</h3>
+        <div class="divider-shadow"></div>
+    </div>
+
+
+
+    <div class="h-divider">
+        <h3>Diversification</h3>
+        <div class="divider-shadow"></div>
+    </div>
+
+
+
+    <div class="h-divider">
+        <h3>Stress Test</h3>
+        <div class="divider-shadow"></div>
+    </div>
+
 </div>
 
+
+
+
+
+
 {% endblock content %}
+
+
+{% block jsextra %}
+
+<script>
+    const techstockTS = "{% static 'data/techstockTS2.csv' %}";
+    const groupedbar = "{% static 'data/groupedbarstock.json' %}";
+</script>
+
+<script type="text/javascript" src="{% static 'js/BarChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/LineChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/HorizontalTable.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/SankeyChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/GroupedBarChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/SpiderChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'scores/js/main_pf.js' %}"></script>
+{% endblock jsextra %}
