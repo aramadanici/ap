@@ -1,5 +1,5 @@
 /* ! TO DO LIST */
-/* ! COLOR THE Total in light grey */
+/* ! COLOR THE Total in */
 
 
 
@@ -40,7 +40,8 @@
     font-weight: bold;
 }
 
-#date-slider1 {
+#date-slider-1,
+#date-slider-2 {
     width: 50%;
     border-radius: 10px;
 }

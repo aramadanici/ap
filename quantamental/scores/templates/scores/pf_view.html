@@ -22,39 +22,38 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <label for="weightAsset1">Asset 1:</label>
-                        <input type="number" id="weightAsset1" name="weightAsset1" class="form-control" step="0.01"
-                            min="0" max="1">
+                        <label for="weightAsset1">AMD:</label>
+                        <input type="number" id="weight_AMD" name="weight_AMD" class="form-control" step="0.01" min="0"
+                            max="1" value="0.2">
                     </div>
                     <div class="col">
-                        <label for="weightAsset2">Asset 2:</label>
-                        <input type="number" id="weightAsset2" name="weightAsset2" class="form-control" step="0.01"
-                            min="0" max="1">
+                        <label for="weightAsset2">Intel:</label>
+                        <input type="number" id="weight_INTC" name="weight_INTC" class="form-control" step="0.01"
+                            min="0" max="1" value="0.4">
                     </div>
                     <div class="col">
-                        <label for="weightAsset3">Asset 3:</label>
-                        <input type="number" id="weightAsset3" name="weightAsset3" class="form-control" step="0.01"
-                            min="0" max="1">
+                        <label for="weightAsset3">Apple:</label>
+                        <input type="number" id="weight_AAPL" name="weight_AAPL" class="form-control" step="0.01"
+                            min="0" max="1" value="0.1">
                     </div>
                     <div class="col">
-                        <label for="weightAsset4">Asset 4:</label>
-                        <input type="number" id="weightAsset4" name="weightAsset4" class="form-control" step="0.01"
-                            min="0" max="1">
+                        <label for="weightAsset4">NVIDIA:</label>
+                        <input type="number" id="weight_NVDA" name="weight_NVDA" class="form-control" step="0.01"
+                            min="0" max="1" value="0.1">
                     </div>
                     <div class="col">
-                        <label for="weightAsset5">Asset 5:</label>
-                        <input type="number" id="weightAsset5" name="weightAsset5" class="form-control" step="0.01"
-                            min="0" max="1">
+                        <label for="weightAsset5">Qualcomm:</label>
+                        <input type="number" id="weight_QCOM" name="weight_QCOM" class="form-control" step="0.01"
+                            min="0" max="1" value="0.1">
                     </div>
                     <div class="col">
-                        <label for="weightAsset6">Asset 6:</label>
-                        <input type="number" id="weightAsset6" name="weightAsset6" class="form-control" step="0.01"
-                            min="0" max="1">
+                        <label for="weightAsset6">Broadcomm:</label>
+                        <input type="number" id="weight_AVGO" name="weight_AVGO" class="form-control" step="0.01"
+                            min="0" max="1" value="0.1">
                     </div>
                     <div class="row">
                         <div class="col">Total: <span id="update-weight">0</span> </div>
                     </div>
-
                 </div>
 
 
@@ -69,7 +68,7 @@
                         <label for="toDate">To:</label>
                         <input type="date" id="toDate" name="toDate" class="form-control">
                     </div>
-                    <div class="col"> <button type="button" class="btn btn-primary mt-4">Compute</button></div>
+                    <div class="col"> <button type="submit" class="btn btn-primary mt-4">Compute</button></div>
                 </div>
 
 
@@ -89,25 +88,37 @@
     <!-- Performance -->
     <div class="row">
         <div class="col">
-            <div id="performance-line-area"></div>
+
+            <div id="aggregated-performance"></div>
 
             <div class="pb-1" id="slider-div">
                 <div class="slider-container">
-                    <label>Date: <span id="dateLabel1">31/12/2009</span> - <span
-                            id="dateLabel2">07/03/2024</span></label>
-
+                    <label>Date: <span id="date-label-start-1">31/12/2009</span> - <span
+                            id="date-label-end-1">07/03/2024</span></label>
                 </div>
                 <div class="slider-container">
-                    <div id="date-slider1"></div>
+                    <div id="date-slider-1"></div>
                 </div>
             </div>
         </div>
 
-
-
         <div class="col">
-            <div id="performance-bar-area"></div>
+
+            <div id="asset-performance"></div>
+
+            <div class="pb-1" id="slider-div">
+                <div class="slider-container">
+                    <label>Date: <span id="date-label-start-2">31/12/2009</span> - <span
+                            id="date-label-end-2">07/03/2024</span></label>
+
+                </div>
+                <div class="slider-container">
+                    <div id="date-slider-2"></div>
+                </div>
+            </div>
+
         </div>
+
 
 
     </div>
@@ -145,15 +156,11 @@
 {% block jsextra %}
 
 <script>
-    const techstockTS = "{% static 'data/techstockTS2.csv' %}";
-    const groupedbar = "{% static 'data/groupedbarstock.json' %}";
+    const performanceLink = "{% url 'scores:performance' %}";
+    const aggregatedPerformance = "{% url 'scores:pf_view_aggregated_performance' %}";
+    const assetPerformance = "{% url 'scores:pf_view_asset_performance' %}";
 </script>
 
-<script type="text/javascript" src="{% static 'js/BarChart.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/LineChart.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/HorizontalTable.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/SankeyChart.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/GroupedBarChart.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/SpiderChart.js' %}"></script>
 <script type="text/javascript" src="{% static 'scores/js/main_pf.js' %}"></script>
 {% endblock jsextra %}

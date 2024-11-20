@@ -1,27 +1,62 @@
 // Handles all the events and interactions for the visualization
-let barChart
 let lineChart
+let lineChart2
+const inputs = document.querySelectorAll('input[id^="weight"]');
 
+// ! ----------------- Get Default Weights -----------------
+let weights = [];
+console.log("weights before", weights)
+inputs.forEach(input => { // Iterate over each input element
+    const weight = parseFloat(input.value) || 0;
+    if (weight > 0) { // Only add non-zero weights
+        weights.push(weight); // Add the weight to the weights array
+    }
+});
+console.log("weights after", weights)
+
+// ! ----------------- Get Default Assets -----------------
+let investedAssets = []; // Declare investedAssets variable globally
+investedAssets = Array.from(inputs)
+    .filter(input => parseFloat(input.value) > 0)
+    .map(input => input.id.replace('weight_', '')); // Remove "weight_" from the input id
+
+
+//!  ----------------- Calculate and Display Total Weight from Input Fields and Prepare Data for POST Request -----------------
 document.addEventListener('DOMContentLoaded', function () { // Wait for the DOM to be fully loaded
-    const inputs = document.querySelectorAll('input[id^="weightAsset"]'); // Select all input elements with id starting with "weightAsset"
+    const inputs = document.querySelectorAll('input[id^="weight"]'); // Select all input elements with id starting with "weightAsset"
     const totalSpan = document.getElementById('update-weight'); // Select the element with id "update-weight"
 
     inputs.forEach(input => { // Iterate over each input element
         input.addEventListener('input', updateTotal); // Add an event listener to call updateTotal on input change
     });
 
+    inputs.forEach(input => { // Iterate over each input element
+        input.addEventListener('input', checkWeightsAndPrepareData); // Add an event listener to call updateTotal on input change
+    });
+
     function updateTotal() { // Function to update the total weight
         let total = 0; // Initialize total to 0
+        weights = []; // Reset weights array
         inputs.forEach(input => { // Iterate over each input element
-            total += parseFloat(input.value) || 0; // Add the input value to total, or 0 if the value is not a number
+            const weight = parseFloat(input.value) || 0;
+            if (weight > 0) { // Only add non-zero weights
+                total += weight; // Add the input value to total
+                weights.push(weight); // Add the weight to the weights array
+            }
         });
         totalSpan.textContent = total.toFixed(2); // Update the text content of totalSpan with the total, formatted to 2 decimal places
+        totalSpan.style.color = total > 1 ? 'red' : 'black'; // Change color based on total value
     }
+
+    function checkWeightsAndPrepareData() {
+        // Prepare data for the POST request
+        const data = new FormData();
+        weights.forEach(weight => data.append("weights", weight));
+    }
+
 });
 
-
-
-
+//! ----------------- Set Default Date Range -----------------
 
 document.addEventListener('DOMContentLoaded', function () {
     const fromDate = document.getElementById('fromDate');
@@ -44,104 +79,113 @@ document.addEventListener('DOMContentLoaded', function () {
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
-        console.log(`${year}-${month}-${day}`)
         return `${year}-${month}-${day}`;
     }
 });
 
 
+//! ----------------- Dynamically update list of invested assets -----------------
 
+document.addEventListener('DOMContentLoaded', function () { // Wait for the DOM to be fully loaded
+    const inputs = document.querySelectorAll('input[id^="weight"]'); // Select all input elements with id starting with "weightAsset"
 
+    inputs.forEach(input => { // Iterate over each input element
+        input.addEventListener('input', updateInvestedAssets); // Add an event listener to update investedAssets on input change
+    });
 
+    function updateInvestedAssets() {
+        investedAssets = Array.from(inputs)
+            .filter(input => parseFloat(input.value) > 0)
+            .map(input => input.id.replace('weight_', '')); // Remove "weight_" from the input id
+    }
+});
 
+// * ----------------- Initialization -----------------
 
-// ----------------- Initialization -----------------
+//! ----------------- Aggregated Portfolio Performance -----------------
 
-
-d3.dsv(";", techstockTS).then(data => { // Read the data from a CSV file
-
+axios.get(aggregatedPerformance, {
+    params: {
+        ticker: investedAssets, // Additional data like ticker
+        weights: JSON.stringify(weights)
+    }
+}).then(response => {
+    const data = response.data;
     const parseTime = d3.timeParse("%d.%m.%Y") // Create a time parser
 
     for (const row of data) { // Iterate over the data rows
-        row.Close = Number(row.Close) // Convert the Close value to a number
-        row.Date = parseTime(row.Date) // Parse the Date value
+        row.close = Number(row.close) // Convert the Close value to a number
+        row.date = parseTime(row.date) // Parse the Date value
     }
 
-    // ! CHANGE THIS BACK TO THE FORM SELECT VALUE
-    // let formSelectValue = $('.form-select').val();
-    let formSelectValue = "AAPL";
-    let tickers = Array.isArray(formSelectValue) ? formSelectValue : [formSelectValue];
-    tickers.push("NVDA");  // Adding "NVDA" to the tickers array
-    let data0 = Object.values(data).filter(item => tickers.includes(item.Symbol));
+    lineChart = new LineChart(_parentElement = "#aggregated-performance", _data = data, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
 
-    lineChart = new LineChart(_parentElement = "#performance-line-area", _data = data0, _xdata = "Date", _xlabel = "", _ydata = "Close", _ylabel = "", _group = "Symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true);
+}).catch(error => {
+    console.error('Error fetching data:', error);
+});
 
-})
+//! ----------------- Asset Performance -----------------
 
-d3.json(groupedbar).then(data => {
-    let formSelectValue = $('.form-select').val();
-    let tickers = Array.isArray(formSelectValue) ? formSelectValue : [formSelectValue];
-    tickers.push("NVDA");  // Adding "NVDA" to the tickers array
+axios.get(assetPerformance, {
+    params: {
+        ticker: investedAssets, // Additional data like ticker
+    }
+}).then(response => {
+    const data = response.data;
+    const parseTime = d3.timeParse("%d.%m.%Y") // Create a time parser
 
-    const data0 = data.filter(d => tickers.includes(d.Stock));
+    for (const row of data) { // Iterate over the data rows
+        row.close = Number(row.close) // Convert the Close value to a number
+        row.date = parseTime(row.date) // Parse the Date value
+    }
+
+    lineChart2 = new LineChart(_parentElement = "#asset-performance", _data = data, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 2);
+
+}).catch(error => {
+    console.error('Error fetching data:', error);
+});
 
 
-    barChart = new GroupedBarChart(_parentElement = "#performance-bar-area", _data = data0, _xdata = "Year", _xlabel = "", _ydata = "Percentage", _ylabel = "Percentage", _cdata = "Stock", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 });
-})
-
-
-
-// ----------------- Update -----------------
+// * ----------------- Update -----------------
 
 
 const updatePfView = () => {
-
-
-
-
-    // Line Chart Update
-    d3.dsv(";", techstockTS).then(data => { // Read the data from a CSV file
+    axios.get(aggregatedPerformance, {
+        params: {
+            ticker: investedAssets, // Additional data like ticker
+            weights: JSON.stringify(weights)
+        }
+    }).then(response => {// Read the data from a CSV file
+        const data = response.data;
         const parseTime = d3.timeParse("%d.%m.%Y") // Create a time parser
-        // const formatTime = d3.timeFormat("%d/%m/%Y")
 
         for (const row of data) { // Iterate over the data rows
-            row.Close = Number(row.Close) // Convert the Close value to a number
-            row.Date = parseTime(row.Date) // Parse the Date value
+            row.close = Number(row.close) // Convert the Close value to a number
+            row.date = parseTime(row.date) // Parse the Date value
         }
 
-        let formSelectValue = $('.form-select').val();
-        let tickers = Array.isArray(formSelectValue) ? formSelectValue : [formSelectValue];
-        tickers.push("NVDA");  // Adding "NVDA" to the tickers array
-        let data1 = Object.values(data).filter(item => tickers.includes(item.Symbol));
-
-        lineChart.data = data1
+        lineChart.data = data
         lineChart.manageData()
     })
 
+    axios.get(assetPerformance, {
+        params: {
+            ticker: investedAssets, // Additional data like ticker
+        }
+    }).then(response => {// Read the data from a CSV file
+        const data = response.data;
+        const parseTime = d3.timeParse("%d.%m.%Y") // Create a time parser
 
-    d3.json(groupedbar).then(data => {
-        let formSelectValue = $('.form-select').val();
-        let tickers = Array.isArray(formSelectValue) ? formSelectValue : [formSelectValue];
-        tickers.push("NVDA");  // Adding "NVDA" to the tickers array
+        for (const row of data) { // Iterate over the data rows
+            row.close = Number(row.close) // Convert the Close value to a number
+            row.date = parseTime(row.date) // Parse the Date value
+        }
 
-        const data1 = data.filter(d => tickers.includes(d.Stock));
-        barChart.data = data1
-        barChart.manageData()
+        lineChart2.data = data
+        lineChart2.manageData()
     })
-
-
-    // d3.json(groupedbar2).then(data => {
-    //     let formSelectValue = $('.form-select').val();
-
-    //     dataGrouped = d3.group(data, d => d['Stock']);
-    //     data1 = dataGrouped.get(formSelectValue);
-    //     barChart2.data = data1
-    //     barChart2.manageData()
-    // })
-
 
 }
 
-// Event listeners
-$('.form-select').on("change", updatePfView)
 
+$('input[id^="weight"]').on("change", updatePfView); // Add an event listener to call updatePfView on input change for elements with id starting with "weight"

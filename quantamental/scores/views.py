@@ -19,6 +19,7 @@ from django.views.generic import (
 
 from . import models
 from .forms import UserRegisterForm
+from .utils import calculate_portfolio_performance
 
 
 @login_required
@@ -99,7 +100,7 @@ def single_stock_view_data_2(request):
         "sector",
         "beta",
         "mcap",
-        "dividendYield"
+        "dividendYield",
     ]
     ticker = request.GET.get("ticker")
     data = list(models.Qualdata.objects.filter(ticker=ticker).values(*default_columns))
@@ -125,3 +126,37 @@ class SignUpView(CreateView):
     form_class = UserRegisterForm
     success_url = reverse_lazy("login")
     template_name = "registration/signup.html"
+
+
+# ! PORTFOLIO PART
+
+
+@login_required
+def performance(request):
+    data = list(models.Performance.objects.values())
+    return JsonResponse(data, safe=False)
+
+
+@login_required
+def pf_view_aggregated_performance(request):
+    symbol = request.GET.getlist("ticker[]", [])
+    weights = json.loads(request.GET.get("weights", "[]"))  # Parse weights
+
+    asset_performance = list(
+        models.Performance.objects.filter(symbol__in=symbol).values()
+    )
+
+    portfolio_performance = calculate_portfolio_performance(weights, asset_performance)
+
+    return JsonResponse(portfolio_performance, safe=False)
+
+
+@login_required
+def pf_view_asset_performance(request):
+    symbol = request.GET.getlist("ticker[]", [])
+
+    asset_performance = list(
+        models.Performance.objects.filter(symbol__in=symbol).values()
+    )
+
+    return JsonResponse(asset_performance, safe=False)

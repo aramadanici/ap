@@ -91,3 +91,12 @@ class Order(models.Model):
 
     def __str__(self):
         return f"From: [{self.customer.name}] Product: [{self.product.name}]"
+
+
+class Performance(models.Model):
+    symbol = models.CharField(max_length=10)
+    date = models.CharField(max_length=25)
+    close = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.symbol} on {self.date}"

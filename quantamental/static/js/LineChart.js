@@ -1,5 +1,5 @@
 class LineChart {
-    constructor(_parentElement, _data, _xdata, _xlabel = "", _ydata, _ylabel = "", _group, _dimension = { width: 928, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true) {
+    constructor(_parentElement, _data, _xdata, _xlabel = "", _ydata, _ylabel = "", _group, _dimension = { width: 928, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1) {
         this.parentElement = _parentElement; // Parent element where the chart will be appended
         this.data = _data; // Data for the chart
         this.xdata = _xdata; // X-axis data
@@ -10,6 +10,7 @@ class LineChart {
         this.ylabel = _ylabel; // Y-axis label
         this.legend = _legend; // Legend configuration
         this.rebase = _rebase; // Rebase the data to a common starting point
+        this.slider = _slider; // Slider configuration
         this.initVis(); // Initialize the chart
     }
 
@@ -17,8 +18,6 @@ class LineChart {
         const opacity = element.style("opacity") === "0.1" ? 1 : 0.1; // Toggle the opacity of an element
         element.style("opacity", opacity);
     };
-
-
 
     initVis() {
         const vis = this;
@@ -28,8 +27,8 @@ class LineChart {
 
         vis.dataGrouped = d3.group(vis.data, d => d[vis.group]); // Group the data based on the grouping variable
 
-        vis.earliestDate = new Date(Math.min(...vis.data.map(entry => entry.Date)));
-        vis.latestDate = new Date(Math.max(...vis.data.map(entry => entry.Date)));
+        vis.earliestDate = new Date(Math.min(...vis.data.map(entry => entry[vis.xdata]))); // Calculate the earliest date
+        vis.latestDate = new Date(Math.max(...vis.data.map(entry => entry[vis.xdata]))); // Calculate the latest date
 
         // Calculate the dates for the "10y", "5y", and "3y" ranges based on the latest date
         vis.latestYear = vis.latestDate.getFullYear();
@@ -49,7 +48,8 @@ class LineChart {
         vis.__YTD = [vis.ytdStart, vis.latestDate]
 
         vis.formatTime = d3.timeFormat("%d/%m/%Y")
-        $("#date-slider1").slider({
+        console.log("#date-slider-" + vis.slider)
+        $("#date-slider-" + vis.slider).slider({
             range: true,
             min: vis.earliestDate.getTime(),
             max: vis.latestDate.getTime(),
@@ -60,11 +60,11 @@ class LineChart {
             ],
             slide: (event, ui) => {
                 let filterEvent = "slide";
-                $("#dateLabel1").text(vis.formatTime(new Date(ui.values[0])))
-                $("#dateLabel2").text(vis.formatTime(new Date(ui.values[1])))
-                dateRange = $("#date-slider1").slider("values"); // Get the values of the date slider
+                $("#date-label-start-" + vis.slider).text(vis.formatTime(new Date(ui.values[0])))
+                $("#date-label-end-" + vis.slider).text(vis.formatTime(new Date(ui.values[1])))
+                dateRange = $("#date-slider-" + vis.slider).slider("values"); // Get the values of the date slider
 
-                lineChart.manageData(dateRange, filterEvent)
+                vis.manageData(dateRange, filterEvent)
             }
         })
 
@@ -138,8 +138,8 @@ class LineChart {
 
         vis.line = d3.line() // Create a line generator
             .curve(d3.curveNatural) // Set the curve type
-            .x(d => vis.x(d.Date)) // Set the x-coordinate of the line
-            .y(d => vis.y(d.Close)); // Set the y-coordinate of the line
+            .x(d => vis.x(d[vis.xdata])) // Set the x-coordinate of the line
+            .y(d => vis.y(d[vis.ydata])); // Set the y-coordinate of the line
 
         vis.maxDotsPerColumn = vis.legend["noCol"]; // Maximum number of dots per column in the legend
         vis.columnWidth = vis.legend["widthCol"]; // Width of each column in the legend
@@ -185,7 +185,7 @@ class LineChart {
                     .style("text-decoration-color", null); // Revert to default text-decoration-color
             });
 
-        let dateRange = $("#date-slider1").slider("values"); // Get the values of the date slider
+        let dateRange = $("#date-slider-" + vis.slider).slider("values"); // Get the values of the date slider
 
         vis.manageData(dateRange); // Manage the data for the chart
     }
@@ -195,22 +195,25 @@ class LineChart {
         // Filter the data based on the date range or the selected range
         vis.dataFiltered = vis.data.filter(d => {
             if (filterEvent === "click") {
-                $("#dateLabel1").text(vis.formatTime(dateRange[0]))
-                $("#dateLabel2").text(vis.formatTime(dateRange[1]))
-                $("#date-slider1").slider("values", [dateRange[0], dateRange[1]]);
+                $("#date-label-start-" + vis.slider).text(vis.formatTime(dateRange[0]))
+                $("#date-label-end-" + vis.slider).text(vis.formatTime(dateRange[1]))
+                $("#date-slider-" + vis.slider).slider("values", [dateRange[0], dateRange[1]]);
             }
-            return ((d.Date >= dateRange[0]) && (d.Date <= dateRange[1]))
+            return ((d[vis.xdata] >= dateRange[0]) && (d[vis.xdata] <= dateRange[1]))
         })
 
         // Group the filtered data
-        vis.dataGrouped = d3.group(vis.dataFiltered, d => d.Symbol); // Group the filtered data based on the symbol
+        // vis.dataGrouped = d3.group(vis.dataFiltered, d => d.Symbol); // Group the filtered data based on the symbol
+
+        vis.dataGrouped = d3.group(vis.dataFiltered, d => d[vis.group]); // Group the data based on the grouping variable
+
 
         // Rebase the grouped data
         if (vis.rebase) {
             for (const [key, value] of vis.dataGrouped) { // Iterate over the grouped data
                 const closingPrices = value; // Get the closing prices
-                const adjustmentFactor = 100 / closingPrices[0].Close; // Calculate the adjustment factor
-                const adjustedPrices = closingPrices.map(entry => ({ ...entry, Close: entry.Close * adjustmentFactor })); // Adjust the closing prices
+                const adjustmentFactor = 100 / closingPrices[0][vis.ydata]; // Calculate the adjustment factor
+                const adjustedPrices = closingPrices.map(entry => ({ ...entry, [vis.ydata]: entry[vis.ydata] * adjustmentFactor })); // Adjust the closing prices
                 vis.dataGrouped.set(key, adjustedPrices); // Update the grouped data
             }
 
@@ -224,13 +227,13 @@ class LineChart {
 
         vis.t = d3.transition().duration(1000); // Transition duration
 
-        vis.x.domain(d3.extent(vis.dataFiltered, d => d.Date)); // Update the x-domain based on the filtered data
+        vis.x.domain(d3.extent(vis.dataFiltered, d => d[vis.xdata])); // Update the x-domain based on the filtered data
         let yDomainMin = Infinity; // Initialize the minimum y-domain value
         let yDomainMax = -Infinity; // Initialize the maximum y-domain value
         vis.dataGrouped.forEach((value) => { // Iterate over the grouped data
             const closingPrices = value; // Get the closing prices
-            const minValue = d3.min(closingPrices, d => d.Close); // Calculate the minimum value
-            const maxValue = d3.max(closingPrices, d => d.Close); // Calculate the maximum value
+            const minValue = d3.min(closingPrices, d => d[vis.ydata]); // Calculate the minimum value
+            const maxValue = d3.max(closingPrices, d => d[vis.ydata]); // Calculate the maximum value
             yDomainMin = Math.min(yDomainMin, minValue); // Update the minimum y-domain value
             yDomainMax = Math.max(yDomainMax, maxValue); // Update the maximum y-domain value
         });
@@ -259,13 +262,16 @@ class LineChart {
 
         vis.line = d3.line() // Create a line generator
             .curve(d3.curveNatural) // Set the curve type
-            .x(d => vis.x(d.Date)) // Set the x-coordinate of the line
-            .y(d => vis.y(d.Close)); // Set the y-coordinate of the line
+            .x(d => vis.x(d[vis.xdata])) // Set the x-coordinate of the line
+            .y(d => vis.y(d[vis.ydata])); // Set the y-coordinate of the line
 
         vis.dataLabel = Array.from(vis.dataGrouped.keys()); // Get the unique labels from the grouped data
         vis.legendOffsetX = (vis.WIDTH - (vis.dataLabel.length * vis.columnWidth)) / 2; // Offset for the legend in the x-direction
         // vis.colors = new Map(vis.dataLabel.map((label, i) => [label, d3.schemeCategory10[i]])); // Create a map of colors for each label
-        vis.colors = new Map(vis.dataLabel.map((label, i) => [label, ['#0e2238', '#d8e5f0'][i % 2]])); // Create a map of colors for each label
+
+        const colorPalette = ['#0e2238', '#d8e5f0', '#117a65', '#f5b041', '#dcb9eb', '#3498db']; // Define a palette with 6 colors
+        vis.colors = new Map(vis.dataLabel.map((label, i) => [label, colorPalette[i % colorPalette.length]])); // Assign colors to labels
+
 
         let i = 0; // Counter variable
         for (const [thisDataLabel, thisData] of vis.dataGrouped) { // Iterate over the grouped data
