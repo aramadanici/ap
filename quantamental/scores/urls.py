@@ -37,4 +37,9 @@ urlpatterns = [
         view=views.pf_view_asset_performance,
         name="pf_view_asset_performance",
     ),
+    path(
+        route="pf_view_performance/",
+        view=views.pf_view_performance,
+        name="pf_view_performance",
+    ),
 ]

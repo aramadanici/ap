@@ -1,6 +1,8 @@
 // Handles all the events and interactions for the visualization
-let lineChart
+let lineChart1
 let lineChart2
+let lineChart3
+let lineChart4
 const inputs = document.querySelectorAll('input[id^="weight"]');
 
 // ! ----------------- Get Default Weights -----------------
@@ -102,9 +104,7 @@ document.addEventListener('DOMContentLoaded', function () { // Wait for the DOM 
 
 // * ----------------- Initialization -----------------
 
-//! ----------------- Aggregated Portfolio Performance -----------------
-
-axios.get(aggregatedPerformance, {
+axios.get(performance, {
     params: {
         ticker: investedAssets, // Additional data like ticker
         weights: JSON.stringify(weights)
@@ -113,44 +113,43 @@ axios.get(aggregatedPerformance, {
     const data = response.data;
     const parseTime = d3.timeParse("%d.%m.%Y") // Create a time parser
 
-    for (const row of data) { // Iterate over the data rows
-        row.close = Number(row.close) // Convert the Close value to a number
-        row.date = parseTime(row.date) // Parse the Date value
+    for (const row of data.portfolio_performance) { // Iterate over the portfolio performance data rows
+        row.close = Number(row.close); // Convert the Close value to a number
+        row.date = parseTime(row.date); // Parse the Date value
     }
 
-    lineChart = new LineChart(_parentElement = "#aggregated-performance", _data = data, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
+    for (const row of data.rolling_return_portfolio) { // Iterate over the asset performance data rows
+        row.volatility = Number(row.volatility) * 100; // Convert the Close value to a number
+        row.return = Number(row.return) * 100; // Convert the Close value to a number
+        row.date = parseTime(row.date); // Parse the Date value
+    }
+
+    for (const row of data.asset_performance) { // Iterate over the asset performance data rows
+        row.close = Number(row.close); // Convert the Close value to a number
+        row.date = parseTime(row.date); // Parse the Date value
+    }
+
+    for (const row of data.rolling_return_asset) { // Iterate over the asset performance data rows
+        row.volatility = Number(row.volatility) * 100; // Convert the Close value to a number
+        row.return = Number(row.return) * 100; // Convert the Close value to a number
+        row.date = parseTime(row.date); // Parse the Date value
+    }
+
+
+
+    lineChart1 = new LineChart(_parentElement = "#aggregated-performance", _data = data.portfolio_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
+    lineChart2 = new LineChart(_parentElement = "#aggregated-performance-volatility", _data = data.rolling_return_portfolio, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 2);
+    lineChart3 = new LineChart(_parentElement = "#asset-performance", _data = data.asset_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 3);
+    lineChart4 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.rolling_return_asset, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 4);
 
 }).catch(error => {
     console.error('Error fetching data:', error);
 });
-
-//! ----------------- Asset Performance -----------------
-
-axios.get(assetPerformance, {
-    params: {
-        ticker: investedAssets, // Additional data like ticker
-    }
-}).then(response => {
-    const data = response.data;
-    const parseTime = d3.timeParse("%d.%m.%Y") // Create a time parser
-
-    for (const row of data) { // Iterate over the data rows
-        row.close = Number(row.close) // Convert the Close value to a number
-        row.date = parseTime(row.date) // Parse the Date value
-    }
-
-    lineChart2 = new LineChart(_parentElement = "#asset-performance", _data = data, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 2);
-
-}).catch(error => {
-    console.error('Error fetching data:', error);
-});
-
 
 // * ----------------- Update -----------------
 
-
 const updatePfView = () => {
-    axios.get(aggregatedPerformance, {
+    axios.get(performance, {
         params: {
             ticker: investedAssets, // Additional data like ticker
             weights: JSON.stringify(weights)
@@ -159,32 +158,43 @@ const updatePfView = () => {
         const data = response.data;
         const parseTime = d3.timeParse("%d.%m.%Y") // Create a time parser
 
-        for (const row of data) { // Iterate over the data rows
-            row.close = Number(row.close) // Convert the Close value to a number
-            row.date = parseTime(row.date) // Parse the Date value
+        for (const row of data.portfolio_performance) { // Iterate over the portfolio performance data rows
+            row.close = Number(row.close); // Convert the Close value to a number
+            row.date = parseTime(row.date); // Parse the Date value
         }
 
-        lineChart.data = data
-        lineChart.manageData()
-    })
-
-    axios.get(assetPerformance, {
-        params: {
-            ticker: investedAssets, // Additional data like ticker
-        }
-    }).then(response => {// Read the data from a CSV file
-        const data = response.data;
-        const parseTime = d3.timeParse("%d.%m.%Y") // Create a time parser
-
-        for (const row of data) { // Iterate over the data rows
-            row.close = Number(row.close) // Convert the Close value to a number
-            row.date = parseTime(row.date) // Parse the Date value
+        for (const row of data.rolling_return_portfolio) { // Iterate over the asset performance data rows
+            row.volatility = Number(row.volatility) * 100; // Convert the Close value to a number
+            row.return = Number(row.return) * 100; // Convert the Close value to a number
+            row.date = parseTime(row.date); // Parse the Date value
         }
 
-        lineChart2.data = data
+        for (const row of data.asset_performance) { // Iterate over the asset performance data rows
+            row.close = Number(row.close); // Convert the Close value to a number
+            row.date = parseTime(row.date); // Parse the Date value
+        }
+
+        for (const row of data.rolling_return_asset) { // Iterate over the asset performance data rows
+            row.volatility = Number(row.volatility) * 100; // Convert the Close value to a number
+            row.return = Number(row.return) * 100; // Convert the Close value to a number
+            row.date = parseTime(row.date); // Parse the Date value
+        }
+
+        lineChart1.data = data.portfolio_performance
+        lineChart1.manageData()
+
+        lineChart2.data = data.rolling_return_portfolio
         lineChart2.manageData()
-    })
 
+        lineChart3.data = data.asset_performance
+        lineChart3.manageData()
+
+        lineChart4.data = data.rolling_return_asset
+        lineChart4.manageData()
+
+    }).catch(error => {
+        console.error('Error fetching data:', error);
+    });
 }
 
 

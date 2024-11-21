@@ -40,8 +40,7 @@
     font-weight: bold;
 }
 
-#date-slider-1,
-#date-slider-2 {
+[id^="date-slider-"] {
     width: 50%;
     border-radius: 10px;
 }

@@ -19,7 +19,7 @@ from django.views.generic import (
 
 from . import models
 from .forms import UserRegisterForm
-from .utils import calculate_portfolio_performance
+from .utils import calculate_portfolio_performance, calculate_rolling_return
 
 
 @login_required
@@ -160,3 +160,41 @@ def pf_view_asset_performance(request):
     )
 
     return JsonResponse(asset_performance, safe=False)
+
+
+@login_required
+def pf_view_performance(request):
+    # Get the symbols (tickers) from the request
+    symbol = request.GET.getlist("ticker[]", [])
+
+    # Retrieve asset performance data
+    asset_performance = list(
+        models.Performance.objects.filter(symbol__in=symbol).values()
+    )
+
+    # Initialize portfolio performance to None
+    portfolio_performance = None
+
+    # Check if weights are provided in the request
+    weights_param = request.GET.get("weights")
+    if weights_param:
+        try:
+            # Parse weights and calculate portfolio performance if weights exist
+            weights = json.loads(weights_param)
+            portfolio_performance = calculate_portfolio_performance(
+                weights, asset_performance
+            )
+        except (json.JSONDecodeError, ValueError) as e:
+            return JsonResponse({"error": "Invalid weights format"}, status=400)
+
+    rolling_return_portfolio = calculate_rolling_return(portfolio_performance)
+    rolling_return_asset = calculate_rolling_return(asset_performance)
+
+    # Combine both results in a single response
+    response_data = {
+        "asset_performance": asset_performance,
+        "portfolio_performance": portfolio_performance,  # This will be None if no weights are provided
+        "rolling_return_portfolio": rolling_return_portfolio,
+        "rolling_return_asset": rolling_return_asset,
+    }
+    return JsonResponse(response_data, safe=False)

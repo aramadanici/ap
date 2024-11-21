@@ -85,12 +85,11 @@
         <div class="divider-shadow"></div>
     </div>
 
-    <!-- Performance -->
+    <!-- Portfolio Performance -->
     <div class="row">
+
         <div class="col">
-
             <div id="aggregated-performance"></div>
-
             <div class="pb-1" id="slider-div">
                 <div class="slider-container">
                     <label>Date: <span id="date-label-start-1">31/12/2009</span> - <span
@@ -103,25 +102,54 @@
         </div>
 
         <div class="col">
-
-            <div id="asset-performance"></div>
-
+            <div id="aggregated-performance-volatility"></div>
             <div class="pb-1" id="slider-div">
                 <div class="slider-container">
-                    <label>Date: <span id="date-label-start-2">31/12/2009</span> - <span
+                    <label>Date: <span id="date-label-start-2">31/12/2010</span> - <span
                             id="date-label-end-2">07/03/2024</span></label>
-
                 </div>
                 <div class="slider-container">
                     <div id="date-slider-2"></div>
                 </div>
             </div>
-
         </div>
 
+    </div>
 
+
+
+    <!-- Asset Performance -->
+    <div class="row">
+
+        <div class="col">
+            <div id="asset-performance"></div>
+            <div class="pb-1" id="slider-div">
+                <div class="slider-container">
+                    <label>Date: <span id="date-label-start-3">31/12/2009</span> - <span
+                            id="date-label-end-3">07/03/2024</span></label>
+                </div>
+                <div class="slider-container">
+                    <div id="date-slider-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div id="asset-performance-volatility"></div>
+            <div class="pb-1" id="slider-div">
+                <div class="slider-container">
+                    <label>Date: <span id="date-label-start-4">31/12/2010</span> - <span
+                            id="date-label-end-4">07/03/2024</span></label>
+                </div>
+                <div class="slider-container">
+                    <div id="date-slider-4"></div>
+                </div>
+            </div>
+        </div>
 
     </div>
+
+
 
 
     <div class="h-divider">
@@ -159,6 +187,7 @@
     const performanceLink = "{% url 'scores:performance' %}";
     const aggregatedPerformance = "{% url 'scores:pf_view_aggregated_performance' %}";
     const assetPerformance = "{% url 'scores:pf_view_asset_performance' %}";
+    const performance = "{% url 'scores:pf_view_performance' %}";
 </script>
 
 <script type="text/javascript" src="{% static 'js/LineChart.js' %}"></script>

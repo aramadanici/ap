@@ -79,3 +79,64 @@ def calculate_portfolio_performance(weights, asset_timeseries):
         )
 
     return output
+
+
+def calculate_rolling_return(asset_timeseries):
+    """
+    Calculate the 1-year rolling volatility and 1-year rolling return for every timeseries in asset_timeseries.
+
+    Parameters:
+    asset_timeseries (list of dict): List of dictionaries with asset timeseries data.
+
+    Returns:
+    str: Rolling volatility and return timeseries in JSON format.
+    """
+    # Convert the list of dictionaries to a DataFrame
+    df = pd.DataFrame(asset_timeseries)
+    df["date"] = pd.to_datetime(df["date"], format="%d.%m.%Y")
+    df["close"] = df["close"].astype(float)
+
+    # Pivot the DataFrame to get the timeseries for each asset
+    asset_timeseries_df = df.pivot(
+        index="date", columns="symbol", values="close"
+    ).sort_index()
+
+    # Calculate daily returns
+    daily_returns = asset_timeseries_df.pct_change()
+
+    # Calculate rolling volatility (annualized, using 252 trading days)
+    rolling_volatility = daily_returns.rolling(window=252).std() * np.sqrt(252)
+
+    # Calculate rolling return
+    rolling_return = (daily_returns + 1).rolling(window=252).apply(
+        np.prod, raw=True
+    ) - 1
+
+    # Reshape the DataFrames to long format
+    rolling_volatility = rolling_volatility.reset_index().melt(
+        id_vars="date", var_name="symbol", value_name="volatility"
+    )
+    rolling_return = rolling_return.reset_index().melt(
+        id_vars="date", var_name="symbol", value_name="return"
+    )
+
+    # Merge the volatility and return DataFrames
+    merged_df = pd.merge(rolling_volatility, rolling_return, on=["date", "symbol"])
+
+    # Drop rows with NaN values (before 1-year rolling window is complete)
+    merged_df = merged_df.dropna()
+
+    # Create the output in the specified format
+    output = []
+    for i, row in merged_df.iterrows():
+        output.append(
+            {
+                "id": i + 1,
+                "symbol": row["symbol"],
+                "date": row["date"].strftime("%d.%m.%Y"),
+                "volatility": f"{row['volatility']:.6f}",
+                "return": f"{row['return']:.6f}",
+            }
+        )
+
+    return output
