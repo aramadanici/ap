@@ -19,6 +19,7 @@ class LineChart {
         element.style("opacity", opacity);
     };
 
+
     initVis() {
         const vis = this;
         vis.MARGIN = { TOP: 50, RIGHT: 5, BOTTOM: 50, LEFT: 80 }; // Margin where the axes, labels, and legend will be placed
@@ -101,9 +102,12 @@ class LineChart {
             .range([0, vis.WIDTH]) // Set the range of the scale
             .domain(d3.extent(vis.data, d => d[vis.xdata])); // Set the domain of the scale based on the x-axis data
 
+        let yDomainMin = Math.min(d3.min(vis.data, d => d[vis.ydata]), d3.min(vis.data, d => d[vis.ydata]) * 0.7);  // Reduce the minimum y-domain value by 30% if it is positive
+        let yDomainMax = d3.max(vis.data, d => d[vis.ydata]);
+
         vis.y = d3.scaleLinear() // Create a linear scale for the y-axis
             .range([vis.HEIGHT, 0]) // Set the range of the scale
-            .domain([0, d3.max(vis.data, d => d[vis.ydata])]); // Set the domain of the scale based on the y-axis data
+            .domain([yDomainMin, yDomainMax]); // Set the domain of the scale based on the y-axis data
 
         vis.xAxisCall = d3.axisBottom(vis.x) // Create the x-axis
             .scale(vis.x); // Set the scale for the axis
@@ -127,9 +131,10 @@ class LineChart {
             .tickFormat(d => vis.formatter(d)) // Set the tick format
             .scale(vis.y); // Set the scale for the axis
 
+        let xAxisPositon = Math.max(0, yDomainMin)
         vis.xAxisGroup = vis.canvas.append("g") // Append a group element for the x-axis
             .attr("class", "x axis") // Set the class attribute
-            .attr("transform", `translate(0, ${vis.HEIGHT})`) // Set the transform attribute
+            .attr("transform", `translate(0, ${vis.y(xAxisPositon)})`)
             .call(vis.xAxisCall); // Call the x-axis
 
         vis.yAxisGroup = vis.canvas.append("g") // Append a group element for the y-axis
@@ -202,11 +207,7 @@ class LineChart {
             return ((d[vis.xdata] >= dateRange[0]) && (d[vis.xdata] <= dateRange[1]))
         })
 
-        // Group the filtered data
-        // vis.dataGrouped = d3.group(vis.dataFiltered, d => d.Symbol); // Group the filtered data based on the symbol
-
         vis.dataGrouped = d3.group(vis.dataFiltered, d => d[vis.group]); // Group the data based on the grouping variable
-
 
         // Rebase the grouped data
         if (vis.rebase) {
@@ -226,8 +227,8 @@ class LineChart {
         const vis = this;
 
         vis.t = d3.transition().duration(1000); // Transition duration
-
         vis.x.domain(d3.extent(vis.dataFiltered, d => d[vis.xdata])); // Update the x-domain based on the filtered data
+
         let yDomainMin = Infinity; // Initialize the minimum y-domain value
         let yDomainMax = -Infinity; // Initialize the maximum y-domain value
         vis.dataGrouped.forEach((value) => { // Iterate over the grouped data
@@ -237,8 +238,14 @@ class LineChart {
             yDomainMin = Math.min(yDomainMin, minValue); // Update the minimum y-domain value
             yDomainMax = Math.max(yDomainMax, maxValue); // Update the maximum y-domain value
         });
-        const buffer = Math.abs(yDomainMax - yDomainMin) * 0.05; // Calculate the buffer for the y-domain
-        vis.y.domain([yDomainMin - buffer, yDomainMax + buffer]); // Update the y-domain
+
+        yDomainMin = Math.min(yDomainMin, yDomainMin * 0.7); // Reduce the minimum y-domain value by 30% if it is positive
+        vis.y.domain([yDomainMin, yDomainMax]); // Update the y-domain
+
+
+        let xAxisPositon = Math.max(0, yDomainMin)
+        vis.xAxisGroup.transition(vis.t).attr("transform", `translate(0, ${vis.y(xAxisPositon)})`); // Shift the x-axis group
+
 
         vis.xAxisCall = d3.axisBottom(vis.x); // Create the x-axis
         vis.xAxisGroup.transition(vis.t).call(vis.xAxisCall) // Transition the x-axis
@@ -247,6 +254,7 @@ class LineChart {
             .attr("x", "-5") // Set the x attribute
             .attr("text-anchor", "end") // Set the text-anchor attribute
             .attr("transform", "rotate(-40)"); // Set the rotation transform
+
 
         // vis.tickCount = Math.max(5, Math.ceil((vis.y.domain()[1] - vis.y.domain()[0]) / 150)); // Calculate the number of ticks for the y-axis
         vis.yAxisCall = d3.axisLeft(vis.y) // Create the y-axis

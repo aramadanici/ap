@@ -135,12 +135,10 @@ axios.get(performance, {
         row.date = parseTime(row.date); // Parse the Date value
     }
 
-
-
     lineChart1 = new LineChart(_parentElement = "#aggregated-performance", _data = data.portfolio_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
-    lineChart2 = new LineChart(_parentElement = "#aggregated-performance-volatility", _data = data.rolling_return_portfolio, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 2);
+    lineChart2 = new LineChart(_parentElement = "#aggregated-performance-volatility", _data = data.rolling_return_portfolio, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 2);
     lineChart3 = new LineChart(_parentElement = "#asset-performance", _data = data.asset_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 3);
-    lineChart4 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.rolling_return_asset, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 4);
+    lineChart4 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.rolling_return_asset, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 4);
 
 }).catch(error => {
     console.error('Error fetching data:', error);
