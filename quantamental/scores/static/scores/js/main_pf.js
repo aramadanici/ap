@@ -3,6 +3,8 @@ let lineChart1
 let lineChart2
 let lineChart3
 let lineChart4
+let lineChart5
+let lineChart6
 const inputs = document.querySelectorAll('input[id^="weight"]');
 
 // ! ----------------- Get Default Weights -----------------
@@ -136,9 +138,13 @@ axios.get(performance, {
     }
 
     lineChart1 = new LineChart(_parentElement = "#aggregated-performance", _data = data.portfolio_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
-    lineChart2 = new LineChart(_parentElement = "#aggregated-performance-volatility", _data = data.rolling_return_portfolio, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 2);
+    lineChart2 = new LineChart(_parentElement = "#aggregated-performance-rolling", _data = data.rolling_return_portfolio, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 2);
     lineChart3 = new LineChart(_parentElement = "#asset-performance", _data = data.asset_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 3);
-    lineChart4 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.rolling_return_asset, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 4);
+    lineChart4 = new LineChart(_parentElement = "#asset-performance-rolling", _data = data.rolling_return_asset, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 4);
+    lineChart5 = new LineChart(_parentElement = "#aggregated-performance-volatility", _data = data.rolling_return_portfolio, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 5);
+    lineChart6 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.rolling_return_asset, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 6);
+
+
 
 }).catch(error => {
     console.error('Error fetching data:', error);
@@ -189,6 +195,12 @@ const updatePfView = () => {
 
         lineChart4.data = data.rolling_return_asset
         lineChart4.manageData()
+
+        lineChart5.data = data.rolling_return_portfolio
+        lineChart5.manageData()
+
+        lineChart6.data = data.rolling_return_asset
+        lineChart6.manageData()
 
     }).catch(error => {
         console.error('Error fetching data:', error);
