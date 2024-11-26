@@ -142,7 +142,6 @@ class LineChart {
             .call(vis.yAxisCall); // Call the y-axis
 
         vis.line = d3.line() // Create a line generator
-            .curve(d3.curveNatural) // Set the curve type
             .x(d => vis.x(d[vis.xdata])) // Set the x-coordinate of the line
             .y(d => vis.y(d[vis.ydata])); // Set the y-coordinate of the line
 
@@ -269,7 +268,6 @@ class LineChart {
         vis.canvas.selectAll(".legend-text").remove();
 
         vis.line = d3.line() // Create a line generator
-            .curve(d3.curveNatural) // Set the curve type
             .x(d => vis.x(d[vis.xdata])) // Set the x-coordinate of the line
             .y(d => vis.y(d[vis.ydata])); // Set the y-coordinate of the line
 
