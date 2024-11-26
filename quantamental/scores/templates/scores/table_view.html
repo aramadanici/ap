@@ -10,22 +10,18 @@
 <div class="container-fluid">
 
 
+
     <div class="row scores justify-content-center">
         <div class="col">
-            <!-- Data -->
-            {% url 'scores:table_data' as data_url %}
-            <!-- Table -->
-            {% include 'table.html' with data_url=data_url view_name=view_name %}
+            {% include 'table_new.html' with id="test_table" show_footer=1 %}
         </div>
     </div>
 
 
+
     <div class="row scores justify-content-center">
         <div class="col">
-            <!-- Data -->
-            {% url 'scores:table_data2' as data_url %}
-            <!-- Table -->
-            {% include 'table.html' with data_url=data_url view_name=view_name %}
+            {% include 'table_new.html' with id="test_table_2" show_footer=1 %}
         </div>
     </div>
 
@@ -37,4 +33,12 @@
 
 
 {% block jsextra %}
+
+<script>
+    const tableData = "{% url 'scores:table_data' %}";
+    const tableData2 = "{% url 'scores:table_data2' %}";
+</script>
+<script type="text/javascript" src="{% static 'js/HorizontalTable.js' %}"></script>
+<script type="text/javascript" src="{% static 'scores/js/main_universe.js' %}"></script>
+
 {% endblock jsextra %}

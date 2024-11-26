@@ -3,6 +3,10 @@ class HorizontalTable {
     constructor(_tableid, _data, _dynamic = false) {
         this.tableid = _tableid;
         this.table = document.getElementById(_tableid);
+        if (!this.table) {
+            console.error(`Table element with ID ${_tableid} not found.`);
+            return;
+        }
         this.data = _data;
         this.dynamic = _dynamic;
 
@@ -12,6 +16,7 @@ class HorizontalTable {
     capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
+
     extractFieldName(str) {
         return str.split('__')[str.split('__').length - 1];
     }
@@ -31,7 +36,7 @@ class HorizontalTable {
             const data = this.data;
 
             const tableHeaders = Object.keys(data[0]);
-            const tableHeadersHTML = tableHeaders.map(header => `<th>${this.splitString(capitalize(extractFieldName(header)))}</th>`).join('');
+            const tableHeadersHTML = tableHeaders.map(header => `<th>${this.splitString(this.capitalize(this.extractFieldName(header)))}</th>`).join('');
             const tableBodyHTML = data.map(item => {
                 const rowHTML = tableHeaders.map(header => {
                     let formattedValue = item[header];

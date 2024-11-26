@@ -39,10 +39,10 @@ div.dataTables_wrapper div.dataTables_length select {
     font-weight: bold;
 }
 
-#slider-range {
+/* #slider-range {
     width: 10%;
     border-radius: 10px;
-}
+} */
 
 tfoot input {
     width: 100%;
@@ -54,7 +54,6 @@ tfoot input {
 :root {
     --dt-row-selected: 14, 34, 56;
 }
-
 
 
 
