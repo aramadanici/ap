@@ -140,3 +140,52 @@ def calculate_rolling_return(asset_timeseries):
         )
 
     return output
+
+
+def calculate_drawdown(asset_timeseries):
+    """
+    Calculate the drawdown timeseries for every timeseries in asset_timeseries.
+
+    Parameters:
+    asset_timeseries (list of dict): List of dictionaries with asset timeseries data.
+
+    Returns:
+    str: Drawdown timeseries in JSON format.
+    """
+    # Convert the list of dictionaries to a DataFrame
+    df = pd.DataFrame(asset_timeseries)
+    df["date"] = pd.to_datetime(df["date"], format="%d.%m.%Y")
+    df["close"] = df["close"].astype(float)
+
+    # Pivot the DataFrame to get the timeseries for each asset
+    asset_timeseries_df = df.pivot(
+        index="date", columns="symbol", values="close"
+    ).sort_index()
+
+    # Calculate the cumulative returns
+    cumulative_returns = asset_timeseries_df / asset_timeseries_df.iloc[0]
+
+    # Calculate the rolling maximum
+    rolling_max = cumulative_returns.cummax()
+
+    # Calculate the drawdown
+    drawdown = (cumulative_returns - rolling_max) / rolling_max
+
+    # Reshape the DataFrame to long format
+    drawdown = drawdown.reset_index().melt(
+        id_vars="date", var_name="symbol", value_name="drawdown"
+    )
+
+    # Create the output in the specified format
+    output = []
+    for i, row in drawdown.iterrows():
+        output.append(
+            {
+                "id": i + 1,
+                "symbol": row["symbol"],
+                "date": row["date"].strftime("%d.%m.%Y"),
+                "drawdown": f"{row['drawdown']:.6f}",
+            }
+        )
+
+    return output

@@ -5,6 +5,7 @@ let lineChart3
 let lineChart4
 let lineChart5
 let lineChart6
+let lineChart7
 const inputs = document.querySelectorAll('input[id^="weight"]');
 
 // ! ----------------- Get Default Weights -----------------
@@ -120,7 +121,7 @@ axios.get(performance, {
         row.date = parseTime(row.date); // Parse the Date value
     }
 
-    for (const row of data.rolling_return_portfolio) { // Iterate over the asset performance data rows
+    for (const row of data.portfolio_rolling_return) { // Iterate over the asset performance data rows
         row.volatility = Number(row.volatility) * 100; // Convert the Close value to a number
         row.return = Number(row.return) * 100; // Convert the Close value to a number
         row.date = parseTime(row.date); // Parse the Date value
@@ -131,18 +132,25 @@ axios.get(performance, {
         row.date = parseTime(row.date); // Parse the Date value
     }
 
-    for (const row of data.rolling_return_asset) { // Iterate over the asset performance data rows
+    for (const row of data.asset_rolling_return) { // Iterate over the asset performance data rows
         row.volatility = Number(row.volatility) * 100; // Convert the Close value to a number
         row.return = Number(row.return) * 100; // Convert the Close value to a number
         row.date = parseTime(row.date); // Parse the Date value
     }
 
+    for (const row of data.portfolio_drawdown) { // Iterate over the asset performance data rows
+        row.drawdown = Number(row.drawdown) * 100; // Convert the Close value to a number
+        row.date = parseTime(row.date); // Parse the Date value
+    }
+
+
     lineChart1 = new LineChart(_parentElement = "#aggregated-performance", _data = data.portfolio_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
-    lineChart2 = new LineChart(_parentElement = "#aggregated-performance-rolling", _data = data.rolling_return_portfolio, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 2);
+    lineChart2 = new LineChart(_parentElement = "#aggregated-performance-rolling", _data = data.portfolio_rolling_return, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 2);
     lineChart3 = new LineChart(_parentElement = "#asset-performance", _data = data.asset_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 3);
-    lineChart4 = new LineChart(_parentElement = "#asset-performance-rolling", _data = data.rolling_return_asset, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 4);
-    lineChart5 = new LineChart(_parentElement = "#aggregated-performance-volatility", _data = data.rolling_return_portfolio, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 5);
-    lineChart6 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.rolling_return_asset, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 6);
+    lineChart4 = new LineChart(_parentElement = "#asset-performance-rolling", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 4);
+    lineChart5 = new LineChart(_parentElement = "#aggregated-performance-volatility", _data = data.portfolio_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 5);
+    lineChart6 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 6);
+    lineChart7 = new LineChart(_parentElement = "#aggregated-performance-drawdown", _data = data.portfolio_drawdown, _xdata = "date", _xlabel = "", _ydata = "drawdown", _ylabel = "Drawdown [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 7);
 
 
 
@@ -167,7 +175,7 @@ const updatePfView = () => {
             row.date = parseTime(row.date); // Parse the Date value
         }
 
-        for (const row of data.rolling_return_portfolio) { // Iterate over the asset performance data rows
+        for (const row of data.portfolio_rolling_return) { // Iterate over the asset performance data rows
             row.volatility = Number(row.volatility) * 100; // Convert the Close value to a number
             row.return = Number(row.return) * 100; // Convert the Close value to a number
             row.date = parseTime(row.date); // Parse the Date value
@@ -178,29 +186,38 @@ const updatePfView = () => {
             row.date = parseTime(row.date); // Parse the Date value
         }
 
-        for (const row of data.rolling_return_asset) { // Iterate over the asset performance data rows
+        for (const row of data.asset_rolling_return) { // Iterate over the asset performance data rows
             row.volatility = Number(row.volatility) * 100; // Convert the Close value to a number
             row.return = Number(row.return) * 100; // Convert the Close value to a number
             row.date = parseTime(row.date); // Parse the Date value
         }
 
+        for (const row of data.portfolio_drawdown) { // Iterate over the asset performance data rows
+            row.drawdown = Number(row.drawdown) * 100; // Convert the Close value to a number
+            row.date = parseTime(row.date); // Parse the Date value
+        }
+
+
         lineChart1.data = data.portfolio_performance
         lineChart1.manageData()
 
-        lineChart2.data = data.rolling_return_portfolio
+        lineChart2.data = data.portfolio_rolling_return
         lineChart2.manageData()
 
         lineChart3.data = data.asset_performance
         lineChart3.manageData()
 
-        lineChart4.data = data.rolling_return_asset
+        lineChart4.data = data.asset_rolling_return
         lineChart4.manageData()
 
-        lineChart5.data = data.rolling_return_portfolio
+        lineChart5.data = data.portfolio_rolling_return
         lineChart5.manageData()
 
-        lineChart6.data = data.rolling_return_asset
+        lineChart6.data = data.asset_rolling_return
         lineChart6.manageData()
+
+        lineChart7.data = data.portfolio_drawdown
+        lineChart7.manageData()
 
     }).catch(error => {
         console.error('Error fetching data:', error);

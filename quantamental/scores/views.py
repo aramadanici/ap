@@ -19,7 +19,11 @@ from django.views.generic import (
 
 from . import models
 from .forms import UserRegisterForm
-from .utils import calculate_portfolio_performance, calculate_rolling_return
+from .utils import (
+    calculate_drawdown,
+    calculate_portfolio_performance,
+    calculate_rolling_return,
+)
 
 
 @login_required
@@ -187,14 +191,16 @@ def pf_view_performance(request):
         except (json.JSONDecodeError, ValueError) as e:
             return JsonResponse({"error": "Invalid weights format"}, status=400)
 
-    rolling_return_portfolio = calculate_rolling_return(portfolio_performance)
-    rolling_return_asset = calculate_rolling_return(asset_performance)
+    portfolio_rolling_return = calculate_rolling_return(portfolio_performance)
+    asset_rolling_return = calculate_rolling_return(asset_performance)
+    portfolio_drawdown = calculate_drawdown(portfolio_performance)
 
     # Combine both results in a single response
     response_data = {
         "asset_performance": asset_performance,
         "portfolio_performance": portfolio_performance,  # This will be None if no weights are provided
-        "rolling_return_portfolio": rolling_return_portfolio,
-        "rolling_return_asset": rolling_return_asset,
+        "portfolio_rolling_return": portfolio_rolling_return,
+        "asset_rolling_return": asset_rolling_return,
+        "portfolio_drawdown": portfolio_drawdown,
     }
     return JsonResponse(response_data, safe=False)
