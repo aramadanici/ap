@@ -22,7 +22,7 @@ axios.get(output1, {
     }
 }).then(response => {
     const data = response.data;
-    horTable = new HorizontalTable(_tableid = "miau1", _data = data);
+    horTable = new HorizontalTable(_tableid = "table_description", _data = data);
 }).catch(error => {
     console.error('Error fetching data:', error);
 });
@@ -34,10 +34,12 @@ axios.get(output2, {
     }
 }).then(response => {
     const data = response.data;
-    horTable = new HorizontalTable(_tableid = "miau2", _data = data);
+    horTable = new HorizontalTable(_tableid = "table_qualitative_data", _data = data);
 }).catch(error => {
     console.error('Error fetching data:', error);
 });
+
+
 
 
 d3.dsv(";", techstockTS).then(data => { // Read the data from a CSV file
@@ -53,7 +55,7 @@ d3.dsv(";", techstockTS).then(data => { // Read the data from a CSV file
     tickers.push("NVDA");  // Adding "NVDA" to the tickers array
     let data0 = Object.values(data).filter(item => tickers.includes(item.Symbol));
 
-    lineChart = new LineChart(_parentElement = "#performance-line-area", _data = data0, _xdata = "Date", _xlabel = "", _ydata = "Close", _ylabel = "", _group = "Symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true);
+    lineChart = new LineChart(_parentElement = "#performance-line-area", _data = data0, _xdata = "Date", _xlabel = "", _ydata = "Close", _ylabel = "", _group = "Symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
 
 })
 
@@ -91,7 +93,7 @@ const updateSingleStockView = () => {
         }
     }).then(response => {
         const data = response.data;
-        horTable = new HorizontalTable(_tableid = "miau1", _data = data);
+        horTable = new HorizontalTable(_tableid = "table_description", _data = data);
     }).catch(error => {
         console.error('Error fetching data:', error);
     });
@@ -103,7 +105,7 @@ const updateSingleStockView = () => {
         }
     }).then(response => {
         const data = response.data;
-        horTable = new HorizontalTable(_tableid = "miau2", _data = data);
+        horTable = new HorizontalTable(_tableid = "table_qualitative_data", _data = data);
     }).catch(error => {
         console.error('Error fetching data:', error);
     });
