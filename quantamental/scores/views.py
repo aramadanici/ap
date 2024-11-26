@@ -23,6 +23,7 @@ from .utils import (
     calculate_drawdown,
     calculate_portfolio_performance,
     calculate_rolling_return,
+    calculate_top_drawdowns,
 )
 
 
@@ -195,6 +196,8 @@ def pf_view_performance(request):
     asset_rolling_return = calculate_rolling_return(asset_performance)
     portfolio_drawdown = calculate_drawdown(portfolio_performance)
 
+    portfolio_top_drawdowns = calculate_top_drawdowns(portfolio_performance)
+
     # Combine both results in a single response
     response_data = {
         "asset_performance": asset_performance,
@@ -202,5 +205,6 @@ def pf_view_performance(request):
         "portfolio_rolling_return": portfolio_rolling_return,
         "asset_rolling_return": asset_rolling_return,
         "portfolio_drawdown": portfolio_drawdown,
+        "portfolio_top_drawdowns": portfolio_top_drawdowns,
     }
     return JsonResponse(response_data, safe=False)

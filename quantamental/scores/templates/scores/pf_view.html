@@ -209,7 +209,9 @@
             </div>
         </div>
 
-        <div class="col"></div>
+        <div class="col">
+            {% include 'table_new.html' with id="table_top_drawdown" show_footer=0 %}
+        </div>
 
     </div>
 
@@ -257,5 +259,6 @@
 </script>
 
 <script type="text/javascript" src="{% static 'js/LineChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/HorizontalTable.js' %}"></script>
 <script type="text/javascript" src="{% static 'scores/js/main_pf.js' %}"></script>
 {% endblock jsextra %}

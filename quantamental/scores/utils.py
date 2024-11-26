@@ -189,3 +189,82 @@ def calculate_drawdown(asset_timeseries):
         )
 
     return output
+
+
+def calculate_top_drawdowns(asset_timeseries):
+    """
+    Calculate the top 5 drawdowns for every timeseries in asset_timeseries.
+
+    Parameters:
+    asset_timeseries (list of dict): List of dictionaries with asset timeseries data.
+
+    Returns:
+    str: Top 5 drawdowns in JSON format.
+    """
+    # Convert the list of dictionaries to a DataFrame
+    df = pd.DataFrame(asset_timeseries)
+    df["date"] = pd.to_datetime(df["date"], format="%d.%m.%Y")
+    df["close"] = df["close"].astype(float)
+
+    # Pivot the DataFrame to get the timeseries for each asset
+    asset_timeseries_df = df.pivot(
+        index="date", columns="symbol", values="close"
+    ).sort_index()
+
+    output = []
+
+    for symbol in asset_timeseries_df.columns:
+        series = asset_timeseries_df[symbol]
+        cumulative_returns = series / series.iloc[0]
+        rolling_max = cumulative_returns.cummax()
+        drawdown = (cumulative_returns - rolling_max) / rolling_max
+
+        # Find drawdown periods
+        drawdown_periods = []
+        in_drawdown = False
+        start_date = None
+        trough_date = None
+        end_date = None
+        max_drawdown = 0
+
+        for date, dd in drawdown.items():
+            if dd < 0:
+                if not in_drawdown:
+                    in_drawdown = True
+                    start_date = date
+                    trough_date = date
+                    max_drawdown = dd
+                elif dd < max_drawdown:
+                    trough_date = date
+                    max_drawdown = dd
+            elif in_drawdown:
+                in_drawdown = False
+                end_date = date
+                drawdown_periods.append(
+                    (start_date, trough_date, end_date, max_drawdown)
+                )
+                start_date = None
+                trough_date = None
+                end_date = None
+                max_drawdown = 0
+
+        # Sort drawdowns by magnitude
+        drawdown_periods = sorted(drawdown_periods, key=lambda x: x[3])
+
+        # Take the top 5 drawdowns
+        top_drawdowns = drawdown_periods[:5]
+
+        for i, (start, trough, end, max_dd) in enumerate(top_drawdowns):
+            output.append(
+                {
+                    "symbol": symbol,
+                    "Start Date": start.strftime("%d.%m.%Y"),
+                    "Trough Date": trough.strftime("%d.%m.%Y"),
+                    "End Date": end.strftime("%d.%m.%Y"),
+                    "Days to Trough": (trough - start).days,
+                    "Days To Recovery": (end - trough).days,
+                    "Max Drawdown [%]": f"{max_dd * 100:.2f}",
+                }
+            )
+
+    return output

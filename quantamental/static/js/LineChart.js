@@ -49,7 +49,6 @@ class LineChart {
         vis.__YTD = [vis.ytdStart, vis.latestDate]
 
         vis.formatTime = d3.timeFormat("%d/%m/%Y")
-        console.log("#date-slider-" + vis.slider)
         $("#date-slider-" + vis.slider).slider({
             range: true,
             min: vis.earliestDate.getTime(),

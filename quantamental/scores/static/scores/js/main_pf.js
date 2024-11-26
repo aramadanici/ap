@@ -6,18 +6,17 @@ let lineChart4
 let lineChart5
 let lineChart6
 let lineChart7
+let horTable1
 const inputs = document.querySelectorAll('input[id^="weight"]');
 
 // ! ----------------- Get Default Weights -----------------
 let weights = [];
-console.log("weights before", weights)
 inputs.forEach(input => { // Iterate over each input element
     const weight = parseFloat(input.value) || 0;
     if (weight > 0) { // Only add non-zero weights
         weights.push(weight); // Add the weight to the weights array
     }
 });
-console.log("weights after", weights)
 
 // ! ----------------- Get Default Assets -----------------
 let investedAssets = []; // Declare investedAssets variable globally
@@ -152,7 +151,7 @@ axios.get(performance, {
     lineChart6 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 6);
     lineChart7 = new LineChart(_parentElement = "#aggregated-performance-drawdown", _data = data.portfolio_drawdown, _xdata = "date", _xlabel = "", _ydata = "drawdown", _ylabel = "Drawdown [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 7);
 
-
+    horTable1 = new HorizontalTable(_tableid = "table_top_drawdown", _data = data.portfolio_top_drawdowns);
 
 }).catch(error => {
     console.error('Error fetching data:', error);
