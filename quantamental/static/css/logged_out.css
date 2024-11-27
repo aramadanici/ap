@@ -17,5 +17,24 @@
 #form-div {
     display: inline-block;
     box-shadow: none;
-    transform: translate(0, 0);
+    transform: translate(0%, 200%);
+    height: 10rem;
 }
+
+
+
+@media (max-width: 1300px) {
+    #form-div {
+        transform: translate(0%, 125%);
+    }
+}
+
+/* #form-div {
+    background-color: #ffffff70;
+    width: 35rem;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    display: inline-block;
+    box-shadow: 1px 1px 2px 2px #c0bfbf44;
+    transform: translate(60%, 95%);
+} */

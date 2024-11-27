@@ -20,7 +20,7 @@
 <body>
     <section class="container-fluid px-0">
         <div class="row align-items-center">
-            <div class="col-6 d-flex justify-content-center">
+            <div class="col-6 d-flex justify-content-center" id="testDW">
 
                 {% block first-col %}
                 <div id="form-div">
@@ -29,14 +29,14 @@
                     {% endblock form-div-content %}
                 </div>
                 {% endblock first-col %}
+
             </div>
-            <div class="col-6">
+            <div class="col-6" id="testDW2">
                 {% if request.resolver_match.url_name == 'login' %}
                 <a class="sign" href="{% url 'scores:signup_view' %}">Sign up</a>
                 {% else %}
                 <a class="sign" href="{% url 'login' %}">Login</a>
                 {% endif %}
-                <img class="img-fluid" src="{% static 'img/crossinvest_stemma_nuovo-1.jpg' %}" alt="Image not found">
             </div>
         </div>
     </section>
