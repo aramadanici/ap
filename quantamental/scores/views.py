@@ -170,6 +170,9 @@ def pf_view_asset_performance(request):
 
 @login_required
 def pf_view_performance(request):
+
+    #    ! GET DATA --------------------------------------------------------------------------
+
     # Get the symbols (tickers) from the request
     symbol = request.GET.getlist("ticker[]", [])
 
@@ -182,6 +185,9 @@ def pf_view_performance(request):
         models.Performance.objects.filter(symbol__in=["MXWO", "LEGATRUU"]).values()
     )
 
+    mxwo_performance = [
+        entry for entry in benchmark_performance if entry["symbol"] != "LEGATRUU"
+    ]
     # Initialize portfolio performance to None
     portfolio_performance = None
 
@@ -197,6 +203,8 @@ def pf_view_performance(request):
         except (json.JSONDecodeError, ValueError) as e:
             return JsonResponse({"error": "Invalid weights format"}, status=400)
 
+    #    ! Run Computation --------------------------------------------------------------------------
+
     portfolio_rolling_return = calculate_rolling_return(portfolio_performance)
     asset_rolling_return = calculate_rolling_return(asset_performance)
     portfolio_drawdown = calculate_drawdown(portfolio_performance)
@@ -206,14 +214,11 @@ def pf_view_performance(request):
     # print(combined_drawdown)
 
     portfolio_top_drawdowns = calculate_top_drawdowns(portfolio_performance)
+    benchmark_top_drawdowns = calculate_top_drawdowns(mxwo_performance)
 
     portfolio_rolling_beta = calculate_rolling_beta(
         portfolio_performance, benchmark_performance
     )
-
-    mxwo_performance = [
-        entry for entry in benchmark_performance if entry["symbol"] != "LEGATRUU"
-    ]
 
     asset_rolling_beta = calculate_rolling_beta(asset_performance, mxwo_performance)
 
@@ -225,6 +230,7 @@ def pf_view_performance(request):
         "asset_rolling_return": asset_rolling_return,
         "portfolio_drawdown": combined_drawdown,
         "portfolio_top_drawdowns": portfolio_top_drawdowns,
+        "benchmark_top_drawdowns": benchmark_top_drawdowns,
         "portfolio_rolling_beta": portfolio_rolling_beta,
         "asset_rolling_beta": asset_rolling_beta,
     }

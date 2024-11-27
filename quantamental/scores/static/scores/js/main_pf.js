@@ -7,6 +7,7 @@ let lineChart5
 let lineChart6
 let lineChart7
 let horTable1
+let horTable2
 const inputs = document.querySelectorAll('input[id^="weight"]');
 
 // ! ----------------- Get Default Weights -----------------
@@ -144,6 +145,7 @@ axios.get(performance, {
     lineChart9 = new LineChart(_parentElement = "#aggregated-performance-drawdown", _data = data.portfolio_drawdown, _xdata = "date", _xlabel = "", _ydata = "drawdown", _ylabel = "Drawdown [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 9);
 
     horTable1 = new HorizontalTable(_tableid = "table_top_drawdown", _data = data.portfolio_top_drawdowns);
+    horTable2 = new HorizontalTable(_tableid = "table_top_drawdown2", _data = data.benchmark_top_drawdowns);
 
 }).catch(error => {
     console.error('Error fetching data:', error);
