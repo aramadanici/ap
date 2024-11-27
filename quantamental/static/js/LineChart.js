@@ -271,12 +271,11 @@ class LineChart {
             .y(d => vis.y(d[vis.ydata])); // Set the y-coordinate of the line
 
         vis.dataLabel = Array.from(vis.dataGrouped.keys()); // Get the unique labels from the grouped data
-        vis.legendOffsetX = (vis.WIDTH - (vis.dataLabel.length * vis.columnWidth)) / 2; // Offset for the legend in the x-direction
+        vis.legendOffsetX = (vis.WIDTH - (vis.dataLabel.length / vis.maxDotsPerColumn * vis.columnWidth)) / 2; // Offset for the legend in the x-direction
         // vis.colors = new Map(vis.dataLabel.map((label, i) => [label, d3.schemeCategory10[i]])); // Create a map of colors for each label
 
         const colorPalette = ['#0e2238', '#d8e5f0', '#117a65', '#f5b041', '#dcb9eb', '#3498db']; // Define a palette with 6 colors
         vis.colors = new Map(vis.dataLabel.map((label, i) => [label, colorPalette[i % colorPalette.length]])); // Assign colors to labels
-
 
         let i = 0; // Counter variable
         for (const [thisDataLabel, thisData] of vis.dataGrouped) { // Iterate over the grouped data
