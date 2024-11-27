@@ -22,6 +22,7 @@ from .forms import UserRegisterForm
 from .utils import (
     calculate_drawdown,
     calculate_portfolio_performance,
+    calculate_rolling_beta,
     calculate_rolling_return,
     calculate_top_drawdowns,
 )
@@ -177,6 +178,10 @@ def pf_view_performance(request):
         models.Performance.objects.filter(symbol__in=symbol).values()
     )
 
+    benchmark_performance = list(
+        models.Performance.objects.filter(symbol__in=["MXWO", "LEGATRUU"]).values()
+    )
+
     # Initialize portfolio performance to None
     portfolio_performance = None
 
@@ -195,8 +200,22 @@ def pf_view_performance(request):
     portfolio_rolling_return = calculate_rolling_return(portfolio_performance)
     asset_rolling_return = calculate_rolling_return(asset_performance)
     portfolio_drawdown = calculate_drawdown(portfolio_performance)
+    benchmark_drawdown = calculate_drawdown(benchmark_performance)
+
+    combined_drawdown = portfolio_drawdown + benchmark_drawdown
+    # print(combined_drawdown)
 
     portfolio_top_drawdowns = calculate_top_drawdowns(portfolio_performance)
+
+    portfolio_rolling_beta = calculate_rolling_beta(
+        portfolio_performance, benchmark_performance
+    )
+
+    mxwo_performance = [
+        entry for entry in benchmark_performance if entry["symbol"] != "LEGATRUU"
+    ]
+
+    asset_rolling_beta = calculate_rolling_beta(asset_performance, mxwo_performance)
 
     # Combine both results in a single response
     response_data = {
@@ -204,7 +223,10 @@ def pf_view_performance(request):
         "portfolio_performance": portfolio_performance,  # This will be None if no weights are provided
         "portfolio_rolling_return": portfolio_rolling_return,
         "asset_rolling_return": asset_rolling_return,
-        "portfolio_drawdown": portfolio_drawdown,
+        "portfolio_drawdown": combined_drawdown,
         "portfolio_top_drawdowns": portfolio_top_drawdowns,
+        "portfolio_rolling_beta": portfolio_rolling_beta,
+        "asset_rolling_beta": asset_rolling_beta,
     }
+    return JsonResponse(response_data, safe=False)
     return JsonResponse(response_data, safe=False)

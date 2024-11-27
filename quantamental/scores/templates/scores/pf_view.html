@@ -194,13 +194,22 @@
 
     </div>
 
+
+
+
+
+
+
+
+
+
     <div class="row">
 
         <div class="col">
-            <div id="aggregated-performance-drawdown"></div>
+            <div id="aggregated-performance-beta"></div>
             <div class="pb-1" id="slider-div">
                 <div class="slider-container">
-                    <label>Date: <span id="date-label-start-7">31/12/2009</span> - <span
+                    <label>Date: <span id="date-label-start-7">31/12/2010</span> - <span
                             id="date-label-end-7">07/03/2024</span></label>
                 </div>
                 <div class="slider-container">
@@ -210,6 +219,50 @@
         </div>
 
         <div class="col">
+            <div id="asset-performance-beta"></div>
+            <div class="pb-1" id="slider-div">
+                <div class="slider-container">
+                    <label>Date: <span id="date-label-start-8">31/12/2010</span> - <span
+                            id="date-label-end-8">07/03/2024</span></label>
+                </div>
+                <div class="slider-container">
+                    <div id="date-slider-8"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="row">
+
+        <div class="col">
+            <div id="aggregated-performance-drawdown"></div>
+            <div class="pb-1" id="slider-div">
+                <div class="slider-container">
+                    <label>Date: <span id="date-label-start-9">31/12/2009</span> - <span
+                            id="date-label-end-9">07/03/2024</span></label>
+                </div>
+                <div class="slider-container">
+                    <div id="date-slider-9"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col mt-4">
             {% include 'table_new.html' with id="table_top_drawdown" show_footer=0 %}
         </div>
 

@@ -268,3 +268,80 @@ def calculate_top_drawdowns(asset_timeseries):
             )
 
     return output
+
+
+def calculate_rolling_beta(asset_timeseries, benchmark_timeseries):
+    """
+    Calculate the 1-year rolling beta based on weekly returns and a 2-year lookback period.
+    Apply the Blume adjustment to the beta.
+
+    Parameters:
+    asset_timeseries (list of dict): List of dictionaries with asset timeseries data.
+    benchmark_timeseries (list of dict): List of dictionaries with benchmark timeseries data.
+
+    Returns:
+    list of dict: Rolling beta timeseries in JSON format.
+    """
+    # Convert input data to DataFrames
+    asset_df = pd.DataFrame(asset_timeseries)
+    benchmark_df = pd.DataFrame(benchmark_timeseries)
+
+    # Convert date columns to datetime and ensure correct types
+    asset_df["date"] = pd.to_datetime(asset_df["date"], format="%d.%m.%Y")
+    benchmark_df["date"] = pd.to_datetime(benchmark_df["date"], format="%d.%m.%Y")
+    asset_df["close"] = asset_df["close"].astype(float)
+    benchmark_df["close"] = benchmark_df["close"].astype(float)
+
+    # Pivot data to have symbols as columns
+    asset_df = asset_df.pivot(
+        index="date", columns="symbol", values="close"
+    ).sort_index()
+    benchmark_df = benchmark_df.pivot(
+        index="date", columns="symbol", values="close"
+    ).sort_index()
+
+    # Resample to weekly frequency and calculate weekly returns
+    asset_weekly_returns = asset_df.resample("W-FRI").last().pct_change()
+    benchmark_weekly_returns = benchmark_df.resample("W-FRI").last().pct_change()
+
+    # Initialize storage for results
+    results = []
+
+    # Iterate over all asset and benchmark combinations
+    for asset_symbol in asset_weekly_returns.columns:
+        for benchmark_symbol in benchmark_weekly_returns.columns:
+            # Align asset and benchmark returns
+            aligned_data = pd.concat(
+                [
+                    asset_weekly_returns[asset_symbol],
+                    benchmark_weekly_returns[benchmark_symbol],
+                ],
+                axis=1,
+                keys=["asset", "benchmark"],
+            ).dropna()
+
+            # Calculate rolling beta (2-year lookback, 104 weeks)
+            rolling_beta = (
+                aligned_data["asset"]
+                .rolling(window=104, min_periods=104)
+                .apply(
+                    lambda x: np.cov(x, aligned_data.loc[x.index, "benchmark"])[0, 1]
+                    / np.var(aligned_data.loc[x.index, "benchmark"]),
+                    raw=False,
+                )
+            )
+
+            # Apply Blume adjustment
+            adjusted_beta = 0.67 * rolling_beta + 0.33
+
+            # Add results to the output list
+            for date, beta in adjusted_beta.dropna().items():
+                results.append(
+                    {
+                        "date": date.strftime("%d.%m.%Y"),
+                        "symbol": asset_symbol + "-" + benchmark_symbol,
+                        "beta": beta,
+                    }
+                )
+
+    return results
