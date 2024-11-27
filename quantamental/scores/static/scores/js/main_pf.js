@@ -141,16 +141,9 @@ axios.get(performance, {
     lineChart6 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 6);
     lineChart7 = new LineChart(_parentElement = "#aggregated-performance-beta", _data = data.portfolio_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 140 }, _rebase = false, _slider = 7);
     lineChart8 = new LineChart(_parentElement = "#asset-performance-beta", _data = data.asset_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 100 }, _rebase = false, _slider = 8);
-
-
-
     lineChart9 = new LineChart(_parentElement = "#aggregated-performance-drawdown", _data = data.portfolio_drawdown, _xdata = "date", _xlabel = "", _ydata = "drawdown", _ylabel = "Drawdown [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 9);
 
-
-
     horTable1 = new HorizontalTable(_tableid = "table_top_drawdown", _data = data.portfolio_top_drawdowns);
-
-
 
 }).catch(error => {
     console.error('Error fetching data:', error);
@@ -173,37 +166,35 @@ const updatePfView = () => {
             portfolio_rolling_return: ['volatility', 'return'],
             asset_performance: ['close'],
             asset_rolling_return: ['volatility', 'return'],
-            portfolio_drawdown: ['drawdown']
+            portfolio_drawdown: ['drawdown'],
+            portfolio_rolling_beta: ['beta'],
+            asset_rolling_beta: ['beta']
         };
 
         for (const [key, fields] of Object.entries(dataKeys)) {
             for (const row of data[key]) {
-                fields.forEach(field => row[field] = Number(row[field]) * (field === 'close' ? 1 : 100));
+                fields.forEach(field => row[field] = Number(row[field]) * (field === 'close' || field === 'beta' ? 1 : 100));
                 row.date = parseTime(row.date);
             }
         }
 
 
         lineChart1.data = data.portfolio_performance
-        lineChart1.manageData()
-
         lineChart2.data = data.portfolio_rolling_return
-        lineChart2.manageData()
-
         lineChart3.data = data.asset_performance
-        lineChart3.manageData()
-
         lineChart4.data = data.asset_rolling_return
-        lineChart4.manageData()
-
         lineChart5.data = data.portfolio_rolling_return
-        lineChart5.manageData()
-
         lineChart6.data = data.asset_rolling_return
-        lineChart6.manageData()
+        lineChart7.data = data.portfolio_rolling_beta
+        lineChart8.data = data.asset_rolling_beta
+        lineChart9.data = data.portfolio_drawdown
 
-        lineChart7.data = data.portfolio_drawdown
-        lineChart7.manageData()
+        const charts = [lineChart1, lineChart2, lineChart3, lineChart4, lineChart5, lineChart6, lineChart7, lineChart8, lineChart9];
+        for (let chart of charts) {
+            chart.manageData();
+        }
+
+        horTable1 = new HorizontalTable(_tableid = "table_top_drawdown", _data = data.portfolio_top_drawdowns);
 
     }).catch(error => {
         console.error('Error fetching data:', error);
