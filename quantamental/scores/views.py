@@ -21,6 +21,8 @@ from . import models
 from .forms import UserRegisterForm
 from .utils import (
     calculate_drawdown,
+    calculate_monthly_returns,
+    calculate_performance_metrics,
     calculate_portfolio_performance,
     calculate_rolling_beta,
     calculate_rolling_return,
@@ -207,11 +209,10 @@ def pf_view_performance(request):
 
     portfolio_rolling_return = calculate_rolling_return(portfolio_performance)
     asset_rolling_return = calculate_rolling_return(asset_performance)
+
     portfolio_drawdown = calculate_drawdown(portfolio_performance)
     benchmark_drawdown = calculate_drawdown(benchmark_performance)
-
     combined_drawdown = portfolio_drawdown + benchmark_drawdown
-    # print(combined_drawdown)
 
     portfolio_top_drawdowns = calculate_top_drawdowns(portfolio_performance)
     benchmark_top_drawdowns = calculate_top_drawdowns(mxwo_performance)
@@ -221,6 +222,15 @@ def pf_view_performance(request):
     )
 
     asset_rolling_beta = calculate_rolling_beta(asset_performance, mxwo_performance)
+
+    combined_performance = portfolio_performance + asset_performance
+    performance_metrics = calculate_performance_metrics(
+        combined_performance, mxwo_performance
+    )
+
+    monthly_returns = calculate_monthly_returns(
+        portfolio_performance, benchmark_performance
+    )
 
     # Combine both results in a single response
     response_data = {
@@ -233,6 +243,7 @@ def pf_view_performance(request):
         "benchmark_top_drawdowns": benchmark_top_drawdowns,
         "portfolio_rolling_beta": portfolio_rolling_beta,
         "asset_rolling_beta": asset_rolling_beta,
+        "performance_metrics": performance_metrics,
+        "monthly_returns": monthly_returns,
     }
-    return JsonResponse(response_data, safe=False)
     return JsonResponse(response_data, safe=False)

@@ -269,9 +269,24 @@
 
     </div>
 
+    <div class="row">
 
+        <div class="col">
+            {% include 'table_new.html' with id="table_performance_metrics" show_footer=0 %}
+        </div>
 
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <div id="upside-downside-bar1"></div>
+                </div>
+                <div class="col">
+                    <div id="upside-downside-bar2"></div>
+                </div>
+            </div>
+        </div>
 
+    </div>
 
 
 
@@ -285,6 +300,27 @@
         <h3>Diversification</h3>
         <div class="divider-shadow"></div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -314,5 +350,6 @@
 
 <script type="text/javascript" src="{% static 'js/LineChart.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/HorizontalTable.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/GroupedBarChart.js' %}"></script>
 <script type="text/javascript" src="{% static 'scores/js/main_pf.js' %}"></script>
 {% endblock jsextra %}

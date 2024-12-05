@@ -345,3 +345,167 @@ def calculate_rolling_beta(asset_timeseries, benchmark_timeseries):
                 )
 
     return results
+
+
+def calculate_performance_metrics(asset_timeseries, benchmark_timeseries):
+    """
+    Calculate performance metrics for the asset timeseries.
+
+    Parameters:
+    asset_timeseries (list of dict): List of dictionaries with asset timeseries data.
+    benchmark_timeseries (list of dict): List of dictionaries with benchmark timeseries data.
+
+    Returns:
+    dict: Performance metrics including cumulative return, return per annum, YTD return, annualized volatility, sharpe ratio, calmar ratio, and sortino ratio.
+    """
+    # Convert the list of dictionaries to a DataFrame
+    df = pd.DataFrame(asset_timeseries)
+    df["date"] = pd.to_datetime(df["date"], format="%d.%m.%Y")
+    df["close"] = df["close"].astype(float)
+
+    # Pivot the DataFrame to get the timeseries for each asset
+    asset_timeseries_df = df.pivot(
+        index="date", columns="symbol", values="close"
+    ).sort_index()
+
+    # Calculate daily returns
+    daily_returns = asset_timeseries_df.pct_change().dropna()
+
+    # Calculate cumulative return
+    cumulative_return = (asset_timeseries_df.iloc[-1] / asset_timeseries_df.iloc[0]) - 1
+
+    # Calculate return per annum (annualized return)
+    n_years = (
+        asset_timeseries_df.index[-1] - asset_timeseries_df.index[0]
+    ).days / 365.25
+    return_per_annum = (1 + cumulative_return) ** (1 / n_years) - 1
+
+    # Calculate YTD return
+    start_of_year = asset_timeseries_df[
+        asset_timeseries_df.index.year == asset_timeseries_df.index[-1].year
+    ].iloc[0]
+    ytd_return = (asset_timeseries_df.iloc[-1] / start_of_year) - 1
+
+    # Calculate annualized volatility
+    annualized_volatility = daily_returns.std() * np.sqrt(252)
+
+    # Calculate Sharpe ratio (assuming risk-free rate is 0)
+    sharpe_ratio = return_per_annum / annualized_volatility
+
+    # Calculate maximum drawdown for Calmar ratio
+    cumulative_returns = asset_timeseries_df / asset_timeseries_df.iloc[0]
+    rolling_max = cumulative_returns.cummax()
+    drawdown = (cumulative_returns - rolling_max) / rolling_max
+    max_drawdown = drawdown.min()
+
+    # Calculate Calmar ratio
+    calmar_ratio = return_per_annum / abs(max_drawdown)
+
+    # Calculate Sortino ratio (assuming risk-free rate is 0)
+    downside_returns = daily_returns[daily_returns < 0]
+    downside_volatility = downside_returns.std() * np.sqrt(252)
+    sortino_ratio = return_per_annum / downside_volatility
+
+    # Create the output dictionary
+    output = [
+        {
+            "symbol": symbol,
+            "Cumulative Return [%]": f"{cumulative_return[symbol] * 100:.2f}",
+            "YTD Return [%]": f"{ytd_return[symbol] * 100:.2f}",
+            "Return p.a. [%]": f"{return_per_annum[symbol] * 100:.2f}",
+            "Annualized Volatility [%]": f"{annualized_volatility[symbol] * 100:.2f}",
+            "Sharpe Ratio": f"{sharpe_ratio[symbol]:.2f}",
+            "Calmar Ratio": f"{calmar_ratio[symbol]:.2f}",
+            "Sortino Ratio": f"{sortino_ratio[symbol]:.2f}",
+        }
+        for symbol in sorted(
+            asset_timeseries_df.columns, key=lambda x: (x != "Portfolio", x)
+        )
+    ]
+
+    return output
+
+
+import pandas as pd
+
+
+def calculate_monthly_returns(asset_timeseries, benchmark_timeseries):
+    """
+    Calculate the monthly returns of both portfolio and benchmark, and then calculate the average returns
+    for all the months when the benchmark performance is negative and all the months when the benchmark return is positive.
+
+    Parameters:
+    asset_timeseries (list of dict): List of dictionaries with asset timeseries data.
+    benchmark_timeseries (list of dict): List of dictionaries with benchmark timeseries data.
+
+    Returns:
+    list of dict: Average returns for positive and negative benchmark months for both portfolio and benchmark.
+    """
+    # Convert the list of dictionaries to DataFrames
+    asset_df = pd.DataFrame(asset_timeseries)
+    benchmark_df = pd.DataFrame(benchmark_timeseries)
+
+    # Convert date columns to datetime and ensure correct types
+    asset_df["date"] = pd.to_datetime(asset_df["date"], format="%d.%m.%Y")
+    benchmark_df["date"] = pd.to_datetime(benchmark_df["date"], format="%d.%m.%Y")
+    asset_df["close"] = asset_df["close"].astype(float)
+    benchmark_df["close"] = benchmark_df["close"].astype(float)
+
+    # Pivot data to have symbols as columns
+    asset_df = asset_df.pivot(
+        index="date", columns="symbol", values="close"
+    ).sort_index()
+    benchmark_df = benchmark_df.pivot(
+        index="date", columns="symbol", values="close"
+    ).sort_index()
+
+    # Resample to monthly frequency and calculate monthly returns
+    benchmark_monthly_returns = benchmark_df.resample("M").ffill().pct_change().dropna()
+    asset_monthly_returns = asset_df.resample("M").ffill().pct_change().dropna()
+    results = []
+    for benchmark_symbol in benchmark_monthly_returns.columns:
+        benchmark_returns = benchmark_monthly_returns[benchmark_symbol]
+
+        # Calculate average returns for positive and negative benchmark months
+        positive_benchmark_months = benchmark_returns[benchmark_returns > 0]
+        negative_benchmark_months = benchmark_returns[benchmark_returns <= 0]
+
+        avg_positive_benchmark_return = positive_benchmark_months.mean() * 100
+        avg_negative_benchmark_return = negative_benchmark_months.mean() * 100
+
+        avg_positive_asset_return = (
+            asset_monthly_returns.loc[positive_benchmark_months.index].mean() * 100
+        ).item()  # Convert to scalar
+        avg_negative_asset_return = (
+            asset_monthly_returns.loc[negative_benchmark_months.index].mean() * 100
+        ).item()  # Convert to scalar
+
+        results.append(
+            {
+                "asset": benchmark_symbol,
+                "returns": [
+                    {
+                        "return_type": "Average Monthly Positive Return",
+                        "Asset": "Portfolio",
+                        "Percentage": avg_positive_asset_return,
+                    },
+                    {
+                        "return_type": "Average Monthly Negative Return",
+                        "Asset": "Portfolio",
+                        "Percentage": avg_negative_asset_return,
+                    },
+                    {
+                        "return_type": "Average Monthly Positive Return",
+                        "Asset": benchmark_symbol,
+                        "Percentage": avg_positive_benchmark_return,
+                    },
+                    {
+                        "return_type": "Average Monthly Negative Return",
+                        "Asset": benchmark_symbol,
+                        "Percentage": avg_negative_benchmark_return,
+                    },
+                ],
+            }
+        )
+
+    return results

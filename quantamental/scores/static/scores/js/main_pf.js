@@ -8,6 +8,10 @@ let lineChart6
 let lineChart7
 let horTable1
 let horTable2
+let horTable3
+let barChart1
+let barChart2
+
 const inputs = document.querySelectorAll('input[id^="weight"]');
 
 // ! ----------------- Get Default Weights -----------------
@@ -146,6 +150,12 @@ axios.get(performance, {
 
     horTable1 = new HorizontalTable(_tableid = "table_top_drawdown", _data = data.portfolio_top_drawdowns);
     horTable2 = new HorizontalTable(_tableid = "table_top_drawdown2", _data = data.benchmark_top_drawdowns);
+    horTable3 = new HorizontalTable(_tableid = "table_performance_metrics", _data = data.performance_metrics);
+
+    barChart = new GroupedBarChart(_parentElement = "#upside-downside-bar1", _data = data.monthly_returns[0].returns, _xdata = "return_type", _xlabel = "", _ydata = "Percentage", _ylabel = "Percentage", _cdata = "Asset", _dimension = { width: 400, height: 500 }, _legend = { noCol: 1, widthCol: 85 });
+    barChart = new GroupedBarChart(_parentElement = "#upside-downside-bar2", _data = data.monthly_returns[1].returns, _xdata = "return_type", _xlabel = "", _ydata = "Percentage", _ylabel = "Percentage", _cdata = "Asset", _dimension = { width: 400, height: 500 }, _legend = { noCol: 1, widthCol: 65 });
+
+
 
 }).catch(error => {
     console.error('Error fetching data:', error);
@@ -197,6 +207,8 @@ const updatePfView = () => {
         }
 
         horTable1 = new HorizontalTable(_tableid = "table_top_drawdown", _data = data.portfolio_top_drawdowns);
+        horTable2 = new HorizontalTable(_tableid = "table_top_drawdown2", _data = data.benchmark_top_drawdowns);
+        horTable3 = new HorizontalTable(_tableid = "table_performance_metrics", _data = data.performance_metrics);
 
     }).catch(error => {
         console.error('Error fetching data:', error);
