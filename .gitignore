@@ -1,0 +1,8 @@
+
+settings.json
+*.xlsx
+*.pyc
+.vscode/settings.json
+01_2024_Quantamental/quantamental/db.sqlite3
+01_2024_Quantamental/quantamental/static/data/~$Data Extraction.xlsm
+01_2024_Quantamental/quantamental/static/data/Data Extraction.xlsm
