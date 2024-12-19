@@ -137,6 +137,12 @@ axios.get(performance, {
         }
     }
 
+    // Order data.asset_rolling_return by symbol in the same way as data.asset_performance
+    const assetPerformanceSymbols = data.asset_performance.map(d => d.symbol);
+    data.asset_rolling_return.sort((a, b) => {
+        return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
+    });
+
 
     lineChart1 = new LineChart(_parentElement = "#aggregated-performance", _data = data.portfolio_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
     lineChart2 = new LineChart(_parentElement = "#aggregated-performance-rolling", _data = data.portfolio_rolling_return, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 2);
