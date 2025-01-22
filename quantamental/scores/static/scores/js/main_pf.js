@@ -10,57 +10,80 @@ let horTable1
 let horTable2
 let horTable3
 let barChart1
-let barChart2
 
-const inputs = document.querySelectorAll('input[id^="weight"]');
+const assetInputs = $('input[id^="weight_"]');
+const bmInputs = $('input[id^="weightbm_"]');
 
-// ! ----------------- Get Default Weights -----------------
-let weights = [];
-inputs.forEach(input => { // Iterate over each input element
+
+
+
+// ! ----------------- Get Default Asset Weights -----------------
+let assetWeights = [];
+for (const input of assetInputs) { // Iterate over each input element
     const weight = parseFloat(input.value) || 0;
     if (weight > 0) { // Only add non-zero weights
-        weights.push(weight); // Add the weight to the weights array
+        assetWeights.push(weight); // Add the weight to the weights array
     }
-});
+}
+
 
 // ! ----------------- Get Default Assets -----------------
 let investedAssets = []; // Declare investedAssets variable globally
-investedAssets = Array.from(inputs)
+
+investedAssets = Array.from(assetInputs)
     .filter(input => parseFloat(input.value) > 0)
     .map(input => input.id.replace('weight_', '')); // Remove "weight_" from the input id
 
 
+// ! ----------------- Get Default BM Weights -----------------
+let bmWeights = [];
+for (const input of bmInputs) { // Iterate over each input element
+    const weight = parseFloat(input.value) || 0;
+    if (weight > 0) { // Only add non-zero weights
+        bmWeights.push(weight); // Add the weight to the weights array
+    }
+}
+
+
+// ! ----------------- Get Default BMs -----------------
+let investedBMs = []; // Declare investedAssets variable globally
+
+investedBMs = Array.from(bmInputs)
+    .filter(input => parseFloat(input.value) > 0)
+    .map(input => input.id.replace('weightbm_', '')); // Remove "weight_" from the input id
+
 //!  ----------------- Calculate and Display Total Weight from Input Fields and Prepare Data for POST Request -----------------
 document.addEventListener('DOMContentLoaded', function () { // Wait for the DOM to be fully loaded
-    const inputs = document.querySelectorAll('input[id^="weight"]'); // Select all input elements with id starting with "weightAsset"
-    const totalSpan = document.getElementById('update-weight'); // Select the element with id "update-weight"
-
-    inputs.forEach(input => { // Iterate over each input element
-        input.addEventListener('input', updateTotal); // Add an event listener to call updateTotal on input change
-    });
-
-    inputs.forEach(input => { // Iterate over each input element
-        input.addEventListener('input', checkWeightsAndPrepareData); // Add an event listener to call updateTotal on input change
-    });
-
-    function updateTotal() { // Function to update the total weight
-        let total = 0; // Initialize total to 0
-        weights = []; // Reset weights array
-        inputs.forEach(input => { // Iterate over each input element
-            const weight = parseFloat(input.value) || 0;
-            if (weight > 0) { // Only add non-zero weights
-                total += weight; // Add the input value to total
-                weights.push(weight); // Add the weight to the weights array
-            }
-        });
-        totalSpan.textContent = total.toFixed(2); // Update the text content of totalSpan with the total, formatted to 2 decimal places
-        totalSpan.style.color = total > 1 ? 'red' : 'black'; // Change color based on total value
+    const assetInputs = $('input[id^="weight_"]'); // Select all input elements with id starting with "weight"
+    const bmInputs = $('input[id^="weightbm_"]');
+    const totalSpan = $('#update-weight')[0]; // Select the element with id "update-weight"
+    for (const input of assetInputs) {
+        input.addEventListener('input', () => updateWeights(assetInputs, assetWeights));
     }
 
-    function checkWeightsAndPrepareData() {
-        // Prepare data for the POST request
-        const data = new FormData();
-        weights.forEach(weight => data.append("weights", weight));
+    for (const input of assetInputs) {
+        input.addEventListener('input', updateTotal);
+    }
+
+    for (const input of bmInputs) {
+        input.addEventListener('input', () => updateWeights(bmInputs, bmWeights));
+    }
+
+    function updateWeights(inputs, weights) {
+        weights.length = 0; // Clear the existing array contents
+        for (const input of inputs) {
+            const weight = parseFloat(input.value) || 0;
+            if (weight > 0) {
+                weights.push(weight);
+            }
+        }
+    }
+
+    function updateTotal() {
+        updateWeights(assetInputs, assetWeights);
+        let total = assetWeights.reduce((acc, weight) => acc + weight, 0);
+        totalSpan.textContent = total.toFixed(2);
+        totalSpan.style.color = total > 1 ? 'red' : 'black';
     }
 
 });
@@ -94,27 +117,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 //! ----------------- Dynamically update list of invested assets -----------------
+document.addEventListener('DOMContentLoaded', function () {
+    const assetInputs = $('input[id^="weight_"]');
+    const bmInputs = $('input[id^="weightbm_"]');
 
-document.addEventListener('DOMContentLoaded', function () { // Wait for the DOM to be fully loaded
-    const inputs = document.querySelectorAll('input[id^="weight"]'); // Select all input elements with id starting with "weightAsset"
+    assetInputs.on('input', () => updateInvested(assetInputs, investedAssets, 'weight_'));
+    bmInputs.on('input', () => updateInvested(bmInputs, investedBMs, 'weightbm_'));
 
-    inputs.forEach(input => { // Iterate over each input element
-        input.addEventListener('input', updateInvestedAssets); // Add an event listener to update investedAssets on input change
-    });
-
-    function updateInvestedAssets() {
-        investedAssets = Array.from(inputs)
-            .filter(input => parseFloat(input.value) > 0)
-            .map(input => input.id.replace('weight_', '')); // Remove "weight_" from the input id
+    function updateInvested(inputs, invested, prefix) {
+        invested.length = 0;
+        inputs.each(function () {
+            const value = parseFloat(this.value);
+            if (value > 0) {
+                invested.push(this.id.replace(prefix, ''));
+            }
+        });
     }
 });
 
 // * ----------------- Initialization -----------------
-
 axios.get(performance, {
     params: {
-        ticker: investedAssets, // Additional data like ticker
-        weights: JSON.stringify(weights)
+        assetTicker: investedAssets, // Additional data like ticker
+        assetWeights: JSON.stringify(assetWeights),
+        bmTicker: investedBMs,
+        bmWeights: JSON.stringify(bmWeights)
     }
 }).then(response => {
     const data = response.data;
@@ -151,16 +178,14 @@ axios.get(performance, {
     lineChart5 = new LineChart(_parentElement = "#aggregated-performance-volatility", _data = data.portfolio_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 5);
     lineChart6 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 6);
     lineChart7 = new LineChart(_parentElement = "#aggregated-performance-beta", _data = data.portfolio_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 140 }, _rebase = false, _slider = 7);
-    lineChart8 = new LineChart(_parentElement = "#asset-performance-beta", _data = data.asset_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 100 }, _rebase = false, _slider = 8);
+    lineChart8 = new LineChart(_parentElement = "#asset-performance-beta", _data = data.asset_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 110 }, _rebase = false, _slider = 8);
     lineChart9 = new LineChart(_parentElement = "#aggregated-performance-drawdown", _data = data.portfolio_drawdown, _xdata = "date", _xlabel = "", _ydata = "drawdown", _ylabel = "Drawdown [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 9);
 
     horTable1 = new HorizontalTable(_tableid = "table_top_drawdown", _data = data.portfolio_top_drawdowns);
     horTable2 = new HorizontalTable(_tableid = "table_top_drawdown2", _data = data.benchmark_top_drawdowns);
     horTable3 = new HorizontalTable(_tableid = "table_performance_metrics", _data = data.performance_metrics);
 
-    barChart = new GroupedBarChart(_parentElement = "#upside-downside-bar1", _data = data.monthly_returns[0].returns, _xdata = "return_type", _xlabel = "", _ydata = "Percentage", _ylabel = "Percentage", _cdata = "Asset", _dimension = { width: 400, height: 500 }, _legend = { noCol: 1, widthCol: 85 });
-    barChart = new GroupedBarChart(_parentElement = "#upside-downside-bar2", _data = data.monthly_returns[1].returns, _xdata = "return_type", _xlabel = "", _ydata = "Percentage", _ylabel = "Percentage", _cdata = "Asset", _dimension = { width: 400, height: 500 }, _legend = { noCol: 1, widthCol: 65 });
-
+    barChart = new GroupedBarChart(_parentElement = "#upside-downside-bar1", _data = data.monthly_returns[0].returns, _xdata = "return_type", _xlabel = "", _ydata = "Percentage", _ylabel = "Percentage", _cdata = "Asset", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 });
 
 
 }).catch(error => {
@@ -169,11 +194,14 @@ axios.get(performance, {
 
 // * ----------------- Update -----------------
 
+
 const updatePfView = () => {
     axios.get(performance, {
         params: {
-            ticker: investedAssets, // Additional data like ticker
-            weights: JSON.stringify(weights)
+            assetTicker: investedAssets, // Additional data like ticker
+            assetWeights: JSON.stringify(assetWeights),
+            bmTicker: investedBMs,
+            bmWeights: JSON.stringify(bmWeights)
         }
     }).then(response => {// Read the data from a CSV file
         const data = response.data;
@@ -222,4 +250,5 @@ const updatePfView = () => {
 }
 
 
-$('input[id^="weight"]').on("change", updatePfView); // Add an event listener to call updatePfView on input change for elements with id starting with "weight"
+$('.btn-primary').on("click", updatePfView); // Add an event listener to call updatePfView on button click for elements with class "btn-primary"
+

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 
-def calculate_portfolio_performance(weights, asset_timeseries):
+def calculate_portfolio_performance(weights, asset_timeseries, symbol):
     """
     Calculate portfolio performance with rebalancing at the last business day of March, June, September, and December.
     The asset timeseries and the resulting portfolio performance are indexed at 100.
@@ -72,7 +72,7 @@ def calculate_portfolio_performance(weights, asset_timeseries):
         output.append(
             {
                 "id": i + 1,
-                "symbol": "Portfolio",
+                "symbol": symbol,
                 "date": date.strftime("%d.%m.%Y"),
                 "close": f"{portfolio_performance[i]:.2f}",
             }

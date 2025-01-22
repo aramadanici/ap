@@ -16,62 +16,98 @@
 <div class="container-fluid">
     <!-- Control panel for content -->
 
-
     <div class="row justify-content-center mt-3">
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col">
-                        <label for="weightAsset1">AMD:</label>
-                        <input type="number" id="weight_AMD" name="weight_AMD" class="form-control" step="0.01" min="0"
-                            max="1" value="0.2">
+                    <div class="col-1">
                     </div>
-                    <div class="col">
-                        <label for="weightAsset2">Intel:</label>
-                        <input type="number" id="weight_INTC" name="weight_INTC" class="form-control" step="0.01"
-                            min="0" max="1" value="0.4">
+                    <div id="DashHeader" class="col-4 text-center">
+                        <strong>Asset Weight</strong>
                     </div>
-                    <div class="col">
-                        <label for="weightAsset3">Apple:</label>
-                        <input type="number" id="weight_AAPL" name="weight_AAPL" class="form-control" step="0.01"
-                            min="0" max="1" value="0.1">
+                    <div class="col-3">
                     </div>
-                    <div class="col">
-                        <label for="weightAsset4">NVIDIA:</label>
-                        <input type="number" id="weight_NVDA" name="weight_NVDA" class="form-control" step="0.01"
-                            min="0" max="1" value="0.1">
+                    <div id="DashHeader" class="col-3 text-center">
+                        <strong>Benchmark Weight</strong>
                     </div>
-                    <div class="col">
-                        <label for="weightAsset5">Qualcomm:</label>
-                        <input type="number" id="weight_QCOM" name="weight_QCOM" class="form-control" step="0.01"
-                            min="0" max="1" value="0.1">
-                    </div>
-                    <div class="col">
-                        <label for="weightAsset6">Broadcomm:</label>
-                        <input type="number" id="weight_AVGO" name="weight_AVGO" class="form-control" step="0.01"
-                            min="0" max="1" value="0.1">
-                    </div>
-                    <div class="row">
-                        <div class="col">Total: <span id="update-weight">0</span> </div>
+                    <div class="col-1">
                     </div>
                 </div>
-
-
-
-
                 <div class="row">
-                    <div class="col">
-                        <label for="fromDate">From:</label>
-                        <input type="date" id="fromDate" name="fromDate" class="form-control">
+                    <div class="col-1">
                     </div>
-                    <div class="col">
-                        <label for="toDate">To:</label>
-                        <input type="date" id="toDate" name="toDate" class="form-control">
+                    <div class="col-2">
+                        <div class="row">
+                            <label for="weightAsset1">AMD:</label>
+                            <input type="number" id="weight_AMD" name="weight_AMD" class="form-control" step="0.01"
+                                min="0" max="1" value="0.2">
+                        </div>
+                        <div class="row">
+                            <label for="weightAsset2">Intel:</label>
+                            <input type="number" id="weight_INTC" name="weight_INTC" class="form-control" step="0.01"
+                                min="0" max="1" value="0.4">
+                        </div>
+                        <div class="row">
+                            <label for="weightAsset3">Apple:</label>
+                            <input type="number" id="weight_AAPL" name="weight_AAPL" class="form-control" step="0.01"
+                                min="0" max="1" value="0.1">
+                        </div>
                     </div>
-                    <div class="col"> <button type="submit" class="btn btn-primary mt-4">Compute</button></div>
+                    <div class="col-2">
+                        <div class="row">
+                            <label for="weightAsset4">NVIDIA:</label>
+                            <input type="number" id="weight_NVDA" name="weight_NVDA" class="form-control" step="0.01"
+                                min="0" max="1" value="0.1">
+                        </div>
+                        <div class="row">
+                        </div>
+                        <div class="row">
+                            <label for="weightAsset5">Qualcomm:</label>
+                            <input type="number" id="weight_QCOM" name="weight_QCOM" class="form-control" step="0.01"
+                                min="0" max="1" value="0.1">
+                        </div>
+                        <div class="row">
+                            <label for="weightAsset6">Broadcomm:</label>
+                            <input type="number" id="weight_AVGO" name="weight_AVGO" class="form-control" step="0.01"
+                                min="0" max="1" value="0.1">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <label for="weightAsset1">MXWO:</label>
+                            <input type="number" id="weightbm_MXWO" name="weight_MXWO" class="form-control" step="0.01"
+                                min="0" max="1" value="0.5">
+                        </div>
+                        <div class="row">
+                            <label for="weightAsset2">LEGATRUU:</label>
+                            <input type="number" id="weightbm_LEGATRUU" name="weight_LEGATRUU" class="form-control"
+                                step="0.01" min="0" max="1" value="0.5">
+                        </div>
+                    </div>
+                    <div class="col-1">
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="col-1">
+                    </div>
+                    <div class="col-10">Total: <span id="update-weight">0</span></div>
+                    <div class="col-1">
+                    </div>
 
-
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="fromDate">From:</label>
+                    <input type="date" id="fromDate" name="fromDate" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="toDate">To:</label>
+                    <input type="date" id="toDate" name="toDate" class="form-control">
+                </div>
+                <div class="col"> <button type="submit" class="btn btn-primary mt-4">Compute</button></div>
             </div>
         </div>
     </div>
@@ -276,14 +312,7 @@
         </div>
 
         <div class="col">
-            <div class="row">
-                <div class="col">
-                    <div id="upside-downside-bar1"></div>
-                </div>
-                <div class="col">
-                    <div id="upside-downside-bar2"></div>
-                </div>
-            </div>
+            <div id="upside-downside-bar1"></div>
         </div>
 
     </div>
