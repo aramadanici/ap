@@ -91,7 +91,11 @@
 #cockpit-row {
     border-bottom: 3px solid #083959;
     padding-bottom: 1rem;
+    display: flex;
+    justify-content: center;
 }
+
+
 
 .card {
     border: none;
@@ -131,8 +135,9 @@ h6 {
 }
 
 #DashHeader {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #083959;
     margin-bottom: 1rem;
+    color: #083959;
 }
 
 #weight_AMD,
