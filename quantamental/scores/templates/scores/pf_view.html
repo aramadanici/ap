@@ -24,22 +24,20 @@
     <!-- Control panel for content -->
     <div id="cockpit-row" class="row mt-3">
 
-        <div class="col-6">
+        <div class="col-5">
             <div class="card">
                 <div class="card-body">
 
                     <div class="row">
-                        <div class="col-1">
-                        </div>
-                        <div id="DashHeader" class="col-4 text-center">
-                            <strong>Asset Weight <span id="update-asset-weight"></span></strong>
+                        <div id="DashHeader" class="col-6 text-center">
+                            <strong>Portfolio Weights <span id="update-asset-weight"></span></strong>
                         </div>
 
                         <div class="col-1">
                         </div>
 
-                        <div id="DashHeader" class="col-4 text-center">
-                            <strong>Benchmark Weight <span id="update-bm-weight"></span></strong>
+                        <div id="DashHeader" class="col-5 text-center">
+                            <strong>Benchmark Weights <span id="update-bm-weight"></span></strong>
                         </div>
 
                         <div class="col-1">
@@ -47,10 +45,9 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-1">
-                        </div>
 
-                        <div class="col-2">
+
+                        <div class="col-3">
                             <div class="row">
                                 <label for="weightAsset1">AMD:</label>
                                 <input type="number" id="weight_AMD" name="weight_AMD" class="form-control" step="0.01"
@@ -68,7 +65,7 @@
                             </div>
                         </div>
 
-                        <div class="col-2">
+                        <div class="col-3">
                             <div class="row">
                                 <label for="weightAsset4">NVIDIA:</label>
                                 <input type="number" id="weight_NVDA" name="weight_NVDA" class="form-control"
@@ -91,7 +88,7 @@
                         <div class="col-1">
                         </div>
 
-                        <div class="col-4">
+                        <div class="col-5">
                             <div class="row">
                                 <label for="weightAsset1">MXWO:</label>
                                 <input type="number" id="weightbm_MXWO" name="weight_MXWO" class="form-control"
@@ -104,18 +101,7 @@
                             </div>
                         </div>
 
-                        <div class="col-1">
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-1">
-                        </div>
-
-                        <!-- <div class="col-10">Total: <span id="update-asset-weight">0</span></div> -->
-
-                        <div class="col-1">
-                        </div>
                     </div>
 
                 </div>
@@ -138,8 +124,13 @@
             </div>
         </div>
 
-        <div class="col-3">barchart1</div>
-        <div class="col-3">barchart1</div>
+
+        <div class="col-3">
+            <div id="multiple-bar-area"></div>
+        </div>
+        <div class="col-3 border border-danger">
+            <strong>BARCHART SHOWING ASSET CLASSES AS PROPOSED BM</strong>
+        </div>
 
     </div>
 
@@ -326,6 +317,7 @@
     const aggregatedPerformance = "{% url 'scores:pf_view_aggregated_performance' %}";
     const assetPerformance = "{% url 'scores:pf_view_asset_performance' %}";
     const performance = "{% url 'scores:pf_view_performance' %}";
+    const groupedbar2 = "{% static 'data/multiples.json' %}";
 </script>
 
 <script type="text/javascript" src="{% static 'js/LineChart.js' %}"></script>

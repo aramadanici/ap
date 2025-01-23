@@ -1,4 +1,3 @@
-// Handles all the events and interactions for the visualization
 let lineChart1
 let lineChart2
 let lineChart3
@@ -10,103 +9,60 @@ let horTable1
 let horTable2
 let horTable3
 let barChart1
-
-const assetInputs = $('input[id^="weight_"]');
-const bmInputs = $('input[id^="weightbm_"]');
-
+let barChart2
+let barChart3
 
 
-
-// ! ----------------- Get Default Asset Weights -----------------
-let assetWeights = [];
-for (const input of assetInputs) { // Iterate over each input element
-    const weight = parseFloat(input.value) || 0;
-    if (weight > 0) { // Only add non-zero weights
-        assetWeights.push(weight); // Add the weight to the weights array
-    }
-}
-
-
-// ! ----------------- Get Default Assets -----------------
-let investedAssets = []; // Declare investedAssets variable globally
-
-investedAssets = Array.from(assetInputs)
-    .filter(input => parseFloat(input.value) > 0)
-    .map(input => input.id.replace('weight_', '')); // Remove "weight_" from the input id
-
-
-// ! ----------------- Get Default BM Weights -----------------
-let bmWeights = [];
-for (const input of bmInputs) { // Iterate over each input element
-    const weight = parseFloat(input.value) || 0;
-    if (weight > 0) { // Only add non-zero weights
-        bmWeights.push(weight); // Add the weight to the weights array
-    }
-}
-
-
-// ! ----------------- Get Default BMs -----------------
-let investedBMs = []; // Declare investedAssets variable globally
-
-investedBMs = Array.from(bmInputs)
-    .filter(input => parseFloat(input.value) > 0)
-    .map(input => input.id.replace('weightbm_', '')); // Remove "weight_" from the input id
-
-//!  ----------------- Calculate and Display Total Weight from Input Fields and Prepare Data for POST Request -----------------
-document.addEventListener('DOMContentLoaded', function () { // Wait for the DOM to be fully loaded
-    const assetInputs = $('input[id^="weight_"]'); // Select all input elements with id starting with "weight"
-    const bmInputs = $('input[id^="weightbm_"]');
-    const totalSpan = $('#update-weight')[0]; // Select the element with id "update-weight"
-    for (const input of assetInputs) {
-        input.addEventListener('input', () => updateWeights(assetInputs, assetWeights));
-    }
-
-    for (const input of assetInputs) {
-        input.addEventListener('input', updateTotal);
-    }
-
-    for (const input of bmInputs) {
-        input.addEventListener('input', () => updateWeights(bmInputs, bmWeights));
-    }
-
-    function updateWeights(inputs, weights) {
-        weights.length = 0; // Clear the existing array contents
-        for (const input of inputs) {
-            const weight = parseFloat(input.value) || 0;
-            if (weight > 0) {
-                weights.push(weight);
-            }
+//! ----------------- Helper Functions -----------------
+function updateInvested(inputs, invested, weights) {
+    invested.length = 0;
+    weights.length = 0;
+    inputs.each(function () {
+        const value = parseFloat(this.value);
+        if (value > 0) {
+            invested.push(this.id.split('_')[1]);
+            weights.push(value);
         }
-    }
+        console.log(invested, weights);
+    });
+}
 
-    function updateTotal() {
-        updateWeights(assetInputs, assetWeights);
-        let total = assetWeights.reduce((acc, weight) => acc + weight, 0);
-        totalSpan.textContent = total.toFixed(2);
-        totalSpan.style.color = total > 1 ? 'red' : 'black';
-    }
+function updateTotal(weights, span) {
+    const total = weights.reduce((acc, weight) => acc + weight, 0) * 100;
+    span.textContent = `(${total.toFixed(0)}%)`;
+    span.style.color = total > 100 ? 'red' : 'black';
+}
 
-});
+// ! ----------------- Get Portfolio Info -----------------
+const assetInputs = $('input[id^="weight_"]');
+let investedAssets = [];
+let assetWeights = [];
+updateInvested(assetInputs, investedAssets, assetWeights);
+
+// ! ----------------- Get BM Info -----------------
+const bmInputs = $('input[id^="weightbm_"]');
+let investedBMs = [];
+let bmWeights = [];
+updateInvested(bmInputs, investedBMs, bmWeights);
 
 //! ----------------- Set Default Date Range -----------------
-
 document.addEventListener('DOMContentLoaded', function () {
     const fromDate = document.getElementById('fromDate');
     const toDate = document.getElementById('toDate');
 
-    // Constants
+
     const oneDayMs = 86400000;
 
-    // Default date calculations
+
     const lastYear = new Date().getFullYear() - 1;
     const defaultFromDate = formatDate(new Date(`${lastYear}-12-31`));
     const defaultToDate = formatDate(new Date(Date.now() - oneDayMs));
 
-    // Check elements exist before setting values
+
     if (fromDate) fromDate.value = defaultFromDate;
     if (toDate) toDate.value = defaultToDate;
 
-    // Function to format date as yyyy-MM-dd
+
     function formatDate(date) {
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -116,37 +72,59 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-//! ----------------- Dynamically update list of invested assets -----------------
+
+//! * ----------------- Initialization -----------------
 document.addEventListener('DOMContentLoaded', function () {
-    const assetInputs = $('input[id^="weight_"]');
-    const bmInputs = $('input[id^="weightbm_"]');
+    const combinedArray = investedAssets.map((stock, index) => {
+        return {
+            Stock: stock,
+            Weight: parseFloat(assetWeights[index])
+        };
+    });
 
-    assetInputs.on('input', () => updateInvested(assetInputs, investedAssets, 'weight_'));
-    bmInputs.on('input', () => updateInvested(bmInputs, investedBMs, 'weightbm_'));
+    const dataTest = [
+        {
+            Stock: "NVDA",
+            Multiple: "P/B",
+            Value: 36.71
+        },
+        {
+            Stock: "NVDA",
+            Multiple: "EV/EBITDA",
+            Value: 54.98
+        },
+        {
+            Stock: "NVDA",
+            Multiple: "P/E",
+            Value: 65.33
+        },
+        {
+            Stock: "NVDA",
+            Multiple: "P/S",
+            Value: 27.48
+        },
+        {
+            Stock: "NVDA",
+            Multiple: "D/E",
+            Value: 0.29
+        }
+    ];
 
-    function updateInvested(inputs, invested, prefix) {
-        invested.length = 0;
-        inputs.each(function () {
-            const value = parseFloat(this.value);
-            if (value > 0) {
-                invested.push(this.id.replace(prefix, ''));
-            }
-        });
-    }
+    barChart2 = new HorizontalBarChart(_parentElement = "#multiple-bar-area", _data = combinedArray, _xdata = "Weight", _xlabel = "", _ydata = "Stock", _ylabel = "", _cdata = null, _dimension = { width: 426, height: 330 }, _legend = { noCol: 1, widthCol: 65 });
+    barChart3 = new HorizontalBarChart(_parentElement = "#multiple-bar-area2", _data = dataTest, _xdata = "Value", _xlabel = "", _ydata = "Multiple", _ylabel = "", _cdata = "Year", _dimension = { width: 426, height: 330 }, _legend = { noCol: 1, widthCol: 65 });
 });
 
-// * ----------------- Initialization -----------------
+
 axios.get(performance, {
     params: {
-        assetTicker: investedAssets, // Additional data like ticker
+        assetTicker: investedAssets,
         assetWeights: JSON.stringify(assetWeights),
         bmTicker: investedBMs,
         bmWeights: JSON.stringify(bmWeights)
     }
 }).then(response => {
     const data = response.data;
-    const parseTime = d3.timeParse("%d.%m.%Y") // Create a time parser
-
+    const parseTime = d3.timeParse("%d.%m.%Y")
     const dataKeys = {
         portfolio_performance: ['close'],
         portfolio_rolling_return: ['volatility', 'return'],
@@ -164,7 +142,6 @@ axios.get(performance, {
         }
     }
 
-    // Order data.asset_rolling_return by symbol in the same way as data.asset_performance
     const assetPerformanceSymbols = data.asset_performance.map(d => d.symbol);
     data.asset_rolling_return.sort((a, b) => {
         return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
@@ -185,27 +162,59 @@ axios.get(performance, {
     horTable2 = new HorizontalTable(_tableid = "table_top_drawdown2", _data = data.benchmark_top_drawdowns);
     horTable3 = new HorizontalTable(_tableid = "table_performance_metrics", _data = data.performance_metrics);
 
-    barChart = new GroupedBarChart(_parentElement = "#upside-downside-bar1", _data = data.monthly_returns[0].returns, _xdata = "return_type", _xlabel = "", _ydata = "Percentage", _ylabel = "Percentage", _cdata = "Asset", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 });
-
+    barChart1 = new GroupedBarChart(_parentElement = "#upside-downside-bar1", _data = data.monthly_returns[0].returns, _xdata = "return_type", _xlabel = "", _ydata = "Percentage", _ylabel = "Percentage", _cdata = "Asset", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 });
 
 }).catch(error => {
     console.error('Error fetching data:', error);
 });
 
-// * ----------------- Update -----------------
 
 
+//! * ----------------- Update -----------------
+// * ----------------- Update Cockpit -----------------
+document.addEventListener('DOMContentLoaded', function () {
+    const assetSpan = $('#update-asset-weight')[0];
+    const bmSpan = $('#update-bm-weight')[0];
+
+    assetInputs.on('input', () => {
+        updateInvested(assetInputs, investedAssets, assetWeights);
+        updateTotal(assetWeights, assetSpan);
+
+
+        const combinedArray = investedAssets.map((stock, index) => {
+            return {
+                Stock: stock,
+                Weight: parseFloat(assetWeights[index])
+            };
+        });
+
+        barChart2.data = combinedArray
+
+        const charts = [barChart2];
+        for (let chart of charts) {
+            chart.manageData();
+        }
+    });
+
+    bmInputs.on('input', () => {
+        updateInvested(bmInputs, investedBMs, bmWeights);
+        updateTotal(bmWeights, bmSpan);
+    });
+});
+
+// * ----------------- Update Computation -----------------
 const updatePfView = () => {
+    console.log("Updated Weights:", assetWeights);
     axios.get(performance, {
         params: {
-            assetTicker: investedAssets, // Additional data like ticker
+            assetTicker: investedAssets,
             assetWeights: JSON.stringify(assetWeights),
             bmTicker: investedBMs,
             bmWeights: JSON.stringify(bmWeights)
         }
-    }).then(response => {// Read the data from a CSV file
+    }).then(response => {
         const data = response.data;
-        const parseTime = d3.timeParse("%d.%m.%Y") // Create a time parser
+        const parseTime = d3.timeParse("%d.%m.%Y")
 
         const dataKeys = {
             portfolio_performance: ['close'],
@@ -223,7 +232,6 @@ const updatePfView = () => {
                 row.date = parseTime(row.date);
             }
         }
-
 
         lineChart1.data = data.portfolio_performance
         lineChart2.data = data.portfolio_rolling_return
@@ -250,5 +258,9 @@ const updatePfView = () => {
 }
 
 
-$('.btn-primary').on("click", updatePfView); // Add an event listener to call updatePfView on button click for elements with class "btn-primary"
+$('.btn-primary').on("click", updatePfView);
+
+
+
+
 
