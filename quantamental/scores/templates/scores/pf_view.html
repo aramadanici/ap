@@ -15,27 +15,32 @@
 
 <div class="container-fluid">
     <!-- Control panel for content -->
-
     <div class="row justify-content-center mt-3">
         <div class="card">
             <div class="card-body">
+
                 <div class="row">
                     <div class="col-1">
                     </div>
                     <div id="DashHeader" class="col-4 text-center">
                         <strong>Asset Weight</strong>
                     </div>
+
                     <div class="col-3">
                     </div>
+
                     <div id="DashHeader" class="col-3 text-center">
                         <strong>Benchmark Weight</strong>
                     </div>
+
                     <div class="col-1">
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-1">
                     </div>
+
                     <div class="col-2">
                         <div class="row">
                             <label for="weightAsset1">AMD:</label>
@@ -53,6 +58,7 @@
                                 min="0" max="1" value="0.1">
                         </div>
                     </div>
+
                     <div class="col-2">
                         <div class="row">
                             <label for="weightAsset4">NVIDIA:</label>
@@ -72,8 +78,10 @@
                                 min="0" max="1" value="0.1">
                         </div>
                     </div>
+
                     <div class="col-3">
                     </div>
+
                     <div class="col-3">
                         <div class="row">
                             <label for="weightAsset1">MXWO:</label>
@@ -86,34 +94,39 @@
                                 step="0.01" min="0" max="1" value="0.5">
                         </div>
                     </div>
+
                     <div class="col-1">
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-1">
                     </div>
+
                     <div class="col-10">Total: <span id="update-weight">0</span></div>
+
                     <div class="col-1">
                     </div>
-
                 </div>
+
             </div>
+
             <div class="row">
                 <div class="col">
                     <label for="fromDate">From:</label>
                     <input type="date" id="fromDate" name="fromDate" class="form-control">
                 </div>
+
                 <div class="col">
                     <label for="toDate">To:</label>
                     <input type="date" id="toDate" name="toDate" class="form-control">
                 </div>
+
                 <div class="col"> <button type="submit" class="btn btn-primary mt-4">Compute</button></div>
             </div>
+
         </div>
     </div>
-
-
-
 
 
     <div class="h-divider">
@@ -121,9 +134,8 @@
         <div class="divider-shadow"></div>
     </div>
 
-    <!-- Portfolio Performance -->
-    <div class="row">
 
+    <div class="row">
         <div class="col">
             <div id="aggregated-performance"></div>
             <div class="pb-1" id="slider-div">
@@ -149,14 +161,10 @@
                 </div>
             </div>
         </div>
-
     </div>
-
-
 
     <!-- Asset Performance -->
     <div class="row">
-
         <div class="col">
             <div id="asset-performance"></div>
             <div class="pb-1" id="slider-div">
@@ -182,10 +190,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-
-
 
 
     <div class="h-divider">
@@ -194,14 +199,7 @@
     </div>
 
 
-
-
-
-
-
-
     <div class="row">
-
         <div class="col">
             <div id="aggregated-performance-volatility"></div>
             <div class="pb-1" id="slider-div">
@@ -227,20 +225,10 @@
                 </div>
             </div>
         </div>
-
     </div>
 
 
-
-
-
-
-
-
-
-
     <div class="row">
-
         <div class="col">
             <div id="aggregated-performance-beta"></div>
             <div class="pb-1" id="slider-div">
@@ -266,25 +254,9 @@
                 </div>
             </div>
         </div>
-
     </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <div class="row">
-
         <div class="col">
             <div id="aggregated-performance-drawdown"></div>
             <div class="pb-1" id="slider-div">
@@ -302,11 +274,9 @@
             {% include 'table_new.html' with id="table_top_drawdown" show_footer=0 %}
             {% include 'table_new.html' with id="table_top_drawdown2" show_footer=0 %}
         </div>
-
     </div>
 
     <div class="row">
-
         <div class="col">
             {% include 'table_new.html' with id="table_performance_metrics" show_footer=0 %}
         </div>
@@ -314,15 +284,7 @@
         <div class="col">
             <div id="upside-downside-bar1"></div>
         </div>
-
     </div>
-
-
-
-
-
-
-
 
 
     <div class="h-divider">
@@ -331,38 +293,12 @@
     </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <div class="h-divider">
         <h3>Stress Test</h3>
         <div class="divider-shadow"></div>
     </div>
 
 </div>
-
-
-
-
 
 
 {% endblock content %}
@@ -381,4 +317,5 @@
 <script type="text/javascript" src="{% static 'js/HorizontalTable.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/GroupedBarChart.js' %}"></script>
 <script type="text/javascript" src="{% static 'scores/js/main_pf.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/HorizontalBarChart.js' %}"></script>
 {% endblock jsextra %}
