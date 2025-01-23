@@ -88,6 +88,9 @@ class HorizontalBarChart {
         vis.y1.domain(vis.data.map(d => d[vis.cdata]));
         vis.y.domain(vis.data.map(d => d[vis.ydata]));
 
+        const uniqueYData = [...new Set(vis.data.map(d => d[vis.ydata]))];
+        const barHeight = (vis.HEIGHT / uniqueYData.length) * 0.8; // Reduce the height of the bars
+
         const bars = vis.canvas.selectAll("rect")
             .data(vis.data, d => d[vis.ydata] + d[vis.cdata]);
 
@@ -100,9 +103,9 @@ class HorizontalBarChart {
         bars.enter().append("rect")
             .merge(bars)
             .transition(t)
-            .attr("y", d => vis.y(d[vis.ydata]) + vis.y1(d[vis.cdata]))
+            .attr("y", d => vis.y(d[vis.ydata]) + (vis.y.bandwidth() - barHeight) / 2) // Center the bars
             .attr("x", vis.x(0))
-            .attr("height", vis.y1.bandwidth())
+            .attr("height", barHeight)
             .attr("width", d => vis.x(d[vis.xdata]))
             .attr("fill", d => vis.color(d[vis.cdata]));
 
