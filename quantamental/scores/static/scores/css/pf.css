@@ -88,16 +88,38 @@
     box-shadow: 0 0 8px #083959;
 }
 
-
+#cockpit-row {
+    border-bottom: 3px solid #083959;
+    padding-bottom: 1rem;
+}
 
 .card {
     border: none;
-    border-bottom: 3px solid #083959;
+    /* border-bottom: 3px solid #083959; */
     border-radius: 3px;
-    margin: 30px 10px 50px 10px;
-    padding: 30px 100px 15px 100px;
-    width: 1000px;
+    /* margin: 30px 10px 50px 10px; */
+    /* padding: 30px 100px 15px 100px; */
 }
+
+#compute-button {
+    background-color: #ffffff;
+    color: #083959;
+    height: 3rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-bottom: 1px solid #083959;
+    text-align: start;
+    margin-top: 1rem;
+    border-radius: 0px;
+}
+
+#compute-button:hover {
+    box-shadow: 0 0.5em 0.375em -0.4em #083959;
+    transform: translateY(-0.05em);
+}
+
+
 
 h5 {
     color: #083959;
