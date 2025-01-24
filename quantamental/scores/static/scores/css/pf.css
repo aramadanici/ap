@@ -149,7 +149,38 @@ h6 {
     width: 90%;
 }
 
-/* 
-.form-control {
-    width: 33%;
-} */
+#play-button {
+    border-top: 1rem solid transparent;
+    border-bottom: 1rem solid transparent;
+    border-right: 1rem solid;
+    background: white;
+    border-left: none;
+    cursor: pointer;
+    outline: none;
+    border-left: 1rem solid;
+    border-right: none;
+    border-left-color: #083959;
+
+    &:hover {
+        border-left-color: darkgreen !important;
+    }
+}
+
+#stressTestSelect {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#stressTestSelect:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
