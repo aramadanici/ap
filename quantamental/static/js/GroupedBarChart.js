@@ -177,7 +177,7 @@ class GroupedBarChart {
                 d3.select(this).on("click", function () {
                     const selection = d3.select(this);
                     const currentColor = selection.style("fill"); // Get the current color of the label
-                    const newColor = currentColor === "rgb(0, 0, 0)" ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)"; // Compare against the RGB value for black
+                    const newColor = currentColor === "rgb(0, 0, 0)" ? "rgb(194, 194, 194)" : "rgb(0, 0, 0)"; // Compare against the RGB value for black
                     selection.style("fill", newColor); // Set the new color
                 });
             });
