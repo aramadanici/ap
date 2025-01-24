@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const combinedArray = investedAssets.map((stock, index) => {
         return {
             Stock: stock,
-            Weight: parseFloat(assetWeights[index])
+            Weight: parseFloat(assetWeights[index]) * 100
         };
     });
 
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const combinedArray = investedAssets.map((stock, index) => {
             return {
                 Stock: stock,
-                Weight: parseFloat(assetWeights[index])
+                Weight: parseFloat(assetWeights[index]) * 100
             };
         });
 
@@ -203,7 +203,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // * ----------------- Update Computation -----------------
 const updatePfView = () => {
-    console.log("Updated Weights:", assetWeights);
+    console.log("Invested Assets:", investedAssets);
+    console.log("Asset Weights:", assetWeights);
+    console.log("Invested BMs:", investedBMs);
+    console.log("BM Weights:", bmWeights);
     axios.get(performance, {
         params: {
             assetTicker: investedAssets,
