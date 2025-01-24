@@ -18,12 +18,11 @@ function updateInvested(inputs, invested, weights) {
     invested.length = 0;
     weights.length = 0;
     inputs.each(function () {
-        const value = parseFloat(this.value);
+        const value = parseFloat(this.value) / 100;
         if (value > 0) {
             invested.push(this.id.split('_')[1]);
             weights.push(value);
         }
-        console.log(invested, weights);
     });
 }
 
