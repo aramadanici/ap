@@ -220,6 +220,8 @@ def pf_view_performance(request):
                 {"error": "Invalid weights format"}, status=400
             )  # Return error if weights format is invalid
 
+    pf_bm_performance = portfolio_performance + bm_performance
+
     #    ! Run Computation --------------------------------------------------------------------------
 
     portfolio_rolling_return = calculate_rolling_return(portfolio_performance)
@@ -248,7 +250,7 @@ def pf_view_performance(request):
     # Combine both results in a single response
     response_data = {
         "asset_performance": asset_performance,
-        "portfolio_performance": portfolio_performance,  # This will be None if no weights are provided
+        "portfolio_performance": pf_bm_performance,  # This will be None if no weights are provided
         "portfolio_rolling_return": portfolio_rolling_return,
         "asset_rolling_return": asset_rolling_return,
         "portfolio_drawdown": combined_drawdown,

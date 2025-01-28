@@ -92,12 +92,12 @@
                             <div class="row">
                                 <label for="weightAsset1">MXWO:</label>
                                 <input type="number" id="weightbm_MXWO" name="weight_MXWO" class="form-control" step="1"
-                                    min="0" max="100" value="40">
+                                    min="0" max="100" value="100">
                             </div>
                             <div class="row">
                                 <label for="weightAsset2">LEGATRUU:</label>
                                 <input type="number" id="weightbm_LEGATRUU" name="weight_LEGATRUU" class="form-control"
-                                    step="1" min="0" max="100" value="60">
+                                    step="1" min="0" max="100" value="0">
                             </div>
                         </div>
 
@@ -293,16 +293,64 @@
     </div>
 
 
-    <div class="h-divider">
+    <!-- <div class="h-divider">
         <h3>Diversification</h3>
         <div class="divider-shadow"></div>
-    </div>
+    </div> -->
 
 
     <div class="h-divider">
         <h3>Stress Test</h3>
         <div class="divider-shadow"></div>
     </div>
+
+
+    <div class="row">
+
+
+        <div class="col-6">
+            <div class="row justify-content-center">
+                <div class="col-3">
+                    <select id="stressTestSelect" name="stressTestSelect" class="form-control">
+                        <option value="1">US/CHINA Tradewar</option>
+                        <option value="2" selected>COVID-19</option>
+                    </select>
+                </div>
+                <div class="col-1">
+                    <button id="play-button"></button>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div id="stress-test-performance"></div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </div>
 
@@ -321,6 +369,7 @@
 </script>
 
 <script type="text/javascript" src="{% static 'js/LineChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/LineChartAnimation.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/HorizontalTable.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/GroupedBarChart.js' %}"></script>
 <script type="text/javascript" src="{% static 'scores/js/main_pf.js' %}"></script>

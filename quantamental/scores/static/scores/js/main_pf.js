@@ -1,16 +1,16 @@
-let lineChart1
-let lineChart2
-let lineChart3
-let lineChart4
-let lineChart5
-let lineChart6
-let lineChart7
-let horTable1
-let horTable2
-let horTable3
-let barChart1
-let barChart2
-let barChart3
+// let lineChart1
+// let lineChart2
+// let lineChart3
+// let lineChart4
+// let lineChart5
+// let lineChart6
+// let lineChart7
+// let horTable1
+// let horTable2
+// let horTable3
+// let barChart1
+// let barChart2
+// let barChart3
 
 
 //! ----------------- Helper Functions -----------------
@@ -31,6 +31,22 @@ function updateTotal(weights, span) {
     span.textContent = `(${total.toFixed(0)}%)`;
     span.style.color = total > 100 ? 'red' : 'black';
 }
+
+
+const stressEvent = document.getElementById('stressTestSelect').value;
+const eventData = {
+    1: {
+        startdate: '2018-01-29',
+        enddate: '2019-04-29',
+        description: 'US/CHINA Trade War'
+    },
+    2: {
+        startdate: '2020-02-13',
+        enddate: '2020-08-24',
+        description: 'COVID-19'
+    }
+};
+
 
 // ! ----------------- Get Portfolio Info -----------------
 const assetInputs = $('input[id^="weight_"]');
@@ -81,36 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     });
 
-    const dataTest = [
-        {
-            Stock: "NVDA",
-            Multiple: "P/B",
-            Value: 36.71
-        },
-        {
-            Stock: "NVDA",
-            Multiple: "EV/EBITDA",
-            Value: 54.98
-        },
-        {
-            Stock: "NVDA",
-            Multiple: "P/E",
-            Value: 65.33
-        },
-        {
-            Stock: "NVDA",
-            Multiple: "P/S",
-            Value: 27.48
-        },
-        {
-            Stock: "NVDA",
-            Multiple: "D/E",
-            Value: 0.29
-        }
-    ];
-
     barChart2 = new HorizontalBarChart(_parentElement = "#multiple-bar-area", _data = combinedArray, _xdata = "Weight", _xlabel = "", _ydata = "Stock", _ylabel = "", _cdata = null, _dimension = { width: 426, height: 330 }, _legend = { noCol: 1, widthCol: 65 });
-    barChart3 = new HorizontalBarChart(_parentElement = "#multiple-bar-area2", _data = dataTest, _xdata = "Value", _xlabel = "", _ydata = "Multiple", _ylabel = "", _cdata = "Year", _dimension = { width: 426, height: 330 }, _legend = { noCol: 1, widthCol: 65 });
 });
 
 
@@ -157,6 +144,16 @@ axios.get(performance, {
     lineChart8 = new LineChart(_parentElement = "#asset-performance-beta", _data = data.asset_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 110 }, _rebase = false, _slider = 8);
     lineChart9 = new LineChart(_parentElement = "#aggregated-performance-drawdown", _data = data.portfolio_drawdown, _xdata = "date", _xlabel = "", _ydata = "drawdown", _ylabel = "Drawdown [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 9);
 
+    const stressTestResults = {};
+    for (const [eventKey, eventDetails] of Object.entries(eventData)) {
+        stressTestResults[eventKey] = data.portfolio_performance.filter(d =>
+            d.date >= new Date(eventDetails.startdate) && d.date <= new Date(eventDetails.enddate)
+        );
+    }
+    dataStressTest = stressTestResults[stressEvent];
+    lineChart10 = new LineChartAnimation(_parentElement = "#stress-test-performance", _data = dataStressTest, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 0);
+    lineChart10.stressTestResults = stressTestResults;
+
     horTable1 = new HorizontalTable(_tableid = "table_top_drawdown", _data = data.portfolio_top_drawdowns);
     horTable2 = new HorizontalTable(_tableid = "table_top_drawdown2", _data = data.benchmark_top_drawdowns);
     horTable3 = new HorizontalTable(_tableid = "table_performance_metrics", _data = data.performance_metrics);
@@ -174,6 +171,7 @@ axios.get(performance, {
 document.addEventListener('DOMContentLoaded', function () {
     const assetSpan = $('#update-asset-weight')[0];
     const bmSpan = $('#update-bm-weight')[0];
+
 
     assetInputs.on('input', () => {
         updateInvested(assetInputs, investedAssets, assetWeights);
@@ -203,10 +201,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // * ----------------- Update Computation -----------------
 const updatePfView = () => {
-    console.log("Invested Assets:", investedAssets);
-    console.log("Asset Weights:", assetWeights);
-    console.log("Invested BMs:", investedBMs);
-    console.log("BM Weights:", bmWeights);
     axios.get(performance, {
         params: {
             assetTicker: investedAssets,
@@ -244,8 +238,21 @@ const updatePfView = () => {
         lineChart7.data = data.portfolio_rolling_beta
         lineChart8.data = data.asset_rolling_beta
         lineChart9.data = data.portfolio_drawdown
+        barChart1.data = data.monthly_returns[0].returns
 
-        const charts = [lineChart1, lineChart2, lineChart3, lineChart4, lineChart5, lineChart6, lineChart7, lineChart8, lineChart9];
+
+
+        const stressTestResults = {};
+        for (const [eventKey, eventDetails] of Object.entries(eventData)) {
+            stressTestResults[eventKey] = data.portfolio_performance.filter(d =>
+                d.date >= new Date(eventDetails.startdate) && d.date <= new Date(eventDetails.enddate)
+            );
+        }
+        dataStressTest = stressTestResults[stressEvent];
+        lineChart10.data = dataStressTest
+        lineChart10.stressTestResults = stressTestResults;
+
+        const charts = [lineChart1, lineChart2, lineChart3, lineChart4, lineChart5, lineChart6, lineChart7, lineChart8, lineChart9, barChart1, lineChart10];
         for (let chart of charts) {
             chart.manageData();
         }
@@ -257,12 +264,21 @@ const updatePfView = () => {
     }).catch(error => {
         console.error('Error fetching data:', error);
     });
+
+
 }
+
+const runStressTest = () => {
+    const stressEvent = document.getElementById('stressTestSelect').value;
+    console.log(lineChart10.data)
+    console.log(lineChart10.stressTestResults[stressEvent])
+
+    lineChart10.data = lineChart10.stressTestResults[stressEvent];
+    lineChart10.manageData();
+};
+
 
 
 $('.btn-primary').on("click", updatePfView);
-
-
-
-
+$('#play-button').on("click", runStressTest);
 
