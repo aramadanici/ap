@@ -293,6 +293,16 @@ const updatePfView = () => {
             }
         }
 
+
+        const assetPerformanceSymbols = data.asset_performance.map(d => d.symbol);
+        data.asset_rolling_return.sort((a, b) => {
+            return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
+        });
+        data.asset_rolling_beta.sort((a, b) => {
+            return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
+        });
+
+
         lineChart1.data = data.portfolio_performance
         lineChart2.data = data.pf_bm_rolling_return
         lineChart3.data = data.asset_performance
