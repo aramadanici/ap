@@ -339,7 +339,7 @@ def calculate_rolling_beta(asset_timeseries, benchmark_timeseries):
                 results.append(
                     {
                         "date": date.strftime("%d.%m.%Y"),
-                        "symbol": asset_symbol + "-" + benchmark_symbol,
+                        "symbol": asset_symbol,
                         "beta": beta,
                     }
                 )
