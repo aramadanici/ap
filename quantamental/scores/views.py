@@ -232,6 +232,8 @@ def pf_view_performance(request):
 
     #    ! Run Computation --------------------------------------------------------------------------
 
+    pf_bm_rolling_return = calculate_rolling_return(pf_bm_performance)
+
     portfolio_rolling_return = calculate_rolling_return(portfolio_performance)
     asset_rolling_return = calculate_rolling_return(asset_performance)
 
@@ -259,7 +261,7 @@ def pf_view_performance(request):
     response_data = {
         "asset_performance": asset_performance,
         "portfolio_performance": pf_bm_performance,  # This will be None if no weights are provided
-        "portfolio_rolling_return": portfolio_rolling_return,
+        "pf_bm_rolling_return": pf_bm_rolling_return,
         "asset_rolling_return": asset_rolling_return,
         "portfolio_drawdown": combined_drawdown,
         "portfolio_top_drawdowns": portfolio_top_drawdowns,
