@@ -204,6 +204,14 @@ def pf_view_performance(request):
     bm_performance = list(
         models.Performance.objects.filter(symbol__in=bm_symbol).values()
     )  # Retrieve performance data for the specified benchmark tickers
+
+    # Ensure that bm_performance has the same "date" as portfolio_performance
+    if portfolio_performance and bm_performance:
+        portfolio_dates = {entry["date"] for entry in portfolio_performance}
+        bm_performance = [
+            entry for entry in bm_performance if entry["date"] in portfolio_dates
+        ]
+
     bm_weights_param = request.GET.get(
         "bmWeights"
     )  # Get benchmark weights from the request
