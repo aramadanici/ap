@@ -278,7 +278,7 @@ const updatePfView = () => {
 
         const dataKeys = {
             portfolio_performance: ['close'],
-            portfolio_rolling_return: ['volatility', 'return'],
+            pf_bm_rolling_return: ['volatility', 'return'],
             asset_performance: ['close'],
             asset_rolling_return: ['volatility', 'return'],
             portfolio_drawdown: ['drawdown'],
@@ -294,10 +294,10 @@ const updatePfView = () => {
         }
 
         lineChart1.data = data.portfolio_performance
-        lineChart2.data = data.portfolio_rolling_return
+        lineChart2.data = data.pf_bm_rolling_return
         lineChart3.data = data.asset_performance
         lineChart4.data = data.asset_rolling_return
-        lineChart5.data = data.portfolio_rolling_return
+        lineChart5.data = data.pf_bm_rolling_return
         lineChart6.data = data.asset_rolling_return
         lineChart7.data = data.portfolio_rolling_beta
         lineChart8.data = data.asset_rolling_beta
