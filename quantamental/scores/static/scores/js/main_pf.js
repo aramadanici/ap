@@ -48,6 +48,16 @@ const eventData = {
 };
 
 
+const lookthrough = [
+    { name: "Robeco US Equities", equity: "100%", fixedIncome: "0%" },
+    { name: "Invesco Pan Europ Eq", equity: "100%", fixedIncome: "0%" },
+    { name: "Classic Global Equity", equity: "90%", fixedIncome: "10%" },
+    { name: "Blueby Global IG", equity: "0%", fixedIncome: "100%" },
+    { name: "Invesco Euro Corporate", equity: "0%", fixedIncome: "100%" },
+    { name: "UBAM Medium Term Corporate", equity: "0%", fixedIncome: "100%" }
+];
+
+
 // ! ----------------- Get Portfolio Info -----------------
 const assetInputs = $('input[id^="weight_"]');
 let investedAssets = [];
@@ -97,7 +107,33 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     });
 
-    barChart2 = new HorizontalBarChart(_parentElement = "#multiple-bar-area", _data = combinedArray, _xdata = "Weight", _xlabel = "", _ydata = "Stock", _ylabel = "", _cdata = null, _dimension = { width: 426, height: 330 }, _legend = { noCol: 1, widthCol: 65 });
+    // Calculate total equity and fixed income allocation
+    const totals = combinedArray.reduce(
+        (acc, item1) => {
+            const match = lookthrough.find(item2 => item2.name === item1.Stock);
+            if (match) {
+                const weight = item1.Weight;
+                const equityPercentage = parseFloat(match.equity) / 100; // Convert "100%" to 1.0
+                const fixedIncomePercentage = parseFloat(match.fixedIncome) / 100; // Convert "100%" to 1.0
+
+                acc.Equity += weight * equityPercentage;
+                acc.FixedIncome += weight * fixedIncomePercentage;
+            }
+            return acc;
+        },
+        { Equity: 0, FixedIncome: 0 }
+    );
+
+    // Format the output as requested
+    const assetAllocation = [
+        { Asset: "Equity", Weight: totals.Equity },
+        { Asset: "Fixed Income", Weight: totals.FixedIncome }
+    ];
+
+
+    barChart2 = new HorizontalBarChart(_parentElement = "#allocation-bar-area-1", _data = combinedArray, _xdata = "Weight", _xlabel = "", _ydata = "Stock", _ylabel = "", _cdata = null, _dimension = { width: 426, height: 330 }, _legend = { noCol: 1, widthCol: 65 });
+    barChart3 = new HorizontalBarChart(_parentElement = "#allocation-bar-area-2", _data = assetAllocation, _xdata = "Weight", _xlabel = "", _ydata = "Asset", _ylabel = "", _cdata = null, _dimension = { width: 426, height: 330 }, _legend = { noCol: 1, widthCol: 65 });
+
 });
 
 
@@ -132,16 +168,19 @@ axios.get(performance, {
     data.asset_rolling_return.sort((a, b) => {
         return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
     });
+    data.asset_rolling_beta.sort((a, b) => {
+        return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
+    });
 
 
     lineChart1 = new LineChart(_parentElement = "#aggregated-performance", _data = data.portfolio_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
     lineChart2 = new LineChart(_parentElement = "#aggregated-performance-rolling", _data = data.portfolio_rolling_return, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 2);
-    lineChart3 = new LineChart(_parentElement = "#asset-performance", _data = data.asset_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 3);
-    lineChart4 = new LineChart(_parentElement = "#asset-performance-rolling", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 4);
+    lineChart3 = new LineChart(_parentElement = "#asset-performance", _data = data.asset_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = true, _slider = 3);
+    lineChart4 = new LineChart(_parentElement = "#asset-performance-rolling", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = false, _slider = 4);
     lineChart5 = new LineChart(_parentElement = "#aggregated-performance-volatility", _data = data.portfolio_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 5);
-    lineChart6 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = false, _slider = 6);
+    lineChart6 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = false, _slider = 6);
     lineChart7 = new LineChart(_parentElement = "#aggregated-performance-beta", _data = data.portfolio_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 140 }, _rebase = false, _slider = 7);
-    lineChart8 = new LineChart(_parentElement = "#asset-performance-beta", _data = data.asset_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 110 }, _rebase = false, _slider = 8);
+    lineChart8 = new LineChart(_parentElement = "#asset-performance-beta", _data = data.asset_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = false, _slider = 8);
     lineChart9 = new LineChart(_parentElement = "#aggregated-performance-drawdown", _data = data.portfolio_drawdown, _xdata = "date", _xlabel = "", _ydata = "drawdown", _ylabel = "Drawdown [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 9);
 
     const stressTestResults = {};
@@ -187,7 +226,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
         barChart2.data = combinedArray
 
-        const charts = [barChart2];
+        // Calculate total equity and fixed income allocation
+        const totals = combinedArray.reduce(
+            (acc, item1) => {
+                const match = lookthrough.find(item2 => item2.name === item1.Stock);
+                if (match) {
+                    const weight = item1.Weight;
+                    const equityPercentage = parseFloat(match.equity) / 100; // Convert "100%" to 1.0
+                    const fixedIncomePercentage = parseFloat(match.fixedIncome) / 100; // Convert "100%" to 1.0
+
+                    acc.Equity += weight * equityPercentage;
+                    acc.FixedIncome += weight * fixedIncomePercentage;
+                }
+                return acc;
+            },
+            { Equity: 0, FixedIncome: 0 }
+        );
+
+        // Format the output as requested
+        const assetAllocation = [
+            { Asset: "Equity", Weight: totals.Equity },
+            { Asset: "Fixed Income", Weight: totals.FixedIncome }
+        ];
+
+        barChart3.data = assetAllocation
+
+        const charts = [barChart2, barChart3];
         for (let chart of charts) {
             chart.manageData();
         }
