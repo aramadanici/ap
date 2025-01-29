@@ -1,4 +1,4 @@
-class LineChart {
+class LineChartAnimation {
     constructor(_parentElement, _data, _xdata, _xlabel = "", _ydata, _ylabel = "", _group, _dimension = { width: 928, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1) {
         this.parentElement = _parentElement; // Parent element where the chart will be appended
         this.data = _data; // Data for the chart
@@ -235,7 +235,8 @@ class LineChart {
     updateVis() {
         const vis = this;
 
-        vis.t = d3.transition().duration(1000); // Transition duration
+        vis.t = d3.transition().duration(10000).ease(d3.easeLinear); // Transition duration with linear easing
+        vis.ty = d3.transition().duration(1000).ease(d3.easeLinear); // Transition duration with linear easing
         vis.x.domain(d3.extent(vis.dataFiltered, d => d[vis.xdata])); // Update the x-domain based on the filtered data
 
         let yDomainMin = Infinity; // Initialize the minimum y-domain value
@@ -251,26 +252,22 @@ class LineChart {
         yDomainMin = Math.min(yDomainMin, yDomainMin * 0.7); // Reduce the minimum y-domain value by 30% if it is positive
         vis.y.domain([yDomainMin, yDomainMax]); // Update the y-domain
 
-
         let xAxisPositon = Math.max(0, yDomainMin)
-        vis.xAxisGroup.transition(vis.t).attr("transform", `translate(0, ${vis.y(xAxisPositon)})`); // Shift the x-axis group
-
+        vis.xAxisGroup.transition(vis.ty).attr("transform", `translate(0, ${vis.y(xAxisPositon)})`); // Shift the x-axis group
 
         vis.xAxisCall = d3.axisBottom(vis.x); // Create the x-axis
-        vis.xAxisGroup.transition(vis.t).call(vis.xAxisCall) // Transition the x-axis
+        vis.xAxisGroup.transition(vis.ty).call(vis.xAxisCall) // Transition the x-axis
             .selectAll("text") // Select all text elements
             .attr("y", "10") // Set the y attribute
             .attr("x", "-5") // Set the x attribute
             .attr("text-anchor", "end") // Set the text-anchor attribute
             .attr("transform", "rotate(-40)"); // Set the rotation transform
 
-
-        // vis.tickCount = Math.max(5, Math.ceil((vis.y.domain()[1] - vis.y.domain()[0]) / 150)); // Calculate the number of ticks for the y-axis
         vis.yAxisCall = d3.axisLeft(vis.y) // Create the y-axis
             .ticks(8) // Set the number of ticks
             .tickFormat(d => vis.formatter(d)) // Set the tick format
             .scale(vis.y); // Set the scale for the axis
-        vis.yAxisGroup.transition(vis.t).call(vis.yAxisCall); // Transition the y-axis
+        vis.yAxisGroup.transition(vis.ty).call(vis.yAxisCall); // Transition the y-axis
 
         // Remove all existing lines
         vis.canvas.selectAll(".line").remove();
@@ -283,7 +280,6 @@ class LineChart {
 
         vis.dataLabel = Array.from(vis.dataGrouped.keys()); // Get the unique labels from the grouped data
         vis.legendOffsetX = (vis.WIDTH - (vis.dataLabel.length / vis.maxDotsPerColumn * vis.columnWidth)) / 2; // Offset for the legend in the x-direction
-        // vis.colors = new Map(vis.dataLabel.map((label, i) => [label, d3.schemeCategory10[i]])); // Create a map of colors for each label
 
         const colorPalette = ['#0e2238', '#d8e5f0', '#117a65', '#f5b041', '#dcb9eb', '#3498db']; // Define a palette with 6 colors
         vis.colors = new Map(vis.dataLabel.map((label, i) => [label, colorPalette[i % colorPalette.length]])); // Assign colors to labels
@@ -302,7 +298,11 @@ class LineChart {
                     vis.toggleOpacity(linePath); // Toggle the opacity of the line
                     vis.toggleOpacity(legendCircle); // Toggle the opacity of the legend circle
                     vis.toggleOpacity(legendText); // Toggle the opacity of the legend text
-                });
+                })
+                .attr("stroke-dasharray", function () { return this.getTotalLength(); })
+                .attr("stroke-dashoffset", function () { return this.getTotalLength(); })
+                .transition(vis.t)
+                .attr("stroke-dashoffset", 0);
 
             const column = Math.floor(i / vis.maxDotsPerColumn); // Calculate the column index
             const dotX = vis.legendOffsetX + column * vis.columnWidth; // Calculate the x-coordinate of the legend dot

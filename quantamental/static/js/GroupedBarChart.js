@@ -169,6 +169,17 @@ class GroupedBarChart {
             .attr("y", "10") // Set the y-coordinate of the x-axis labels
             .attr("x", "-5") // Set the x-coordinate of the x-axis labels
             .attr("text-anchor", "end") // Set the text anchor property to end
-            .attr("transform", "rotate(-40)"); // Rotate the x-axis labels by -40 degrees
+            .attr("transform", "rotate(-40)") // Rotate the x-axis labels by -40 degrees
+            .style("cursor", "pointer") // Set the cursor to pointer to indicate that the labels are clickable
+            .style("fill", "rgb(0, 0, 0)") // Explicitly set the initial color of the labels to black
+            .each(function () {
+                // Add a click event listener to each text element
+                d3.select(this).on("click", function () {
+                    const selection = d3.select(this);
+                    const currentColor = selection.style("fill"); // Get the current color of the label
+                    const newColor = currentColor === "rgb(0, 0, 0)" ? "rgb(194, 194, 194)" : "rgb(0, 0, 0)"; // Compare against the RGB value for black
+                    selection.style("fill", newColor); // Set the new color
+                });
+            });
     }
 }
