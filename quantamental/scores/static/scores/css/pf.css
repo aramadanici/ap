@@ -140,13 +140,8 @@ h6 {
     color: #083959;
 }
 
-#weight_AMD,
-#weight_INTC,
-#weight_AAPL,
-#weight_NVDA,
-#weight_QCOM,
-#weight_AVGO {
-    width: 90%;
+[id^="weight_"] {
+    width: 93%;
 }
 
 #play-button {
@@ -183,4 +178,9 @@ h6 {
     border-color: #80bdff;
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+
+.card {
+    transform: translate(-45px)
 }
