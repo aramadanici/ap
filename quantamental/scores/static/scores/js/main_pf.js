@@ -164,6 +164,13 @@ axios.get(performance, {
         }
     }
 
+
+    const performanceSymbols = data.portfolio_performance.map(d => d.symbol);
+    data.pf_bm_rolling_return.sort((a, b) => {
+        return performanceSymbols.indexOf(a.symbol) - performanceSymbols.indexOf(b.symbol);
+    });
+
+
     const assetPerformanceSymbols = data.asset_performance.map(d => d.symbol);
     data.asset_rolling_return.sort((a, b) => {
         return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
@@ -293,6 +300,10 @@ const updatePfView = () => {
             }
         }
 
+        const performanceSymbols = data.portfolio_performance.map(d => d.symbol);
+        data.pf_bm_rolling_return.sort((a, b) => {
+            return performanceSymbols.indexOf(a.symbol) - performanceSymbols.indexOf(b.symbol);
+        });
 
         const assetPerformanceSymbols = data.asset_performance.map(d => d.symbol);
         data.asset_rolling_return.sort((a, b) => {
