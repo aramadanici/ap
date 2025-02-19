@@ -54,7 +54,7 @@ const lookthrough = [
     { name: "Classic Global Equity", equity: "90%", fixedIncome: "10%" },
     { name: "Blueby Global IG", equity: "0%", fixedIncome: "100%" },
     { name: "Invesco Euro Corporate", equity: "0%", fixedIncome: "100%" },
-    { name: "UBAM Medium Term Corporate", equity: "0%", fixedIncome: "100%" }
+    { name: "UBAM Medium Term Corp", equity: "0%", fixedIncome: "100%" }
 ];
 
 

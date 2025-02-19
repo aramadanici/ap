@@ -286,7 +286,7 @@ class LineChart {
         // vis.colors = new Map(vis.dataLabel.map((label, i) => [label, d3.schemeCategory10[i]])); // Create a map of colors for each label
 
         // const colorPalette = ['#0e2238', '#d8e5f0', '#117a65', '#f5b041', '#dcb9eb', '#3498db']; // Cross
-        const colorPalette = ['#4472CA', '#77933C', '#C0504D', '#ED7D31', '#dcb9eb', '#3498db']; // Alp
+        const colorPalette = ['#4472CA', '#77933C', '#C0504D', '#ED7D31', '#81a3e6', '#aac474']; // Alp
 
         vis.colors = new Map(vis.dataLabel.map((label, i) => [label, colorPalette[i % colorPalette.length]])); // Assign colors to labels
 

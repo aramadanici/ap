@@ -99,7 +99,7 @@ class GroupedBarChart {
 
         // Alp
         vis.color = d3.scaleOrdinal() // Create an ordinal scale for the colors
-            .range(['#4472CA', '#77933C', '#C0504D', '#ED7D31', '#dcb9eb', '#3498db']); // Set the range of the scale to your custom color palette
+            .range(['#4472CA', '#77933C', '#C0504D', '#ED7D31', '#81a3e6', '#aac474']); // Set the range of the scale to your custom color palette
         // .range(d3.schemeCategory10); // Set the range of the scale to the category10 color scheme
 
         vis.y.domain([Math.min(d3.min(vis.data, d => d[vis.ydata]), 0), d3.max(vis.data, d => d[vis.ydata])]); // Set the domain of the y-axis scale to the minimum and maximum values of the y-axis data
@@ -154,6 +154,24 @@ class GroupedBarChart {
             .attr("width", vis.x.bandwidth()) // Set the width of the rect elements
             .attr("height", d => Math.abs(vis.y(0) - vis.y(d[vis.ydata]))) // Set the height of the rect elements
             .attr("fill", d => vis.color(d[vis.cdata])); // Set the fill color of the rect elements based on the color value
+
+        const labels = vis.canvas.selectAll(".label")
+            .data(vis.data, d => d[vis.ydata] + d[vis.cdata]);
+
+        labels.exit().remove();
+
+        labels.enter().append("text")
+            .attr("class", "label")
+            .merge(labels)
+            .transition(t)
+            .attr("x", d => vis.fx(d[vis.xdata]) + vis.x(d[vis.cdata]) + vis.x.bandwidth() / 2)
+            .attr("y", d => d[vis.ydata] >= 0 ? vis.y(d[vis.ydata]) - 5 : vis.y(d[vis.ydata]) + 5)
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .attr("fill", "#d6d6d6")
+            .text(d => d[vis.ydata].toFixed(2));
+
+
 
         vis.yAxisCall = d3.axisLeft(vis.y); // Create the y-axis call
         vis.yAxisGroup.transition(t).call(vis.yAxisCall); // Apply the transition to the y-axis group and call the y-axis
