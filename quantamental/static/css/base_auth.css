@@ -89,29 +89,34 @@ input:-webkit-autofill:active {
     border-radius: 25px;
     display: inline-block;
     box-shadow: 1px 1px 2px 2px #c0bfbf44;
-    transform: translate(60%, 95%);
+    transform: translate(0%, 95%);
 }
 
 @media (max-width: 1300px) {
     #form-div {
-        transform: translate(25%, 35%);
+        transform: translate(0%, 35%);
     }
 }
 
 
 #testDW {
-    background-image: url('../img/lighthouse.jpg');
+    background-image: url('../img/winter2.jpg');
     /* Adjust path based on the CSS location */
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 100vh;
+}
+
+#testDW2 {
+    background-image: url('../img/crossinvest_stemma_nuovo-1.jpg');
+    /* background-image: url('../img/Logo\ 3.png'); */
     background-size: cover;
     background-position: center;
     width: 50%;
     height: 100vh;
 }
 
-#testDW2 {
-    background-image: url('../img/crossinvest_stemma_nuovo-1.jpg');
-    background-size: cover;
-    background-position: center;
-    width: 50%;
-    height: 100vh;
+#alplogo {
+    width: 80%;
 }
