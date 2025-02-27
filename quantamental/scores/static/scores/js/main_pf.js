@@ -49,12 +49,12 @@ const eventData = {
 
 
 const lookthrough = [
-    { name: "Robeco US Equities", equity: "100%", fixedIncome: "0%" },
-    { name: "Invesco Pan Europ Eq", equity: "100%", fixedIncome: "0%" },
-    { name: "Classic Global Equity", equity: "90%", fixedIncome: "10%" },
-    { name: "Blueby Global IG", equity: "0%", fixedIncome: "100%" },
-    { name: "Invesco Euro Corporate", equity: "0%", fixedIncome: "100%" },
-    { name: "UBAM Medium Term Corp", equity: "0%", fixedIncome: "100%" }
+    { name: "ALPEAAF", equity: "100%", fixedIncome: "0%" }, //  Alpinum SICAV-SIF - Asia Equity Dynamic Fund Class AF (Luxembourg)
+    { name: "ALPCRDA", equity: "0%", fixedIncome: "100%" }, // Alpinum SICAV-SIF - Credit Fund Class A USD ACC (Luxembourg)
+    { name: "ALPCSPA", equity: "0%", fixedIncome: "100%" }, // Alpinum SICAV-SIF - Defensive Bond Fund Class A USD ACC (Luxembourg)
+    { name: "ALPEFCA", equity: "75%", fixedIncome: "25%" }, // Alpinum SICAV-SIF - Equity Focus Fund Class A (Luxembourg)
+    { name: "ALPEDFA", equity: "50%", fixedIncome: "50%" }, // Alpinum SICAV-SIF - Equity Dynamic Fund Class A USD ACC (Luxembourg)
+    { name: "ALPALTA", equity: "50%", fixedIncome: "50%" } // Alpinum SICAV-SIF - Alternative Investments Fund Class A (Luxembourg)
 ];
 
 

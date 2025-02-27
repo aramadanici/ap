@@ -4,7 +4,7 @@ import pandas as pd
 
 def calculate_portfolio_performance(weights, asset_timeseries, symbol):
     """
-    Calculate portfolio performance with rebalancing at the last business day of March, June, September, and December.
+    Calculate portfolio performance with rebalancing at the end of March, June, September, and December.
     The asset timeseries and the resulting portfolio performance are indexed at 100.
 
     Parameters:
@@ -26,6 +26,9 @@ def calculate_portfolio_performance(weights, asset_timeseries, symbol):
         index="date", columns="symbol", values="close"
     ).sort_index()
 
+    # Resample to monthly frequency
+    asset_timeseries_df = asset_timeseries_df.resample("M").last()
+
     # Extract the dates from the DataFrame
     dates = asset_timeseries_df.index
 
@@ -44,9 +47,9 @@ def calculate_portfolio_performance(weights, asset_timeseries, symbol):
     # Calculate simple returns from the asset timeseries
     simple_returns = asset_timeseries[1:] / asset_timeseries[:-1] - 1
 
-    # Find the last business day of March, June, September, and December
+    # Find the end of March, June, September, and December
     rebalancing_dates = pd.date_range(start=dates.min(), end=dates.max(), freq="Q")
-    rebalancing_dates = rebalancing_dates + pd.offsets.BMonthEnd(0)
+    rebalancing_dates = rebalancing_dates + pd.offsets.MonthEnd(0)
 
     # Create a weights matrix for all rebalancings
     n_quarters = len(rebalancing_dates)
@@ -101,14 +104,14 @@ def calculate_rolling_return(asset_timeseries):
         index="date", columns="symbol", values="close"
     ).sort_index()
 
-    # Calculate daily returns
-    daily_returns = asset_timeseries_df.pct_change()
+    # Calculate monthly returns
+    monthly_returns = asset_timeseries_df.pct_change()
 
-    # Calculate rolling volatility (annualized, using 252 trading days)
-    rolling_volatility = daily_returns.rolling(window=252).std() * np.sqrt(252)
+    # Calculate rolling volatility (annualized, using 12 months)
+    rolling_volatility = monthly_returns.rolling(window=12).std() * np.sqrt(12)
 
     # Calculate rolling return
-    rolling_return = (daily_returns + 1).rolling(window=252).apply(
+    rolling_return = (monthly_returns + 1).rolling(window=12).apply(
         np.prod, raw=True
     ) - 1
 
@@ -162,6 +165,9 @@ def calculate_drawdown(asset_timeseries):
         index="date", columns="symbol", values="close"
     ).sort_index()
 
+    # Ensure the data is at monthly frequency
+    asset_timeseries_df = asset_timeseries_df.resample("M").last()
+
     # Calculate the cumulative returns
     cumulative_returns = asset_timeseries_df / asset_timeseries_df.iloc[0]
 
@@ -210,6 +216,9 @@ def calculate_top_drawdowns(asset_timeseries):
     asset_timeseries_df = df.pivot(
         index="date", columns="symbol", values="close"
     ).sort_index()
+
+    # Ensure the data is at monthly frequency
+    asset_timeseries_df = asset_timeseries_df.resample("M").last()
 
     output = []
 
@@ -261,8 +270,10 @@ def calculate_top_drawdowns(asset_timeseries):
                     "Start Date": start.strftime("%d.%m.%Y"),
                     "Trough Date": trough.strftime("%d.%m.%Y"),
                     "End Date": end.strftime("%d.%m.%Y"),
-                    "Days to Trough": (trough - start).days,
-                    "Days To Recovery": (end - trough).days,
+                    "Months to Trough": (trough.year - start.year) * 12
+                    + (trough.month - start.month),
+                    "Months To Recovery": (end.year - trough.year) * 12
+                    + (end.month - trough.month),
                     "Max Drawdown [%]": f"{max_dd * 100:.2f}",
                 }
             )
@@ -272,7 +283,7 @@ def calculate_top_drawdowns(asset_timeseries):
 
 def calculate_rolling_beta(asset_timeseries, benchmark_timeseries):
     """
-    Calculate the 1-year rolling beta based on weekly returns and a 2-year lookback period.
+    Calculate the 1-year rolling beta based on monthly returns and a 2-year lookback period.
     Apply the Blume adjustment to the beta.
 
     Parameters:
@@ -300,30 +311,30 @@ def calculate_rolling_beta(asset_timeseries, benchmark_timeseries):
         index="date", columns="symbol", values="close"
     ).sort_index()
 
-    # Resample to weekly frequency and calculate weekly returns
-    asset_weekly_returns = asset_df.resample("W-FRI").last().pct_change()
-    benchmark_weekly_returns = benchmark_df.resample("W-FRI").last().pct_change()
+    # Calculate monthly returns
+    asset_monthly_returns = asset_df.pct_change().dropna()
+    benchmark_monthly_returns = benchmark_df.pct_change().dropna()
 
     # Initialize storage for results
     results = []
 
     # Iterate over all asset and benchmark combinations
-    for asset_symbol in asset_weekly_returns.columns:
-        for benchmark_symbol in benchmark_weekly_returns.columns:
+    for asset_symbol in asset_monthly_returns.columns:
+        for benchmark_symbol in benchmark_monthly_returns.columns:
             # Align asset and benchmark returns
             aligned_data = pd.concat(
                 [
-                    asset_weekly_returns[asset_symbol],
-                    benchmark_weekly_returns[benchmark_symbol],
+                    asset_monthly_returns[asset_symbol],
+                    benchmark_monthly_returns[benchmark_symbol],
                 ],
                 axis=1,
                 keys=["asset", "benchmark"],
             ).dropna()
 
-            # Calculate rolling beta (2-year lookback, 104 weeks)
+            # Calculate rolling beta (2-year lookback, 24 months)
             rolling_beta = (
                 aligned_data["asset"]
-                .rolling(window=104, min_periods=104)
+                .rolling(window=24, min_periods=24)
                 .apply(
                     lambda x: np.cov(x, aligned_data.loc[x.index, "benchmark"])[0, 1]
                     / np.var(aligned_data.loc[x.index, "benchmark"]),
@@ -368,8 +379,8 @@ def calculate_performance_metrics(asset_timeseries, benchmark_timeseries):
         index="date", columns="symbol", values="close"
     ).sort_index()
 
-    # Calculate daily returns
-    daily_returns = asset_timeseries_df.pct_change().dropna()
+    # Calculate monthly returns
+    monthly_returns = asset_timeseries_df.pct_change().dropna()
 
     # Calculate cumulative return
     cumulative_return = (asset_timeseries_df.iloc[-1] / asset_timeseries_df.iloc[0]) - 1
@@ -387,7 +398,7 @@ def calculate_performance_metrics(asset_timeseries, benchmark_timeseries):
     ytd_return = (asset_timeseries_df.iloc[-1] / start_of_year) - 1
 
     # Calculate annualized volatility
-    annualized_volatility = daily_returns.std() * np.sqrt(252)
+    annualized_volatility = monthly_returns.std() * np.sqrt(12)
 
     # Calculate Sharpe ratio (assuming risk-free rate is 0)
     sharpe_ratio = return_per_annum / annualized_volatility
@@ -402,8 +413,8 @@ def calculate_performance_metrics(asset_timeseries, benchmark_timeseries):
     calmar_ratio = return_per_annum / abs(max_drawdown)
 
     # Calculate Sortino ratio (assuming risk-free rate is 0)
-    downside_returns = daily_returns[daily_returns < 0]
-    downside_volatility = downside_returns.std() * np.sqrt(252)
+    downside_returns = monthly_returns[monthly_returns < 0]
+    downside_volatility = downside_returns.std() * np.sqrt(12)
     sortino_ratio = return_per_annum / downside_volatility
 
     # Create the output dictionary
@@ -459,9 +470,9 @@ def calculate_monthly_returns(asset_timeseries, benchmark_timeseries):
         index="date", columns="symbol", values="close"
     ).sort_index()
 
-    # Resample to monthly frequency and calculate monthly returns
-    benchmark_monthly_returns = benchmark_df.resample("M").ffill().pct_change().dropna()
-    asset_monthly_returns = asset_df.resample("M").ffill().pct_change().dropna()
+    # Calculate monthly returns
+    benchmark_monthly_returns = benchmark_df.pct_change().dropna()
+    asset_monthly_returns = asset_df.pct_change().dropna()
     results = []
     for benchmark_symbol in benchmark_monthly_returns.columns:
         benchmark_returns = benchmark_monthly_returns[benchmark_symbol]
