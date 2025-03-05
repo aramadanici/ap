@@ -109,9 +109,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 //! * ----------------- Initialization -----------------
-
-
-
 document.addEventListener('DOMContentLoaded', function () {
     const combinedArray = investedAssets.map((stock, index) => {
         return {
@@ -255,8 +252,6 @@ document.addEventListener('DOMContentLoaded', function () {
     assetInputs.on('input', () => {
         updateInvested(assetInputs, investedAssets, assetWeights);
         updateTotal(assetWeights, assetSpan);
-
-
 
 
         const combinedArray = investedAssets.map((stock, index) => {
