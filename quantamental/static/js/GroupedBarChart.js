@@ -169,8 +169,7 @@ class GroupedBarChart {
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
             .attr("fill", "#d6d6d6")
-            .text(d => d[vis.ydata].toFixed(2));
-
+            .text(d => d[vis.ydata].toFixed(2) + "%");
 
 
         vis.yAxisCall = d3.axisLeft(vis.y); // Create the y-axis call
@@ -192,9 +191,9 @@ class GroupedBarChart {
             .call(vis.fxAxisCall) // Call the x-axis
             .selectAll("text")
             .attr("y", "10") // Set the y-coordinate of the x-axis labels
-            .attr("x", "-5") // Set the x-coordinate of the x-axis labels
-            .attr("text-anchor", "end") // Set the text anchor property to end
-            .attr("transform", "rotate(-40)") // Rotate the x-axis labels by -40 degrees
+            .attr("x", "0") // Set the x-coordinate of the x-axis labels
+            .attr("text-anchor", "middle") // Set the text anchor property to middle
+            .attr("font-size", "1.3em") // Set the font size of the text element
             .style("cursor", "pointer") // Set the cursor to pointer to indicate that the labels are clickable
             .style("fill", "rgb(0, 0, 0)") // Explicitly set the initial color of the labels to black
             .each(function () {

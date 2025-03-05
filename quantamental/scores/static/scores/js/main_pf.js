@@ -58,6 +58,16 @@ const lookthrough = [
 ];
 
 
+const nameMap = [
+    { dbName: "ALPEAAF", webName: "Asia Equity" }, //  Alpinum SICAV-SIF - Asia Equity Dynamic Fund Class AF (Luxembourg)
+    { dbName: "ALPCRDA", webName: "Credit" }, // Alpinum SICAV-SIF - Credit Fund Class A USD ACC (Luxembourg)
+    { dbName: "ALPCSPA", webName: "Defensive Bond" }, // Alpinum SICAV-SIF - Defensive Bond Fund Class A USD ACC (Luxembourg)
+    { dbName: "ALPEFCA", webName: "Equity Focus" }, // Alpinum SICAV-SIF - Equity Focus Fund Class A (Luxembourg)
+    { dbName: "ALPEDFA", webName: "Equity Dynamic" }, // Alpinum SICAV-SIF - Equity Dynamic Fund Class A USD ACC (Luxembourg)
+    { dbName: "ALPALTA", webName: "Alternative Investments" } // Alpinum SICAV-SIF - Alternative Investments Fund Class A (Luxembourg)
+];
+
+
 // ! ----------------- Get Portfolio Info -----------------
 const assetInputs = $('input[id^="weight_"]');
 let investedAssets = [];
@@ -99,6 +109,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 //! * ----------------- Initialization -----------------
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const combinedArray = investedAssets.map((stock, index) => {
         return {
@@ -130,6 +143,13 @@ document.addEventListener('DOMContentLoaded', function () {
         { Asset: "Fixed Income", Weight: totals.FixedIncome }
     ];
 
+    // Replace dbName strings with webName strings in combinedArray
+    combinedArray.forEach(item => {
+        const match = nameMap.find(mapItem => mapItem.dbName === item.Stock);
+        if (match) {
+            item.Stock = match.webName;
+        }
+    });
 
     barChart2 = new HorizontalBarChart(_parentElement = "#allocation-bar-area-1", _data = combinedArray, _xdata = "Weight", _xlabel = "", _ydata = "Stock", _ylabel = "", _cdata = null, _dimension = { width: 426, height: 330 }, _legend = { noCol: 1, widthCol: 65 });
     barChart3 = new HorizontalBarChart(_parentElement = "#allocation-bar-area-2", _data = assetAllocation, _xdata = "Weight", _xlabel = "", _ydata = "Asset", _ylabel = "", _cdata = null, _dimension = { width: 426, height: 330 }, _legend = { noCol: 1, widthCol: 65 });
@@ -164,21 +184,34 @@ axios.get(performance, {
         }
     }
 
-
+    // Extract the symbols from the portfolio performance data
     const performanceSymbols = data.portfolio_performance.map(d => d.symbol);
+
+    // Sort the portfolio benchmark rolling return data based on the order of symbols in the portfolio performance data
     data.pf_bm_rolling_return.sort((a, b) => {
         return performanceSymbols.indexOf(a.symbol) - performanceSymbols.indexOf(b.symbol);
     });
 
-
+    // Extract the symbols from the asset performance data
     const assetPerformanceSymbols = data.asset_performance.map(d => d.symbol);
-    data.asset_rolling_return.sort((a, b) => {
-        return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
-    });
-    data.asset_rolling_beta.sort((a, b) => {
-        return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
+
+    // Sort the asset rolling return and beta data based on the order of symbols in the asset performance data
+    ['asset_rolling_return', 'asset_rolling_beta'].forEach(key => {
+        data[key].sort((a, b) => {
+            return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
+        });
     });
 
+
+    // Replace dbName strings with webName strings in asset_performance, asset_rolling_return, and asset_rolling_beta
+    ['asset_performance', 'asset_rolling_return', 'asset_rolling_beta', 'performance_metrics'].forEach(key => {
+        data[key].forEach(item => {
+            const match = nameMap.find(mapItem => mapItem.dbName === item.symbol);
+            if (match) {
+                item.symbol = match.webName;
+            }
+        });
+    });
 
     lineChart1 = new LineChart(_parentElement = "#aggregated-performance", _data = data.portfolio_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
     lineChart2 = new LineChart(_parentElement = "#aggregated-performance-rolling", _data = data.pf_bm_rolling_return, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 2);
@@ -224,6 +257,8 @@ document.addEventListener('DOMContentLoaded', function () {
         updateTotal(assetWeights, assetSpan);
 
 
+
+
         const combinedArray = investedAssets.map((stock, index) => {
             return {
                 Stock: stock,
@@ -231,7 +266,6 @@ document.addEventListener('DOMContentLoaded', function () {
             };
         });
 
-        barChart2.data = combinedArray
 
         // Calculate total equity and fixed income allocation
         const totals = combinedArray.reduce(
@@ -256,6 +290,14 @@ document.addEventListener('DOMContentLoaded', function () {
             { Asset: "Fixed Income", Weight: totals.FixedIncome }
         ];
 
+        combinedArray.forEach(item => {
+            const match = nameMap.find(mapItem => mapItem.dbName === item.Stock);
+            if (match) {
+                item.Stock = match.webName;
+            }
+        });
+
+        barChart2.data = combinedArray
         barChart3.data = assetAllocation
 
         const charts = [barChart2, barChart3];
@@ -311,6 +353,17 @@ const updatePfView = () => {
         });
         data.asset_rolling_beta.sort((a, b) => {
             return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
+        });
+
+
+        // Replace dbName strings with webName strings in asset_performance, asset_rolling_return, and asset_rolling_beta
+        ['asset_performance', 'asset_rolling_return', 'asset_rolling_beta', 'performance_metrics'].forEach(key => {
+            data[key].forEach(item => {
+                const match = nameMap.find(mapItem => mapItem.dbName === item.symbol);
+                if (match) {
+                    item.symbol = match.webName;
+                }
+            });
         });
 
 

@@ -105,7 +105,8 @@ class LineChartAnimation {
             .range([0, vis.WIDTH]) // Set the range of the scale
             .domain(d3.extent(vis.data, d => d[vis.xdata])); // Set the domain of the scale based on the x-axis data
 
-        let yDomainMin = Math.min(d3.min(vis.data, d => d[vis.ydata]), d3.min(vis.data, d => d[vis.ydata]) * 0.7);  // Reduce the minimum y-domain value by 30% if it is positive
+        let yDomainMin = Math.min(d3.min(vis.data, d => d[vis.ydata]), d3.min(vis.data, d => d[vis.ydata]) * 0.95);  // Reduce the minimum y-domain value by 30% if it is positive
+        // let yDomainMin = d3.min(vis.data, d => d[vis.ydata]);  // Reduce the minimum y-domain value by 30% if it is positive
         let yDomainMax = d3.max(vis.data, d => d[vis.ydata]);
 
         vis.y = d3.scaleLinear() // Create a linear scale for the y-axis
@@ -160,7 +161,6 @@ class LineChartAnimation {
         const buttonFilterText = ["All", "10Y", "5Y", "3Y", "YTD"];
 
         const filterText = vis.canvas.selectAll(".filter-text")
-            .data(buttonFilterText)
             .enter()
             .append("text")
             .attr("class", "filter-text")
@@ -249,7 +249,7 @@ class LineChartAnimation {
             yDomainMax = Math.max(yDomainMax, maxValue); // Update the maximum y-domain value
         });
 
-        yDomainMin = Math.min(yDomainMin, yDomainMin * 0.7); // Reduce the minimum y-domain value by 30% if it is positive
+        yDomainMin = Math.min(yDomainMin, yDomainMin * 0.95); // Reduce the minimum y-domain value by 30% if it is positive
         vis.y.domain([yDomainMin, yDomainMax]); // Update the y-domain
 
         let xAxisPositon = Math.max(0, yDomainMin)
@@ -259,9 +259,8 @@ class LineChartAnimation {
         vis.xAxisGroup.transition(vis.ty).call(vis.xAxisCall) // Transition the x-axis
             .selectAll("text") // Select all text elements
             .attr("y", "10") // Set the y attribute
-            .attr("x", "-5") // Set the x attribute
-            .attr("text-anchor", "end") // Set the text-anchor attribute
-            .attr("transform", "rotate(-40)"); // Set the rotation transform
+            .attr("x", "0") // Set the x attribute
+            .attr("text-anchor", "middle"); // Set the text anchor property to middle;
 
         vis.yAxisCall = d3.axisLeft(vis.y) // Create the y-axis
             .ticks(8) // Set the number of ticks

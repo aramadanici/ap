@@ -123,7 +123,7 @@ class HorizontalBarChart {
             .attr("dy", ".35em")
             .attr("text-anchor", "start")
             .attr("fill", "#d6d6d6")
-            .text(d => Math.round(d[vis.xdata]));
+            .text(d => Math.round(d[vis.xdata]) + "%");
 
         vis.xAxisCall = d3.axisBottom(vis.x);
         vis.xAxisGroup.transition(t).call(vis.xAxisCall);
