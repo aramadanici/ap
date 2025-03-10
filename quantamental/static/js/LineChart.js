@@ -31,11 +31,12 @@ class LineChart {
         vis.earliestDate = new Date(Math.min(...vis.data.map(entry => entry[vis.xdata]))); // Calculate the earliest date
         vis.latestDate = new Date(Math.max(...vis.data.map(entry => entry[vis.xdata]))); // Calculate the latest date
 
-        // Calculate the dates for the "10y", "5y", and "3y" ranges based on the latest date
+        // Calculate the dates for the "10y", "5y", "3y", "1y", and "YTD" ranges based on the latest date
         vis.latestYear = vis.latestDate.getFullYear();
         vis.tenYearsAgo = new Date(vis.latestYear - 10, vis.latestDate.getMonth(), vis.latestDate.getDate());
         vis.fiveYearsAgo = new Date(vis.latestYear - 5, vis.latestDate.getMonth(), vis.latestDate.getDate());
         vis.threeYearsAgo = new Date(vis.latestYear - 3, vis.latestDate.getMonth(), vis.latestDate.getDate());
+        vis.oneYearAgo = new Date(vis.latestYear - 1, vis.latestDate.getMonth(), vis.latestDate.getDate());
 
         // Determine the date for the "YTD" range
         vis.lastYearEnd = new Date(vis.latestYear - 1, 11, 31); // 11 represents December
@@ -46,9 +47,10 @@ class LineChart {
         vis.__10Y = [vis.tenYearsAgo, vis.latestDate]
         vis.__5Y = [vis.fiveYearsAgo, vis.latestDate]
         vis.__3Y = [vis.threeYearsAgo, vis.latestDate]
+        vis.__1Y = [vis.oneYearAgo, vis.latestDate]
         vis.__YTD = [vis.ytdStart, vis.latestDate]
 
-        vis.formatTime = d3.timeFormat("%d/%m/%Y")
+        vis.formatTime = d3.timeFormat("%d.%m.%Y")
 
 
         if (vis.slider !== 0) {
@@ -105,8 +107,8 @@ class LineChart {
             .range([0, vis.WIDTH]) // Set the range of the scale
             .domain(d3.extent(vis.data, d => d[vis.xdata])); // Set the domain of the scale based on the x-axis data
 
-        let yDomainMin = Math.min(d3.min(vis.data, d => d[vis.ydata]), d3.min(vis.data, d => d[vis.ydata]) * 0.7);  // Reduce the minimum y-domain value by 30% if it is positive
-        let yDomainMax = d3.max(vis.data, d => d[vis.ydata]);
+        let yDomainMin = Math.min(d3.min(vis.data, d => d[vis.ydata]), d3.min(vis.data, d => d[vis.ydata]) * 0.90);  // Reduce the minimum y-domain value by 30% if it is positive
+        let yDomainMax = Math.max(d3.max(vis.data, d => d[vis.ydata]), d3.max(vis.data, d => d[vis.ydata]) * 1.05); // Increase the maximum y-domain value by 15%   
 
         vis.y = d3.scaleLinear() // Create a linear scale for the y-axis
             .range([vis.HEIGHT, 0]) // Set the range of the scale
@@ -157,7 +159,7 @@ class LineChart {
         vis.dotSpacing = 20; // Spacing between legend dots
         vis.textOffsetX = 10; // Offset for the legend text in the x-direction
 
-        const buttonFilterText = ["All", "10Y", "5Y", "3Y", "YTD"];
+        const buttonFilterText = ["All", "10Y", "5Y", "3Y", "1Y", "YTD"];
 
         const filterText = vis.canvas.selectAll(".filter-text")
             .data(buttonFilterText)
@@ -248,7 +250,8 @@ class LineChart {
             yDomainMax = Math.max(yDomainMax, maxValue); // Update the maximum y-domain value
         });
 
-        yDomainMin = Math.min(yDomainMin, yDomainMin * 0.7); // Reduce the minimum y-domain value by 30% if it is positive
+        yDomainMax = Math.max(yDomainMax, yDomainMax * 1.05); // Increase the maximum y-domain value by 15%   
+        yDomainMin = Math.min(yDomainMin, yDomainMin * 0.90); // Reduce the minimum y-domain value by 30% if it is positive
         vis.y.domain([yDomainMin, yDomainMax]); // Update the y-domain
 
 
@@ -260,9 +263,8 @@ class LineChart {
         vis.xAxisGroup.transition(vis.t).call(vis.xAxisCall) // Transition the x-axis
             .selectAll("text") // Select all text elements
             .attr("y", "10") // Set the y attribute
-            .attr("x", "-5") // Set the x attribute
-            .attr("text-anchor", "end") // Set the text-anchor attribute
-            .attr("transform", "rotate(-40)"); // Set the rotation transform
+            .attr("x", "0") // Set the x attribute
+            .attr("text-anchor", "middle") // Set the text anchor property to middle;
 
 
         // vis.tickCount = Math.max(5, Math.ceil((vis.y.domain()[1] - vis.y.domain()[0]) / 150)); // Calculate the number of ticks for the y-axis
@@ -285,7 +287,9 @@ class LineChart {
         vis.legendOffsetX = (vis.WIDTH - (vis.dataLabel.length / vis.maxDotsPerColumn * vis.columnWidth)) / 2; // Offset for the legend in the x-direction
         // vis.colors = new Map(vis.dataLabel.map((label, i) => [label, d3.schemeCategory10[i]])); // Create a map of colors for each label
 
-        const colorPalette = ['#0e2238', '#d8e5f0', '#117a65', '#f5b041', '#dcb9eb', '#3498db']; // Define a palette with 6 colors
+        // const colorPalette = ['#0e2238', '#d8e5f0', '#117a65', '#f5b041', '#dcb9eb', '#3498db']; // Cross
+        const colorPalette = ['#4472CA', '#77933C', '#C0504D', '#ED7D31', '#81a3e6', '#aac474']; // Alp
+
         vis.colors = new Map(vis.dataLabel.map((label, i) => [label, colorPalette[i % colorPalette.length]])); // Assign colors to labels
 
         let i = 0; // Counter variable

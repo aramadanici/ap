@@ -82,7 +82,7 @@ class HorizontalBarChart {
         vis.data = vis.data.sort((a, b) => b[vis.xdata] - a[vis.xdata]);
 
         vis.color = d3.scaleOrdinal()
-            .range(['#0e2238', '#d8e5f0']);
+            .range(['#4472CA', '#77933C', '#C0504D', '#ED7D31', '#81a3e6', '#aac474']); // Alp
 
         vis.x.domain([0, d3.max(vis.data, d => d[vis.xdata])]);
         vis.y1.domain(vis.data.map(d => d[vis.cdata]));
@@ -108,6 +108,22 @@ class HorizontalBarChart {
             .attr("height", barHeight)
             .attr("width", d => vis.x(d[vis.xdata]))
             .attr("fill", d => vis.color(d[vis.cdata]));
+
+        const labels = vis.canvas.selectAll(".label")
+            .data(vis.data, d => d[vis.ydata] + d[vis.cdata]);
+
+        labels.exit().remove();
+
+        labels.enter().append("text")
+            .attr("class", "label")
+            .merge(labels)
+            .transition(t)
+            .attr("x", d => vis.x(d[vis.xdata]) + 5)
+            .attr("y", d => vis.y(d[vis.ydata]) + vis.y.bandwidth() / 2)
+            .attr("dy", ".35em")
+            .attr("text-anchor", "start")
+            .attr("fill", "#d6d6d6")
+            .text(d => Math.round(d[vis.xdata]) + "%");
 
         vis.xAxisCall = d3.axisBottom(vis.x);
         vis.xAxisGroup.transition(t).call(vis.xAxisCall);
