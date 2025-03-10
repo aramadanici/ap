@@ -81,8 +81,13 @@ class HorizontalBarChart {
 
         vis.data = vis.data.sort((a, b) => b[vis.xdata] - a[vis.xdata]);
 
+        // vis.color = d3.scaleOrdinal()
+        //     .range(['#4472CA', '#77933C', '#C0504D', '#ED7D31', '#81a3e6', '#aac474']); // Alp
+
         vis.color = d3.scaleOrdinal()
-            .range(['#4472CA', '#77933C', '#C0504D', '#ED7D31', '#81a3e6', '#aac474']); // Alp
+            .range(['#0e2238', '#d8e5f0', '#117a65', '#f5b041', '#dcb9eb', '#3498db']); // Cross
+
+
 
         vis.x.domain([0, d3.max(vis.data, d => d[vis.xdata])]);
         vis.y1.domain(vis.data.map(d => d[vis.cdata]));

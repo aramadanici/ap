@@ -93,13 +93,13 @@ class GroupedBarChart {
 
 
         // Cross
-        // vis.color = d3.scaleOrdinal() // Create an ordinal scale for the colors
-        //     .range(['#0e2238', '#d8e5f0']); // Set the range of the scale to your custom color palette
+        vis.color = d3.scaleOrdinal() // Create an ordinal scale for the colors
+            .range(['#0e2238', '#d8e5f0']); // Set the range of the scale to your custom color palette
         // // .range(d3.schemeCategory10); // Set the range of the scale to the category10 color scheme
 
         // Alp
-        vis.color = d3.scaleOrdinal() // Create an ordinal scale for the colors
-            .range(['#4472CA', '#77933C', '#C0504D', '#ED7D31', '#81a3e6', '#aac474']); // Set the range of the scale to your custom color palette
+        // vis.color = d3.scaleOrdinal() // Create an ordinal scale for the colors
+        //     .range(['#4472CA', '#77933C', '#C0504D', '#ED7D31', '#81a3e6', '#aac474']); // Set the range of the scale to your custom color palette
         // .range(d3.schemeCategory10); // Set the range of the scale to the category10 color scheme
 
         vis.y.domain([Math.min(d3.min(vis.data, d => d[vis.ydata]), 0), d3.max(vis.data, d => d[vis.ydata])]); // Set the domain of the y-axis scale to the minimum and maximum values of the y-axis data
