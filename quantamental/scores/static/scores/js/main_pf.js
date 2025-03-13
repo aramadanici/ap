@@ -215,8 +215,6 @@ $(document).ready(function () {
         });
 
 
-        // console.log(data.portfolio_performance)
-
         lineChart1 = new LineChart(_parentElement = "#aggregated-performance", _data = data.portfolio_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
         lineChart2 = new LineChart(_parentElement = "#aggregated-performance-rolling", _data = data.pf_bm_rolling_return, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 2);
         lineChart3 = new LineChart(_parentElement = "#asset-performance", _data = data.asset_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = true, _slider = 3);
@@ -394,9 +392,6 @@ const updatePfView = () => {
             $(label).text(formattedLatestDateBM);
         });
 
-
-        // console.log(data.portfolio_performance)
-
         lineChart1.data = data.portfolio_performance
         lineChart2.data = data.pf_bm_rolling_return
         lineChart3.data = data.asset_performance
@@ -407,8 +402,6 @@ const updatePfView = () => {
         lineChart8.data = data.asset_rolling_beta
         lineChart9.data = data.portfolio_drawdown
         barChart1.data = data.monthly_returns[0].returns
-
-
 
         const stressTestResults = {};
         for (const [eventKey, eventDetails] of Object.entries(eventData)) {
@@ -424,10 +417,7 @@ const updatePfView = () => {
 
 
         const dateRange = [new Date($('#fromDate').val()), new Date($('#toDate').val())];
-        // console.log("this is the date range", dateRange)
 
-        // const dateRangeTest = [new Date("2009-12-31"), new Date("2024-03-07")]
-        // console.log("this is the date range test", dateRangeTest)
         for (let chart of charts) {
             chart.manageData(dateRange);
         }
