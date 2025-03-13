@@ -282,7 +282,7 @@ def calculate_top_drawdowns(asset_timeseries):
 
 def calculate_rolling_beta(asset_timeseries, benchmark_timeseries):
     """
-    Calculate the 1-year rolling beta based on weekly returns and a 2-year lookback period.
+    Calculate the rolling beta based on weekly returns and a 2-year lookback period.
     Apply the Blume adjustment to the beta.
 
     Parameters:
