@@ -1,4 +1,6 @@
 import json
+import pprint
+from datetime import datetime
 
 from django import forms
 from django.contrib.auth.decorators import login_required
@@ -27,6 +29,7 @@ from .utils import (
     calculate_rolling_beta,
     calculate_rolling_return,
     calculate_top_drawdowns,
+    filter_performance,
 )
 
 
@@ -178,9 +181,24 @@ def pf_view_performance(request):
     asset_symbol = request.GET.getlist(
         "assetTicker[]", []
     )  # Get asset tickers from the request
+
+    from_date = request.GET.get("fromDate")
+    to_date = request.GET.get("toDate")
+
+    print(from_date, to_date)
+
     asset_performance = list(
         models.Performance.objects.filter(symbol__in=asset_symbol).values()
     )  # Retrieve performance data for the specified asset tickers
+
+    # Convert the from_date and to_date to datetime objects
+    from_date = datetime.strptime(from_date.strip('"'), "%Y-%m-%d")
+    to_date = datetime.strptime(to_date.strip('"'), "%Y-%m-%d")
+
+    asset_performance = filter_performance(asset_performance, from_date, to_date)
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(asset_performance)
+
     asset_weights_param = request.GET.get(
         "assetWeights"
     )  # Get asset weights from the request
@@ -204,6 +222,8 @@ def pf_view_performance(request):
     bm_performance = list(
         models.Performance.objects.filter(symbol__in=bm_symbol).values()
     )  # Retrieve performance data for the specified benchmark tickers
+
+    bm_performance = filter_performance(bm_performance, from_date, to_date)
 
     # Ensure that bm_performance has the same "date" as portfolio_performance
     if portfolio_performance and bm_performance:

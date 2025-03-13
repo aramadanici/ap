@@ -168,7 +168,7 @@ class GroupedBarChart {
             .attr("y", d => d[vis.ydata] >= 0 ? vis.y(d[vis.ydata]) - 5 : vis.y(d[vis.ydata]) + 5)
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
-            .attr("fill", "#d6d6d6")
+            .attr("fill", "#c4c4c4")
             .text(d => d[vis.ydata].toFixed(2) + "%");
 
 
@@ -195,15 +195,26 @@ class GroupedBarChart {
             .attr("text-anchor", "middle") // Set the text anchor property to middle
             .attr("font-size", "1.3em") // Set the font size of the text element
             .style("cursor", "pointer") // Set the cursor to pointer to indicate that the labels are clickable
-            .style("fill", "rgb(0, 0, 0)") // Explicitly set the initial color of the labels to black
+            // Explicitly set the initial color of the labels to black
             .each(function () {
                 // Add a click event listener to each text element
-                d3.select(this).on("click", function () {
+                let moveDown = true; // Initialize a flag to track the direction of movement
+
+                d3.select(this).on("dblclick", function () {
                     const selection = d3.select(this);
                     const currentColor = selection.style("fill"); // Get the current color of the label
                     const newColor = currentColor === "rgb(0, 0, 0)" ? "rgb(194, 194, 194)" : "rgb(0, 0, 0)"; // Compare against the RGB value for black
                     selection.style("fill", newColor); // Set the new color
-                });
+                })
+                    // Add a click event listener to move the text element down or up
+                    .on("click", function () {
+                        const selection = d3.select(this);
+                        const currentY = parseFloat(selection.attr("y")); // Get the current y-coordinate of the label
+                        const moveAmount = 10; // Define the amount to move the label
+                        const newY = moveDown ? currentY + moveAmount : currentY - moveAmount; // Calculate the new y-coordinate
+                        selection.attr("y", newY); // Set the new y-coordinate
+                        moveDown = !moveDown; // Toggle the direction of movement
+                    });
             });
     }
 }
