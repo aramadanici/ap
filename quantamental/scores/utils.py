@@ -1,5 +1,15 @@
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
+
+
+def filter_performance(performance_ts, from_date, to_date):
+    return [
+        asset
+        for asset in performance_ts
+        if from_date <= datetime.strptime(asset["date"], "%d.%m.%Y") <= to_date
+    ]
 
 
 def calculate_portfolio_performance(weights, asset_timeseries, symbol):

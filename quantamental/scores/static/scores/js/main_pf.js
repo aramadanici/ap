@@ -1,18 +1,3 @@
-// let lineChart1
-// let lineChart2
-// let lineChart3
-// let lineChart4
-// let lineChart5
-// let lineChart6
-// let lineChart7
-// let horTable1
-// let horTable2
-// let horTable3
-// let barChart1
-// let barChart2
-// let barChart3
-
-
 //! ----------------- Helper Functions -----------------
 function updateInvested(inputs, invested, weights) {
     invested.length = 0;
@@ -32,6 +17,18 @@ function updateTotal(weights, span) {
     span.style.color = total > 100 ? 'red' : 'black';
 }
 
+function formatDate(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+}
+
+const oneDayMs = 86400000;
+
+const lastYear = new Date().getFullYear() - 1;
+const defaultToDate = formatDate(new Date(`2025-03-04`));
+const defaultFromDate = formatDate(new Date(new Date(defaultToDate).getTime() - 5 * 365 * oneDayMs));
 
 const stressEvent = document.getElementById('stressTestSelect').value;
 const eventData = {
@@ -54,7 +51,7 @@ const lookthrough = [
     { name: "Classic Global Equity", equity: "90%", fixedIncome: "10%" },
     { name: "Blueby Global IG", equity: "0%", fixedIncome: "100%" },
     { name: "Invesco Euro Corporate", equity: "0%", fixedIncome: "100%" },
-    { name: "UBAM Medium Term Corporate", equity: "0%", fixedIncome: "100%" }
+    { name: "UBAM Medium Term Corp", equity: "0%", fixedIncome: "100%" }
 ];
 
 
@@ -70,36 +67,14 @@ let investedBMs = [];
 let bmWeights = [];
 updateInvested(bmInputs, investedBMs, bmWeights);
 
-//! ----------------- Set Default Date Range -----------------
-document.addEventListener('DOMContentLoaded', function () {
-    const fromDate = document.getElementById('fromDate');
-    const toDate = document.getElementById('toDate');
-
-
-    const oneDayMs = 86400000;
-
-
-    const lastYear = new Date().getFullYear() - 1;
-    const defaultFromDate = formatDate(new Date(`${lastYear}-12-31`));
-    const defaultToDate = formatDate(new Date(Date.now() - oneDayMs));
-
-
-    if (fromDate) fromDate.value = defaultFromDate;
-    if (toDate) toDate.value = defaultToDate;
-
-
-    function formatDate(date) {
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${year}-${month}-${day}`;
-    }
-});
-
-
-
 //! * ----------------- Initialization -----------------
 document.addEventListener('DOMContentLoaded', function () {
+    const fromDate = $('#fromDate');
+    const toDate = $('#toDate');
+
+    if (fromDate.length) fromDate.val(defaultFromDate);
+    if (toDate.length) toDate.val(defaultToDate);
+
     const combinedArray = investedAssets.map((stock, index) => {
         return {
             Stock: stock,
@@ -137,79 +112,111 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-axios.get(performance, {
-    params: {
-        assetTicker: investedAssets,
-        assetWeights: JSON.stringify(assetWeights),
-        bmTicker: investedBMs,
-        bmWeights: JSON.stringify(bmWeights)
-    }
-}).then(response => {
-    const data = response.data;
-    const parseTime = d3.timeParse("%d.%m.%Y")
-    const dataKeys = {
-        portfolio_performance: ['close'],
-        pf_bm_rolling_return: ['volatility', 'return'],
-        asset_performance: ['close'],
-        asset_rolling_return: ['volatility', 'return'],
-        portfolio_drawdown: ['drawdown'],
-        portfolio_rolling_beta: ['beta'],
-        asset_rolling_beta: ['beta']
-    };
 
-    for (const [key, fields] of Object.entries(dataKeys)) {
-        for (const row of data[key]) {
-            fields.forEach(field => row[field] = Number(row[field]) * (field === 'close' || field === 'beta' ? 1 : 100));
-            row.date = parseTime(row.date);
+$(document).ready(function () {
+    axios.get(performance, {
+        params: {
+            assetTicker: investedAssets,
+            assetWeights: JSON.stringify(assetWeights),
+            bmTicker: investedBMs,
+            bmWeights: JSON.stringify(bmWeights),
+            fromDate: JSON.stringify($('#fromDate').val()),
+            toDate: JSON.stringify($('#toDate').val())
         }
-    }
+    }).then(response => {
+        const data = response.data;
+        const parseTime = d3.timeParse("%d.%m.%Y")
+        const dataKeys = {
+            portfolio_performance: ['close'],
+            pf_bm_rolling_return: ['volatility', 'return'],
+            asset_performance: ['close'],
+            asset_rolling_return: ['volatility', 'return'],
+            portfolio_drawdown: ['drawdown'],
+            portfolio_rolling_beta: ['beta'],
+            asset_rolling_beta: ['beta']
+        };
+
+        for (const [key, fields] of Object.entries(dataKeys)) {
+            for (const row of data[key]) {
+                fields.forEach(field => row[field] = Number(row[field]) * (field === 'close' || field === 'beta' ? 1 : 100));
+                row.date = parseTime(row.date);
+            }
+        }
 
 
-    const performanceSymbols = data.portfolio_performance.map(d => d.symbol);
-    data.pf_bm_rolling_return.sort((a, b) => {
-        return performanceSymbols.indexOf(a.symbol) - performanceSymbols.indexOf(b.symbol);
+        const performanceSymbols = data.portfolio_performance.map(d => d.symbol);
+        data.pf_bm_rolling_return.sort((a, b) => {
+            return performanceSymbols.indexOf(a.symbol) - performanceSymbols.indexOf(b.symbol);
+        });
+
+
+        const assetPerformanceSymbols = data.asset_performance.map(d => d.symbol);
+        data.asset_rolling_return.sort((a, b) => {
+            return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
+        });
+        data.asset_rolling_beta.sort((a, b) => {
+            return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
+        });
+
+
+        const nonRollStartLabels = ['#date-label-start-1', '#date-label-start-3', '#date-label-start-9'];
+        const earliestDatePortfolio = d3.min(data.portfolio_performance, d => new Date(d.date));
+        const formattedEarliestDatePortfolio = d3.timeFormat("%d.%m.%Y")(earliestDatePortfolio);
+        nonRollStartLabels.forEach(label => {
+            $(label).text(formattedEarliestDatePortfolio);
+        });
+
+        const nonRollEndLabels = ['#date-label-end-1', '#date-label-end-1', '#date-label-end-9'];
+        const latestDatePortfolio = d3.max(data.portfolio_performance, d => new Date(d.date));
+        const formattedLatestDatePortfolio = d3.timeFormat("%d.%m.%Y")(latestDatePortfolio);
+        nonRollEndLabels.forEach(label => {
+            $(label).text(formattedLatestDatePortfolio);
+        });
+
+        const rollStartLabels = ['#date-label-start-2', '#date-label-start-4', '#date-label-start-5', '#date-label-start-6', '#date-label-start-7', '#date-label-start-8'];
+        const earliestDateBM = d3.min(data.pf_bm_rolling_return, d => new Date(d.date));
+        const formattedEarliestDateBM = d3.timeFormat("%d.%m.%Y")(earliestDateBM);
+        rollStartLabels.forEach(label => {
+            $(label).text(formattedEarliestDateBM);
+        });
+
+        const rollEndLabels = ['#date-label-end-2', '#date-label-end-4', '#date-label-end-5', '#date-label-end-6', '#date-label-end-7', '#date-label-end-8'];
+        const latestDateBM = d3.max(data.pf_bm_rolling_return, d => new Date(d.date));
+        const formattedLatestDateBM = d3.timeFormat("%d.%m.%Y")(latestDateBM);
+        rollEndLabels.forEach(label => {
+            $(label).text(formattedLatestDateBM);
+        });
+
+        lineChart1 = new LineChart(_parentElement = "#aggregated-performance", _data = data.portfolio_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
+        lineChart2 = new LineChart(_parentElement = "#aggregated-performance-rolling", _data = data.pf_bm_rolling_return, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 2);
+        lineChart3 = new LineChart(_parentElement = "#asset-performance", _data = data.asset_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = true, _slider = 3);
+        lineChart4 = new LineChart(_parentElement = "#asset-performance-rolling", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = false, _slider = 4);
+        lineChart5 = new LineChart(_parentElement = "#aggregated-performance-volatility", _data = data.pf_bm_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 5);
+        lineChart6 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = false, _slider = 6);
+        lineChart7 = new LineChart(_parentElement = "#aggregated-performance-beta", _data = data.portfolio_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 140 }, _rebase = false, _slider = 7);
+        lineChart8 = new LineChart(_parentElement = "#asset-performance-beta", _data = data.asset_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = false, _slider = 8);
+        lineChart9 = new LineChart(_parentElement = "#aggregated-performance-drawdown", _data = data.portfolio_drawdown, _xdata = "date", _xlabel = "", _ydata = "drawdown", _ylabel = "Drawdown [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 9);
+
+        const stressTestResults = {};
+        for (const [eventKey, eventDetails] of Object.entries(eventData)) {
+            stressTestResults[eventKey] = data.portfolio_performance.filter(d =>
+                d.date >= new Date(eventDetails.startdate) && d.date <= new Date(eventDetails.enddate)
+            );
+        }
+        dataStressTest = stressTestResults[stressEvent];
+        lineChart10 = new LineChartAnimation(_parentElement = "#stress-test-performance", _data = dataStressTest, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 0);
+        lineChart10.stressTestResults = stressTestResults;
+
+        horTable1 = new HorizontalTable(_tableid = "table_top_drawdown", _data = data.portfolio_top_drawdowns);
+        horTable2 = new HorizontalTable(_tableid = "table_top_drawdown2", _data = data.benchmark_top_drawdowns);
+        horTable3 = new HorizontalTable(_tableid = "table_performance_metrics", _data = data.performance_metrics);
+
+        barChart1 = new GroupedBarChart(_parentElement = "#upside-downside-bar1", _data = data.monthly_returns[0].returns, _xdata = "return_type", _xlabel = "", _ydata = "Percentage", _ylabel = "Percentage", _cdata = "Asset", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 });
+
+    }).catch(error => {
+        console.error('Error fetching data:', error);
     });
-
-
-    const assetPerformanceSymbols = data.asset_performance.map(d => d.symbol);
-    data.asset_rolling_return.sort((a, b) => {
-        return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
-    });
-    data.asset_rolling_beta.sort((a, b) => {
-        return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
-    });
-
-
-    lineChart1 = new LineChart(_parentElement = "#aggregated-performance", _data = data.portfolio_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 1);
-    lineChart2 = new LineChart(_parentElement = "#aggregated-performance-rolling", _data = data.pf_bm_rolling_return, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 2);
-    lineChart3 = new LineChart(_parentElement = "#asset-performance", _data = data.asset_performance, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = true, _slider = 3);
-    lineChart4 = new LineChart(_parentElement = "#asset-performance-rolling", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "return", _ylabel = "1-Year Rolling Return [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = false, _slider = 4);
-    lineChart5 = new LineChart(_parentElement = "#aggregated-performance-volatility", _data = data.pf_bm_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 5);
-    lineChart6 = new LineChart(_parentElement = "#asset-performance-volatility", _data = data.asset_rolling_return, _xdata = "date", _xlabel = "", _ydata = "volatility", _ylabel = "1-Year Rolling Volatility [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = false, _slider = 6);
-    lineChart7 = new LineChart(_parentElement = "#aggregated-performance-beta", _data = data.portfolio_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 140 }, _rebase = false, _slider = 7);
-    lineChart8 = new LineChart(_parentElement = "#asset-performance-beta", _data = data.asset_rolling_beta, _xdata = "date", _xlabel = "", _ydata = "beta", _ylabel = "Beta", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 2, widthCol: 125 }, _rebase = false, _slider = 8);
-    lineChart9 = new LineChart(_parentElement = "#aggregated-performance-drawdown", _data = data.portfolio_drawdown, _xdata = "date", _xlabel = "", _ydata = "drawdown", _ylabel = "Drawdown [%]", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 }, _rebase = false, _slider = 9);
-
-    const stressTestResults = {};
-    for (const [eventKey, eventDetails] of Object.entries(eventData)) {
-        stressTestResults[eventKey] = data.portfolio_performance.filter(d =>
-            d.date >= new Date(eventDetails.startdate) && d.date <= new Date(eventDetails.enddate)
-        );
-    }
-    dataStressTest = stressTestResults[stressEvent];
-    lineChart10 = new LineChartAnimation(_parentElement = "#stress-test-performance", _data = dataStressTest, _xdata = "date", _xlabel = "", _ydata = "close", _ylabel = "", _group = "symbol", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 65 }, _rebase = true, _slider = 0);
-    lineChart10.stressTestResults = stressTestResults;
-
-    horTable1 = new HorizontalTable(_tableid = "table_top_drawdown", _data = data.portfolio_top_drawdowns);
-    horTable2 = new HorizontalTable(_tableid = "table_top_drawdown2", _data = data.benchmark_top_drawdowns);
-    horTable3 = new HorizontalTable(_tableid = "table_performance_metrics", _data = data.performance_metrics);
-
-    barChart1 = new GroupedBarChart(_parentElement = "#upside-downside-bar1", _data = data.monthly_returns[0].returns, _xdata = "return_type", _xlabel = "", _ydata = "Percentage", _ylabel = "Percentage", _cdata = "Asset", _dimension = { width: 829, height: 500 }, _legend = { noCol: 1, widthCol: 85 });
-
-}).catch(error => {
-    console.error('Error fetching data:', error);
 });
-
 
 
 //! * ----------------- Update -----------------
@@ -277,7 +284,9 @@ const updatePfView = () => {
             assetTicker: investedAssets,
             assetWeights: JSON.stringify(assetWeights),
             bmTicker: investedBMs,
-            bmWeights: JSON.stringify(bmWeights)
+            bmWeights: JSON.stringify(bmWeights),
+            fromDate: JSON.stringify($('#fromDate').val()),
+            toDate: JSON.stringify($('#toDate').val())
         }
     }).then(response => {
         const data = response.data;
@@ -313,6 +322,33 @@ const updatePfView = () => {
             return assetPerformanceSymbols.indexOf(a.symbol) - assetPerformanceSymbols.indexOf(b.symbol);
         });
 
+        const nonRollStartLabels = ['#date-label-start-1', '#date-label-start-9'];
+        const earliestDatePortfolio = d3.min(data.portfolio_performance, d => new Date(d.date));
+        const formattedEarliestDatePortfolio = d3.timeFormat("%d.%m.%Y")(earliestDatePortfolio);
+        nonRollStartLabels.forEach(label => {
+            $(label).text(formattedEarliestDatePortfolio);
+        });
+
+        const nonRollEndLabels = ['#date-label-end-1', '#date-label-end-9'];
+        const latestDatePortfolio = d3.max(data.portfolio_performance, d => new Date(d.date));
+        const formattedLatestDatePortfolio = d3.timeFormat("%d.%m.%Y")(latestDatePortfolio);
+        nonRollEndLabels.forEach(label => {
+            $(label).text(formattedLatestDatePortfolio);
+        });
+
+        const rollStartLabels = ['#date-label-start-2', '#date-label-start-3', '#date-label-start-4', '#date-label-start-5', '#date-label-start-6', '#date-label-start-7', '#date-label-start-8'];
+        const earliestDateBM = d3.min(data.pf_bm_rolling_return, d => new Date(d.date));
+        const formattedEarliestDateBM = d3.timeFormat("%d.%m.%Y")(earliestDateBM);
+        rollStartLabels.forEach(label => {
+            $(label).text(formattedEarliestDateBM);
+        });
+
+        const rollEndLabels = ['#date-label-end-2', '#date-label-end-3', '#date-label-end-4', '#date-label-end-5', '#date-label-end-6', '#date-label-end-7', '#date-label-end-8'];
+        const latestDateBM = d3.max(data.pf_bm_rolling_return, d => new Date(d.date));
+        const formattedLatestDateBM = d3.timeFormat("%d.%m.%Y")(latestDateBM);
+        rollEndLabels.forEach(label => {
+            $(label).text(formattedLatestDateBM);
+        });
 
         lineChart1.data = data.portfolio_performance
         lineChart2.data = data.pf_bm_rolling_return

@@ -108,7 +108,7 @@ class LineChart {
             .domain(d3.extent(vis.data, d => d[vis.xdata])); // Set the domain of the scale based on the x-axis data
 
         let yDomainMin = Math.min(d3.min(vis.data, d => d[vis.ydata]), d3.min(vis.data, d => d[vis.ydata]) * 0.90);  // Reduce the minimum y-domain value by 30% if it is positive
-        let yDomainMax = Math.max(d3.max(vis.data, d => d[vis.ydata]), d3.max(vis.data, d => d[vis.ydata]) * 1.05); // Increase the maximum y-domain value by 15%   
+        let yDomainMax = Math.max(d3.max(vis.data, d => d[vis.ydata]), d3.max(vis.data, d => d[vis.ydata]) * 1.00); // Increase the maximum y-domain value by 15%   
 
         vis.y = d3.scaleLinear() // Create a linear scale for the y-axis
             .range([vis.HEIGHT, 0]) // Set the range of the scale
@@ -209,6 +209,16 @@ class LineChart {
     manageData(dateRange = [new Date("2009-12-31"), new Date("2024-03-07")], filterEvent) {
         const vis = this;
         // Filter the data based on the date range or the selected range
+
+        vis.earliestDate = new Date(Math.min(...vis.data.map(entry => entry[vis.xdata]))); // Calculate the earliest date
+        vis.latestDate = new Date(Math.max(...vis.data.map(entry => entry[vis.xdata]))); // Calculate the latest date
+
+        if (vis.slider !== 0) {
+            $("#date-slider-" + vis.slider).slider("option", "min", vis.earliestDate.getTime());
+            $("#date-slider-" + vis.slider).slider("option", "max", vis.latestDate.getTime());
+            $("#date-slider-" + vis.slider).slider("values", [vis.earliestDate.getTime(), vis.latestDate.getTime()]);
+        }
+
         vis.dataFiltered = vis.data.filter(d => {
             if (vis.slider !== 0 && filterEvent === "click") {
                 $("#date-label-start-" + vis.slider).text(vis.formatTime(dateRange[0]))
@@ -217,6 +227,7 @@ class LineChart {
             }
             return ((d[vis.xdata] >= dateRange[0]) && (d[vis.xdata] <= dateRange[1]))
         })
+
 
         vis.dataGrouped = d3.group(vis.dataFiltered, d => d[vis.group]); // Group the data based on the grouping variable
 
@@ -250,24 +261,20 @@ class LineChart {
             yDomainMax = Math.max(yDomainMax, maxValue); // Update the maximum y-domain value
         });
 
-        yDomainMax = Math.max(yDomainMax, yDomainMax * 1.05); // Increase the maximum y-domain value by 15%   
+        yDomainMax = Math.max(yDomainMax, yDomainMax * 1.00); // Increase the maximum y-domain value by 15%   
         yDomainMin = Math.min(yDomainMin, yDomainMin * 0.90); // Reduce the minimum y-domain value by 30% if it is positive
         vis.y.domain([yDomainMin, yDomainMax]); // Update the y-domain
 
-
         let xAxisPositon = Math.max(0, yDomainMin)
         vis.xAxisGroup.transition(vis.t).attr("transform", `translate(0, ${vis.y(xAxisPositon)})`); // Shift the x-axis group
-
 
         vis.xAxisCall = d3.axisBottom(vis.x); // Create the x-axis
         vis.xAxisGroup.transition(vis.t).call(vis.xAxisCall) // Transition the x-axis
             .selectAll("text") // Select all text elements
             .attr("y", "10") // Set the y attribute
             .attr("x", "0") // Set the x attribute
-            .attr("text-anchor", "middle") // Set the text anchor property to middle;
+            .attr("text-anchor", "middle"); // Set the text anchor property to middle
 
-
-        // vis.tickCount = Math.max(5, Math.ceil((vis.y.domain()[1] - vis.y.domain()[0]) / 150)); // Calculate the number of ticks for the y-axis
         vis.yAxisCall = d3.axisLeft(vis.y) // Create the y-axis
             .ticks(8) // Set the number of ticks
             .tickFormat(d => vis.formatter(d)) // Set the tick format
@@ -285,7 +292,6 @@ class LineChart {
 
         vis.dataLabel = Array.from(vis.dataGrouped.keys()); // Get the unique labels from the grouped data
         vis.legendOffsetX = (vis.WIDTH - (vis.dataLabel.length / vis.maxDotsPerColumn * vis.columnWidth)) / 2; // Offset for the legend in the x-direction
-        // vis.colors = new Map(vis.dataLabel.map((label, i) => [label, d3.schemeCategory10[i]])); // Create a map of colors for each label
 
         const colorPalette = ['#0e2238', '#d8e5f0', '#117a65', '#f5b041', '#dcb9eb', '#3498db']; // Cross
         // const colorPalette = ['#4472CA', '#77933C', '#C0504D', '#ED7D31', '#81a3e6', '#aac474']; // Alp
