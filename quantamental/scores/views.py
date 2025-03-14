@@ -1,5 +1,4 @@
 import json
-import pprint
 from datetime import datetime
 
 from django import forms
@@ -143,37 +142,6 @@ class SignUpView(CreateView):
 
 
 @login_required
-def performance(request):
-    data = list(models.Performance.objects.values())
-    return JsonResponse(data, safe=False)
-
-
-@login_required
-def pf_view_aggregated_performance(request):
-    symbol = request.GET.getlist("ticker[]", [])
-    weights = json.loads(request.GET.get("weights", "[]"))  # Parse weights
-
-    asset_performance = list(
-        models.Performance.objects.filter(symbol__in=symbol).values()
-    )
-
-    portfolio_performance = calculate_portfolio_performance(weights, asset_performance)
-
-    return JsonResponse(portfolio_performance, safe=False)
-
-
-@login_required
-def pf_view_asset_performance(request):
-    symbol = request.GET.getlist("ticker[]", [])
-
-    asset_performance = list(
-        models.Performance.objects.filter(symbol__in=symbol).values()
-    )
-
-    return JsonResponse(asset_performance, safe=False)
-
-
-@login_required
 def pf_view_performance(request):
 
     #    ! GET DATA --------------------------------------------------------------------------
@@ -185,8 +153,6 @@ def pf_view_performance(request):
     from_date = request.GET.get("fromDate")
     to_date = request.GET.get("toDate")
 
-    print(from_date, to_date)
-
     asset_performance = list(
         models.Performance.objects.filter(symbol__in=asset_symbol).values()
     )  # Retrieve performance data for the specified asset tickers
@@ -196,8 +162,6 @@ def pf_view_performance(request):
     to_date = datetime.strptime(to_date.strip('"'), "%Y-%m-%d")
 
     asset_performance = filter_performance(asset_performance, from_date, to_date)
-    pp = pprint.PrettyPrinter(indent=4)
-    pp.pprint(asset_performance)
 
     asset_weights_param = request.GET.get(
         "assetWeights"

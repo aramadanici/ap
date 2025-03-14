@@ -23,21 +23,6 @@ urlpatterns = [
     path(route="data2/", view=views.table_view_data_2, name="table_data2"),
     path(route="pf/", view=views.pf_view, name="pf_view"),
     path(
-        route="performance/",
-        view=views.performance,
-        name="performance",
-    ),
-    path(
-        route="pf_view_aggregated_performance/",
-        view=views.pf_view_aggregated_performance,
-        name="pf_view_aggregated_performance",
-    ),
-    path(
-        route="pf_view_asset_performance/",
-        view=views.pf_view_asset_performance,
-        name="pf_view_asset_performance",
-    ),
-    path(
         route="pf_view_performance/",
         view=views.pf_view_performance,
         name="pf_view_performance",
