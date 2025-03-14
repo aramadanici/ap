@@ -221,8 +221,11 @@ class LineChart {
 
         // Determine the date for the "YTD" range
         vis.lastYearEnd = new Date(vis.latestYear - 1, 11, 31); // 11 represents December
-        vis.ytdStart = new Date(vis.latestDate.getFullYear(), 0, 1); // 0 represents January
+        vis.ytdStart = new Date(vis.latestYear, 0, 1); // 0 represents January
         vis.ytdStart.setDate(vis.ytdStart.getDate() - 1);
+        while (vis.ytdStart.getDay() === 0 || vis.ytdStart.getDay() === 6) { // Check if the date is a weekend
+            vis.ytdStart.setDate(vis.ytdStart.getDate() - 1); // Move to the previous day if it's a weekend
+        }
 
         vis.__All = [vis.earliestDate, vis.latestDate]
         vis.__10Y = [vis.tenYearsAgo, vis.latestDate]
