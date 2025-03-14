@@ -419,7 +419,7 @@ const updatePfView = () => {
         const dateRange = [new Date($('#fromDate').val()), new Date($('#toDate').val())];
 
         for (let chart of charts) {
-            chart.manageData(dateRange);
+            chart.manageData(dateRange, "compute");
         }
 
         horTable1 = new HorizontalTable(_tableid = "table_top_drawdown", _data = data.portfolio_top_drawdowns);

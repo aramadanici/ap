@@ -67,7 +67,6 @@ class LineChart {
                     $("#date-label-start-" + vis.slider).text(vis.formatTime(new Date(ui.values[0])));
                     $("#date-label-end-" + vis.slider).text(vis.formatTime(new Date(ui.values[1])));
                     dateRange = $("#date-slider-" + vis.slider).slider("values"); // Get the values of the date slider
-                    console.log("this is ui.values", ui.values)
 
                     vis.manageData(dateRange, filterEvent);
                 }
@@ -213,10 +212,32 @@ class LineChart {
         // Filter the data based on the date range or the selected range
         vis.earliestDate = new Date(Math.min(...vis.data.map(entry => entry[vis.xdata]))); // Calculate the earliest date
         vis.latestDate = new Date(Math.max(...vis.data.map(entry => entry[vis.xdata]))); // Calculate the latest date
+        // Calculate the dates for the "10y", "5y", "3y", "1y", and "YTD" ranges based on the latest date
+        vis.latestYear = vis.latestDate.getFullYear();
+        vis.tenYearsAgo = new Date(vis.latestYear - 10, vis.latestDate.getMonth(), vis.latestDate.getDate());
+        vis.fiveYearsAgo = new Date(vis.latestYear - 5, vis.latestDate.getMonth(), vis.latestDate.getDate());
+        vis.threeYearsAgo = new Date(vis.latestYear - 3, vis.latestDate.getMonth(), vis.latestDate.getDate());
+        vis.oneYearAgo = new Date(vis.latestYear - 1, vis.latestDate.getMonth(), vis.latestDate.getDate());
 
-        if (vis.slider !== 0) {
+        // Determine the date for the "YTD" range
+        vis.lastYearEnd = new Date(vis.latestYear - 1, 11, 31); // 11 represents December
+        vis.ytdStart = new Date(vis.latestDate.getFullYear(), 0, 1); // 0 represents January
+        vis.ytdStart.setDate(vis.ytdStart.getDate() - 1);
+
+        vis.__All = [vis.earliestDate, vis.latestDate]
+        vis.__10Y = [vis.tenYearsAgo, vis.latestDate]
+        vis.__5Y = [vis.fiveYearsAgo, vis.latestDate]
+        vis.__3Y = [vis.threeYearsAgo, vis.latestDate]
+        vis.__1Y = [vis.oneYearAgo, vis.latestDate]
+        vis.__YTD = [vis.ytdStart, vis.latestDate]
+
+        if (vis.slider !== 0 && filterEvent === "slide") {
             $("#date-slider-" + vis.slider).slider("option", "min", vis.earliestDate.getTime());
             $("#date-slider-" + vis.slider).slider("option", "max", vis.latestDate.getTime());
+        } else if (vis.slider !== 0 && filterEvent === "compute") {
+            $("#date-slider-" + vis.slider).slider("option", "min", vis.earliestDate.getTime());
+            $("#date-slider-" + vis.slider).slider("option", "max", vis.latestDate.getTime());
+            $("#date-slider-" + vis.slider).slider("values", [dateRange[0], dateRange[1]]);
         }
 
         vis.dataFiltered = vis.data.filter(d => {
