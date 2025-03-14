@@ -27,8 +27,8 @@ function formatDate(date) {
 const oneDayMs = 86400000;
 
 const lastYear = new Date().getFullYear() - 1;
+const defaultFromDate = formatDate(new Date(`2016-05-31`));
 const defaultToDate = formatDate(new Date(`2025-02-28`));
-const defaultFromDate = formatDate(new Date(`2017-05-31`));
 // const defaultFromDate = formatDate(new Date(new Date(defaultToDate).getTime() - 5 * 365 * oneDayMs));
 
 const stressEvent = document.getElementById('stressTestSelect').value;

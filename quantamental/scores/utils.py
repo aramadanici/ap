@@ -36,8 +36,8 @@ def calculate_portfolio_performance(weights, asset_timeseries, symbol):
         index="date", columns="symbol", values="close"
     ).sort_index()
 
-    # Resample to monthly frequency
-    asset_timeseries_df = asset_timeseries_df.resample("M").last()
+    # Resample to monthly frequency using the last business day
+    asset_timeseries_df = asset_timeseries_df.resample("BM").last()
 
     # Extract the dates from the DataFrame
     dates = asset_timeseries_df.index
@@ -57,9 +57,9 @@ def calculate_portfolio_performance(weights, asset_timeseries, symbol):
     # Calculate simple returns from the asset timeseries
     simple_returns = asset_timeseries[1:] / asset_timeseries[:-1] - 1
 
-    # Find the end of March, June, September, and December
+    # Find the last business day of March, June, September, and December
     rebalancing_dates = pd.date_range(start=dates.min(), end=dates.max(), freq="Q")
-    rebalancing_dates = rebalancing_dates + pd.offsets.MonthEnd(0)
+    rebalancing_dates = rebalancing_dates + pd.offsets.BMonthEnd(0)
 
     # Create a weights matrix for all rebalancings
     n_quarters = len(rebalancing_dates)
@@ -96,7 +96,8 @@ def calculate_portfolio_performance(weights, asset_timeseries, symbol):
 
 def calculate_rolling_return(asset_timeseries):
     """
-    Calculate the 1-year rolling volatility and 1-year rolling return for every timeseries in asset_timeseries.
+    Calculate the 1-year rolling volatility and 1-year rolling return for every timeseries in asset_timeseries,
+    considering only the last business days of each month.
 
     Parameters:
     asset_timeseries (list of dict): List of dictionaries with asset timeseries data.
@@ -113,6 +114,9 @@ def calculate_rolling_return(asset_timeseries):
     asset_timeseries_df = df.pivot(
         index="date", columns="symbol", values="close"
     ).sort_index()
+
+    # Resample to monthly frequency using the last business day
+    asset_timeseries_df = asset_timeseries_df.resample("BM").last()
 
     # Calculate monthly returns
     monthly_returns = asset_timeseries_df.pct_change()
@@ -157,7 +161,7 @@ def calculate_rolling_return(asset_timeseries):
 
 def calculate_drawdown(asset_timeseries):
     """
-    Calculate the drawdown timeseries for every timeseries in asset_timeseries.
+    Calculate the drawdown timeseries for every timeseries in asset_timeseries, considering only the last business days of each month.
 
     Parameters:
     asset_timeseries (list of dict): List of dictionaries with asset timeseries data.
@@ -175,8 +179,8 @@ def calculate_drawdown(asset_timeseries):
         index="date", columns="symbol", values="close"
     ).sort_index()
 
-    # Ensure the data is at monthly frequency
-    asset_timeseries_df = asset_timeseries_df.resample("M").last()
+    # Resample to monthly frequency using the last business day
+    asset_timeseries_df = asset_timeseries_df.resample("BM").last()
 
     # Calculate the cumulative returns
     cumulative_returns = asset_timeseries_df / asset_timeseries_df.iloc[0]
@@ -209,7 +213,7 @@ def calculate_drawdown(asset_timeseries):
 
 def calculate_top_drawdowns(asset_timeseries):
     """
-    Calculate the top 5 drawdowns for every timeseries in asset_timeseries.
+    Calculate the top 5 drawdowns for every timeseries in asset_timeseries, considering only the last business days of each month.
 
     Parameters:
     asset_timeseries (list of dict): List of dictionaries with asset timeseries data.
@@ -227,8 +231,8 @@ def calculate_top_drawdowns(asset_timeseries):
         index="date", columns="symbol", values="close"
     ).sort_index()
 
-    # Ensure the data is at monthly frequency
-    asset_timeseries_df = asset_timeseries_df.resample("M").last()
+    # Resample to monthly frequency using the last business day
+    asset_timeseries_df = asset_timeseries_df.resample("BM").last()
 
     output = []
 
@@ -293,8 +297,8 @@ def calculate_top_drawdowns(asset_timeseries):
 
 def calculate_rolling_beta(asset_timeseries, benchmark_timeseries):
     """
-    Calculate the 1-year rolling beta based on monthly returns and a 2-year lookback period.
-    Apply the Blume adjustment to the beta.
+    Calculate the rolling beta based on monthly returns and a 2-year lookback period.
+    Apply the Blume adjustment to the beta, considering only the last business days of each month.
 
     Parameters:
     asset_timeseries (list of dict): List of dictionaries with asset timeseries data.
@@ -320,6 +324,10 @@ def calculate_rolling_beta(asset_timeseries, benchmark_timeseries):
     benchmark_df = benchmark_df.pivot(
         index="date", columns="symbol", values="close"
     ).sort_index()
+
+    # Resample to monthly frequency using the last business day
+    asset_df = asset_df.resample("BM").last()
+    benchmark_df = benchmark_df.resample("BM").last()
 
     # Calculate monthly returns
     asset_monthly_returns = asset_df.pct_change().dropna()
@@ -370,7 +378,7 @@ def calculate_rolling_beta(asset_timeseries, benchmark_timeseries):
 
 def calculate_performance_metrics(asset_timeseries, benchmark_timeseries):
     """
-    Calculate performance metrics for the asset timeseries.
+    Calculate performance metrics for the asset timeseries, considering only the last business days of each month.
 
     Parameters:
     asset_timeseries (list of dict): List of dictionaries with asset timeseries data.
@@ -388,6 +396,9 @@ def calculate_performance_metrics(asset_timeseries, benchmark_timeseries):
     asset_timeseries_df = df.pivot(
         index="date", columns="symbol", values="close"
     ).sort_index()
+
+    # Resample to monthly frequency using the last business day
+    asset_timeseries_df = asset_timeseries_df.resample("BM").last()
 
     # Calculate monthly returns
     monthly_returns = asset_timeseries_df.pct_change().dropna()
@@ -447,9 +458,6 @@ def calculate_performance_metrics(asset_timeseries, benchmark_timeseries):
     return output
 
 
-import pandas as pd
-
-
 def calculate_monthly_returns(asset_timeseries, benchmark_timeseries):
     """
     Calculate the monthly returns of both portfolio and benchmark, and then calculate the average returns
@@ -479,6 +487,10 @@ def calculate_monthly_returns(asset_timeseries, benchmark_timeseries):
     benchmark_df = benchmark_df.pivot(
         index="date", columns="symbol", values="close"
     ).sort_index()
+
+    # Resample to monthly frequency using the last business day
+    asset_df = asset_df.resample("BM").last()
+    benchmark_df = benchmark_df.resample("BM").last()
 
     # Calculate monthly returns
     benchmark_monthly_returns = benchmark_df.pct_change().dropna()
